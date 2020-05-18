@@ -127,7 +127,7 @@ class Shop(commands.Cog):
 
         emoji_cost = await guild_data.emoji_cost()
         cc_cost = await guild_data.cc_cost()
-        
+
         level100id = await guild_data.level100id()
         level100 = ctx.guild.get_role(level100id)
 
@@ -149,6 +149,18 @@ class Shop(commands.Cog):
         author = ctx.author
         current_role = author.roles
 
+        highest_role = None
+        for role in current_role:
+            if role == legendary:
+                highest_role = legendary
+                break
+            elif role == epic:
+                highest_role = epic
+                break
+            elif role == rare:
+                highest_role = rare
+                break
+
         user_bal = await bank.get_balance(author)
 
         # Buying Custom Command -- DONE
@@ -159,45 +171,42 @@ class Shop(commands.Cog):
 
         # Getting Rare
         elif choice_no == 2 and user_bal >= rarecost:  # if user wants a rare role
-            for role in current_role:
-                if role == rare or epic or legendary:
-                    await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")  # if user already has rare or higher roles
-                    return
-                else:
-                    await author.add_roles(rare)
-                    await bank.withdraw_credits(author, rarecost)
-                    await ctx.send("Done. You have been given the rare role {} \n {} credits have been removed".format(
-                        author.mention, rarecost))
-                    return
+            if highest_role is not None: # user has any of rare/epic/legendary
+                await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")  # if user already has rare or higher roles
+                return
+            else:
+                await author.add_roles(rare)
+                await bank.withdraw_credits(author, rarecost)
+                await ctx.send("Done. You have been given the rare role {} \n {} credits have been removed".format(
+                    author.mention, rarecost))
+                return
         elif choice_no == 3 and user_bal >= epiccost:  # if user wants an epic role
-            for role in current_role:
-                if role != rare:  # checks if the user has a rare role
-                    await ctx.send("Get the rare role first.{}".format(author.mention))
-                    return
-                elif role == epic or legendary:  # checks if the user already has the role or higher
-                    await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
-                    return
-                else:
-                    await author.add_roles(epic)
-                    await bank.withdraw_credits(author, epiccost)
-                    await ctx.send("Done. You have been given the epic role {} \n {} credits have been removed".format(
-                        author.mention, epiccost))
-                    return
+            if highest_role is None:  # user has no rare/epic/legendary
+                await ctx.send("Get the rare role first.{}".format(author.mention))
+                return
+            elif highest_role == epic or highest_role == legendary:  # checks if the user already has the role or higher
+                await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
+                return
+            else:
+                await author.add_roles(epic)
+                await bank.withdraw_credits(author, epiccost)
+                await ctx.send("Done. You have been given the epic role {} \n {} credits have been removed".format(
+                    author.mention, epiccost))
+                return
         elif choice_no == 4 and user_bal >= legendarycost:  # if user wants a legendary role
-            for role in current_role:
-                if role != epic:  # checks if the user has required roles
-                    await ctx.send("Get the epic role first.{}".format(author.mention))
-                    return
-                elif role == legendary:  # checks if the user already has the role required
-                    await ctx.send("DON'T WASTE YOUR TIME HERE GO ABUSE GENS WALLET. ")
-                    return
-                else:
-                    await author.add_roles(legendary)
-                    await bank.withdraw_credits(author, legendarycost)
-                    await ctx.send(
-                        "Done. You have been given the Legendary role {} \n {} credits have been removed".format(
-                            author.mention, legendarycost))
-                    return
+            if highest_role != epic:  # checks if the user has required roles
+                await ctx.send("Get the epic role first.{}".format(author.mention))
+                return
+            elif highest_role == legendary:  # checks if the user already has the role required
+                await ctx.send("DON'T WASTE YOUR TIME HERE GO ABUSE GENS WALLET. ")
+                return
+            else:
+                await author.add_roles(legendary)
+                await bank.withdraw_credits(author, legendarycost)
+                await ctx.send(
+                    "Done. You have been given the Legendary role {} \n {} credits have been removed".format(
+                        author.mention, legendarycost))
+                return
 
         # Custom Emote -- DONE
         elif choice_no == 5 and user_bal >= int(emoji_cost):
@@ -316,8 +325,8 @@ class Shop(commands.Cog):
         await self.config.guild(ctx.guild).get_attr(attr).set(int(val))
         a = self.config.guild(ctx.guild).get_attr(attr)
         await ctx.send("Set {} to {}".format(attr, await a()))
-        
-        
+
+
     @checks.mod_or_permissions()
     @commands.command()
     async def setrole(self, ctx, attr, role: discord.Role):
