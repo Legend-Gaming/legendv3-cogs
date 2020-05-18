@@ -14,7 +14,6 @@ class Shop(commands.Cog):
 
     def __init__(self, bot):
         self.config = Config.get_conf(self, identifier=32539819)
-        # self.cc_config = Config.get_conf(self, )
         default_guild = {
             'emoji_cost': 80000,
             'cc_cost': 90000,
