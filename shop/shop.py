@@ -71,7 +71,7 @@ class Shop(commands.Cog):
                     raise UserEnd
 
                 if final_command in (
-                        *self.bot.all_commands, *commands.RESERVED_COMMAND_NAMES, all_commands):
+                        *self.bot.all_commands, *commands.RESERVED_COMMAND_NAMES):
                     await user.send("There already exists a command with the same name.")
                     break
 
@@ -160,7 +160,7 @@ class Shop(commands.Cog):
         # Getting Rare
         elif choice_no == 2 and user_bal >= rarecost:  # if user wants a rare role
             for role in current_role:
-                if role == rare or epic or legendary:
+                if role == rare or role == epic or role == legendary:
                     await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")  # if user already has rare or higher roles
                     return
                 else:
@@ -174,7 +174,7 @@ class Shop(commands.Cog):
                 if role != rare:  # checks if the user has a rare role
                     await ctx.send("Get the rare role first.{}".format(author.mention))
                     return
-                elif role == epic or legendary:  # checks if the user already has the role or higher
+                elif role == epic or role == legendary:  # checks if the user already has the role or higher
                     await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
                     return
                 else:
