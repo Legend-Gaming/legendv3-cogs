@@ -7,8 +7,11 @@ credit = "Bot by Generaleoley | LeGeND eSports"
 
 class UserEnd(Exception):
     pass
+
+
 class CommandInUse(Exception):
     pass
+
 
 class Shop(commands.Cog):
 
@@ -32,7 +35,6 @@ class Shop(commands.Cog):
         self.bot = bot
         self.cc = self.bot.get_cog('CustomCommands').cc_create
         self.prepare_args = self.bot.get_cog('CustomCommands').prepare_args
-
 
     async def buycc(self, ctx):
         await ctx.send("Please check your DM's...")
@@ -71,7 +73,7 @@ class Shop(commands.Cog):
                     raise UserEnd
 
                 if final_command in (
-                        *self.bot.all_commands, *commands.RESERVED_COMMAND_NAMES, all_commands):
+                        *self.bot.all_commands, *commands.RESERVED_COMMAND_NAMES):
                     await user.send("There already exists a command with the same name.")
                     break
 
@@ -171,15 +173,14 @@ class Shop(commands.Cog):
 
         # Getting Rare
         elif choice_no == 2 and user_bal >= rarecost:  # if user wants a rare role
-            if highest_role is not None: # user has any of rare/epic/legendary
-                await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")  # if user already has rare or higher roles
-                return
-            else:
+            if highest_role is None:  # user has any of rare/epic/legendary
                 await author.add_roles(rare)
                 await bank.withdraw_credits(author, rarecost)
                 await ctx.send("Done. You have been given the rare role {} \n {} credits have been removed".format(
                     author.mention, rarecost))
-                return
+            else:
+                await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
+
         elif choice_no == 3 and user_bal >= epiccost:  # if user wants an epic role
             if highest_role is None:  # user has no rare/epic/legendary
                 await ctx.send("Get the rare role first.{}".format(author.mention))
@@ -247,7 +248,7 @@ class Shop(commands.Cog):
                 else:
                     await ctx.send("Alright! We kept your current nickname!")
             except asyncio.exceptions.TimeoutError:
-                await user.send("Timeout... your credits have been refunded")
+                await author.send("Timeout... your credits have been refunded")
 
         # Nitro classic / pass royale -- COMPLETE
         elif choice_no == 6 and user_bal >= passroyale_cost:
@@ -272,7 +273,7 @@ class Shop(commands.Cog):
                             await ctx.send("Request Ignored")
                             return
                     except asyncio.exceptions.TimeoutError:
-                        await user.send("Timeout... your credits have been refunded")
+                        await author.send("Timeout... your credits have been refunded")
 
                 else:
                     await ctx.send("You need the legendary role before buying this.")
@@ -300,7 +301,7 @@ class Shop(commands.Cog):
                             await ctx.send("Request Ignored")
                             return
                     except asyncio.exceptions.TimeoutError:
-                        await user.send("Timeout... your credits have been refunded")
+                        await author.send("Timeout... your credits have been refunded")
                         return
 
                 else:
@@ -342,4 +343,4 @@ class Shop(commands.Cog):
         # await ctx.send(await self.config.guild(ctx.guild).get_attr(attr))
         a = self.config.guild(ctx.guild).get_attr(attr)
         await ctx.send(await a())
-
+        await ctx.send(await a())
