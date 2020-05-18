@@ -317,6 +317,16 @@ class Shop(commands.Cog):
         await self.config.guild(ctx.guild).get_attr(attr).set(int(val))
         a = self.config.guild(ctx.guild).get_attr(attr)
         await ctx.send("Set {} to {}".format(attr, await a()))
+        
+        
+    @checks.mod_or_permissions()
+    @commands.command()
+    async def setrole(self, ctx, attr, role: discord.Role):
+        """Set Role ID"""
+        id = role.id
+        await self.config.guild(ctx.guild).get_attr(attr).set(int(id))
+        a = self.config.guild(ctx.guild).get_attr(attr)
+        await ctx.send("Set {} to {}".format(attr, await a()))
 
 
     @commands.command()
