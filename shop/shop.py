@@ -14,7 +14,7 @@ class Shop(commands.Cog):
 
     def __init__(self, bot):
         self.config = Config.get_conf(self, identifier=32539819)
-        self.cc_config = Config.get_conf(self, )
+        # self.cc_config = Config.get_conf(self, )
         default_guild = {
             'emoji_cost': 80000,
             'cc_cost': 90000,
@@ -26,6 +26,7 @@ class Shop(commands.Cog):
             'rareid': 381056647721910281,
             'epicid': 381057151805816844,
             'legendaryid': 381057293963362307,
+            'level100id': 618205748022738950,
             'logchannel': 711696407580377168,
         }
         self.config.register_guild(**default_guild)
@@ -127,6 +128,9 @@ class Shop(commands.Cog):
 
         emoji_cost = await guild_data.emoji_cost()
         cc_cost = await guild_data.cc_cost()
+        
+        level100id = await guild_data.level100id()
+        level100 = ctx.guild.get_role(level100id)
 
         legendaryid = await guild_data.legendaryid()
         legendary = ctx.guild.get_role(legendaryid)
@@ -240,7 +244,7 @@ class Shop(commands.Cog):
         # Nitro classic / pass royale -- COMPLETE
         elif choice_no == 6 and user_bal >= passroyale_cost:
             for role in current_role:
-                if role == legendary:
+                if role == legendary or == level100:
                     await ctx.send("Are you sure you would like to buy pass royale?")
                     try:
                         if await self.action_confirm(ctx):
@@ -269,7 +273,7 @@ class Shop(commands.Cog):
 
         elif choice_no == 7 and user_bal >= nitroclassic_cost:
             for role in current_role:
-                if role == legendary:
+                if role == legendary or role == level100:
                     await ctx.send("Are you sure you would like to buy Nitro Classic?")
                     try:
                         if await self.action_confirm(ctx):
