@@ -172,6 +172,7 @@ class Shop(commands.Cog):
         # Getting Rare
         elif choice_no == 2 and user_bal >= rarecost:  # if user wants a rare role
             if highest_role is not None: # user has any of rare/epic/legendary
+                await ctx.send(f"Highest role is {highest_role}")
                 await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")  # if user already has rare or higher roles
                 return
             else:
