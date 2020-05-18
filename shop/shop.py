@@ -67,8 +67,6 @@ class Shop(commands.Cog):
                 final_command = cmd.content.replace(' ', '_')  # Auto replace spaces
                 final_command = final_command.strip('!/.')  # Remove the prefix if they added one
 
-                all_commands = await self.config.guild(ctx.guild).commands()
-
                 if cmd.content.lower() == "stop":
                     raise UserEnd
 
