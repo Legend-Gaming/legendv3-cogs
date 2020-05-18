@@ -173,7 +173,7 @@ class Shop(commands.Cog):
 
         # Getting Rare
         elif choice_no == 2 and user_bal >= rarecost:  # if user wants a rare role
-            if highest_role is None:  # user has any of rare/epic/legendary
+            if highest_role is None:  # user has none of rare/epic/legendary
                 await author.add_roles(rare)
                 await bank.withdraw_credits(author, rarecost)
                 await ctx.send("Done. You have been given the rare role {} \n {} credits have been removed".format(
