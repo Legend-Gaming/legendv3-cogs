@@ -243,7 +243,7 @@ class Shop(commands.Cog):
         # Nitro classic / pass royale -- COMPLETE
         elif choice_no == 6 and user_bal >= passroyale_cost:
             for role in current_role:
-                if role == legendary or == level100:
+                if role == legendary or role == level100:
                     await ctx.send("Are you sure you would like to buy pass royale?")
                     try:
                         if await self.action_confirm(ctx):
