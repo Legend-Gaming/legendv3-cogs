@@ -61,7 +61,7 @@ class Roast(commands.Cog):
     async def removevip(self, ctx, new_vip: discord.Member):
         """Remove a VIP Member"""
         current = await self.config.guild(ctx.guild).VIP()
-        if new_vip in current:
+        if new_vip.id in current:
             current.remove(new_vip.id)
             await self.config.guild(ctx.guild).VIP.set(current)
             await ctx.send("Done {} is not an elite anymore".format(new_vip.mention))
