@@ -13,12 +13,12 @@ class MemeGrab(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=293878237)
-        default_guild = {'index': 0,
+        default_global = {'index': 0,
                          'lastref': '1970-01-01',
                          'dailycnt': 5,
                          'idlist': []
                          }
-        self.config.register_guild(**default_guild)
+        self.config.register_global(**default_global)
 
     async def check(self):
         reddit_keys = await self.bot.get_shared_api_tokens("reddit")
@@ -50,59 +50,45 @@ class MemeGrab(commands.Cog):
     @commands.command()
     async def meme(self, ctx):
         """Get a Meme"""
-        lastref = await self.config.guild(ctx.guild).lastref()
-        memeind = await self.config.guild(ctx.guild).index()
-        dailymax = await self.config.guild(ctx.guild).dailycnt()
+        lastref = await self.config.lastref()
+        memeind = await self.config.index()
+        dailymax = await self.config.dailycnt()
 
         if str(date.today()) != lastref:
-            await self.config.guild(ctx.guild).lastref.set(str(date.today()))
+            await self.config.lastref.set(str(date.today()))
             idlist = self.refresh_memes(dailymax)
-            await self.config.guild(ctx.guild).idlist.set(idlist)
-            await self.config.guild(ctx.guild).index.set(0)
+            await self.config.idlist.set(idlist)
+            await self.config.index.set(0)
 
         if memeind >= dailymax:
             dailymax *= 2
-            await self.config.guild(ctx.guild).dailycnt.set(dailymax)
+            await self.config.dailycnt.set(dailymax)
             idlist = self.refresh_memes(dailymax)
-            await self.config.guild(ctx.guild).idlist.set(idlist)
+            await self.config.idlist.set(idlist)
 
-        idlist = await self.config.guild(ctx.guild).idlist()
+        idlist = await self.config.idlist()
 
         embed = self.getEmbed(memeid=idlist[memeind])
         await ctx.send(embed=embed)
 
         memeind += 1
-        await self.config.guild(ctx.guild).index.set(memeind)
+        await self.config.index.set(memeind)
 
     @commands.command()
     @checks.mod_or_permissions(manage_roles=True)
     async def resetdata(self, ctx):
-        await self.config.guild(ctx.guild).clear()
+        await self.config.clear()
         await ctx.send("Done")
 
     @commands.command()
     async def memeinfo(self, ctx):
-        guilddata = self.config.guild(ctx.guild)
+        guilddata = self.config
         ref = await guilddata.lastref()
         inx = await guilddata.index()
         cnt = await guilddata.dailycnt()
-        embed = discord.Embed(title='Guild Meme Cog Configuration', description='Note values may change dynamically')
+        embed = discord.Embed(title='Meme Cog Configuration', description='Note values may change dynamically')
         embed.add_field(name='Last Refresh', value=ref)
         embed.add_field(name='Current Index', value=inx)
         embed.add_field(name='Daily Refresh Count', value=cnt)
         embed.set_footer(text="Bot by: Generaleoley | Legend Family")
         await ctx.send(embed=embed)
-
-    # @commands.command()
-    # async def automeme(self, ctx, amount: int):
-    #     if amount > 20:
-    #         await ctx.send("Now let's not send that many memes at once...")
-    #         return
-    #
-    #     for submission in self.reddit.subreddit('memes').top(limit=amount, time_filter='day'):
-    #         embed = discord.Embed(title=submission.title, url="https://www.reddit.com/{}".format(submission.permalink),
-    #                               description="Upvotes: {}".format(submission.ups), color=0x008000)
-    #         embed.set_image(url=submission.url)
-    #         embed.set_footer(text="Bot by: Generaleoley | Legend Family")
-    #         await ctx.send(embed=embed)
-    #         time.sleep(5)
