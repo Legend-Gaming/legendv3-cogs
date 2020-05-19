@@ -149,19 +149,7 @@ class Shop(commands.Cog):
         nitroclassic_cost = await guild_data.nitroclassic_cost()
 
         author = ctx.author
-        current_role = author.roles
-
-        highest_role = None
-        for role in current_role:
-            if role == legendary:
-                highest_role = legendary
-                break
-            elif role == epic:
-                highest_role = epic
-                break
-            elif role == rare:
-                highest_role = rare
-                break
+        current_roles = author.roles
 
         user_bal = await bank.get_balance(author)
 
@@ -173,37 +161,37 @@ class Shop(commands.Cog):
 
         # Getting Rare
         elif choice_no == 2 and user_bal >= rarecost:  # if user wants a rare role
-            if highest_role is None:  # user has none of rare/epic/legendary
+            if rare in current_roles or epic in current_roles or legendary in current_roles:  # user has any of rare/epic/legendary
+                await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
+            else:
                 await author.add_roles(rare)
                 await bank.withdraw_credits(author, rarecost)
                 await ctx.send("Done. You have been given the rare role {} \n {} credits have been removed".format(
                     author.mention, rarecost))
-            else:
-                await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
 
         # Getting epic
         elif choice_no == 3 and user_bal >= epiccost:  # if user wants an epic role
-            if highest_role is None:  # user has no rare/epic/legendary
-                await ctx.send("Get the rare role first.{}".format(author.mention))
-                return
-            elif highest_role == epic or highest_role == legendary:  # checks if the user already has the role or higher
+            if epic in current_roles or legendary in current_roles: # checks if the user already has the role or higher
                 await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
                 return
-            else:
+            elif rare in current_roles:
                 await author.remove_roles(rare, reason="User is getting epic role. Discard stupid orange.")
                 await author.add_roles(epic)
                 await bank.withdraw_credits(author, epiccost)
                 await ctx.send("Done. You have been given the epic role {} \n {} credits have been removed".format(
                     author.mention, epiccost))
                 return
+            else:  # user has no rare/epic/legendary
+                await ctx.send("Get the rare role first.{}".format(author.mention))
+                return
 
         # Getting legendary
         elif choice_no == 4 and user_bal >= legendarycost:  # if user wants a legendary role
-            if highest_role is None or highest_role == rare:  # If user has no or just rare role but not epic
-                await ctx.send("Get the epic role first.{}".format(author.mention))
-                return
-            elif highest_role == legendary:  # checks if the user already has the role required
+            if legendary in current_roles:  # checks if the user already has the role required
                 await ctx.send("DON'T WASTE YOUR TIME HERE GO ABUSE GENS WALLET. ")
+                return
+            elif epic not in current_roles:  # If user has no or just rare role but not epic
+                await ctx.send("Get the epic role first.{}".format(author.mention))
                 return
             else:
                 await author.remove_roles(epic, reason="Getting legendery role. Discard stupid purple")
@@ -257,60 +245,58 @@ class Shop(commands.Cog):
 
         # Nitro classic / pass royale -- COMPLETE
         elif choice_no == 6 and user_bal >= passroyale_cost:
-            for role in current_role:
-                if role == legendary or role == level100:
-                    await ctx.send("Are you sure you would like to buy pass royale?")
-                    try:
-                        if await self.action_confirm(ctx):
-                            await bank.withdraw_credits(author, passroyale_cost)
-                            channel_id = await guild_data.logchannel()
+            if legendary in current_roles or level100 in current_roles:
+                await ctx.send("Are you sure you would like to buy pass royale?")
+                try:
+                    if await self.action_confirm(ctx):
+                        await bank.withdraw_credits(author, passroyale_cost)
+                        channel_id = await guild_data.logchannel()
 
-                            channel = ctx.guild.get_channel(int(channel_id))
+                        channel = ctx.guild.get_channel(int(channel_id))
 
-                            if channel is None:
-                                await ctx.send("Log channel not set")
-                                return
-
-                            await channel.send('**Pass Royale Purchase** : {}'.format(author.mention))
-
-                            await ctx.send("Request sent. Please check DM's in 24 hours")
-                        else:
-                            await ctx.send("Request Ignored")
+                        if channel is None:
+                            await ctx.send("Log channel not set")
                             return
-                    except asyncio.exceptions.TimeoutError:
-                        await author.send("Timeout... your credits have been refunded")
 
-                else:
-                    await ctx.send("You need the legendary role before buying this.")
+                        await channel.send('**Pass Royale Purchase** : {}'.format(author.mention))
 
-                    return
+                        await ctx.send("Request sent. Please check DM's in 24 hours")
+                    else:
+                        await ctx.send("Request Ignored")
+                        return
+                except asyncio.exceptions.TimeoutError:
+                    await author.send("Timeout... your credits have been refunded")
+
+            else:
+                await ctx.send("You need the legendary role before buying this.")
+
+                return
 
         elif choice_no == 7 and user_bal >= nitroclassic_cost:
-            for role in current_role:
-                if role == legendary or role == level100:
-                    await ctx.send("Are you sure you would like to buy Nitro Classic?")
-                    try:
-                        if await self.action_confirm(ctx):
-                            await bank.withdraw_credits(author, nitroclassic_cost)
-                            channel_id = await guild_data.logchannel()
-                            channel = ctx.guild.get_channel(int(channel_id))
+            if legendary in current_roles or level100 in current_roles:
+                await ctx.send("Are you sure you would like to buy Nitro Classic?")
+                try:
+                    if await self.action_confirm(ctx):
+                        await bank.withdraw_credits(author, nitroclassic_cost)
+                        channel_id = await guild_data.logchannel()
+                        channel = ctx.guild.get_channel(int(channel_id))
 
-                            if channel is None:
-                                await ctx.send("Log channel not set")
-                                return
-
-                            await channel.send('**Discord Nitro Purchase** : {}'.format(author.mention))
-
-                            await ctx.send("Request sent. Please check DM's in 24 hours")
-                        else:
-                            await ctx.send("Request Ignored")
+                        if channel is None:
+                            await ctx.send("Log channel not set")
                             return
-                    except asyncio.exceptions.TimeoutError:
-                        await author.send("Timeout... your credits have been refunded")
-                        return
 
-                else:
-                    await ctx.send("You need the legendary role before buying this.")
+                        await channel.send('**Discord Nitro Purchase** : {}'.format(author.mention))
+
+                        await ctx.send("Request sent. Please check DM's in 24 hours")
+                    else:
+                        await ctx.send("Request Ignored")
+                        return
+                except asyncio.exceptions.TimeoutError:
+                    await author.send("Timeout... your credits have been refunded")
+                    return
+
+            else:
+                await ctx.send("You need the legendary role before buying this.")
 
 
         # Useless code. See above why
