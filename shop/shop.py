@@ -181,6 +181,7 @@ class Shop(commands.Cog):
             else:
                 await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
 
+        # Getting epic
         elif choice_no == 3 and user_bal >= epiccost:  # if user wants an epic role
             if highest_role is None:  # user has no rare/epic/legendary
                 await ctx.send("Get the rare role first.{}".format(author.mention))
@@ -189,19 +190,23 @@ class Shop(commands.Cog):
                 await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
                 return
             else:
+                await author.remove_roles(rare, reason="User is getting epic role. Discard stupid orange.")
                 await author.add_roles(epic)
                 await bank.withdraw_credits(author, epiccost)
                 await ctx.send("Done. You have been given the epic role {} \n {} credits have been removed".format(
                     author.mention, epiccost))
                 return
+
+        # Getting legendary
         elif choice_no == 4 and user_bal >= legendarycost:  # if user wants a legendary role
-            if highest_role != epic:  # checks if the user has required roles
+            if highest_role is None or highest_role == rare:  # If user has no or just rare role but not epic
                 await ctx.send("Get the epic role first.{}".format(author.mention))
                 return
             elif highest_role == legendary:  # checks if the user already has the role required
                 await ctx.send("DON'T WASTE YOUR TIME HERE GO ABUSE GENS WALLET. ")
                 return
             else:
+                await author.remove_roles(epic, reason="Getting legendery role. Discard stupid purple")
                 await author.add_roles(legendary)
                 await bank.withdraw_credits(author, legendarycost)
                 await ctx.send(
