@@ -3,7 +3,7 @@ from redbot.core.utils import predicates
 import discord
 import asyncio
 
-credit = "Bot by Generaleoley | LeGeND eSports"
+credit = "Bot by Generaleoley | LeGeND eSports (Yeah Nevus and Kingslayer weren't involved at all)"
 
 
 class UserEnd(Exception):
@@ -118,7 +118,7 @@ class Shop(commands.Cog):
     # todo make a seperate command called "shop" - don't put them together that's just lazy
     @commands.command()
     async def shop(self, ctx):
-        await ctx.send("Insert Shop Here")
+        await ctx.send("Insert Shop") #Fyn8 embed this as the format in #shop
 
     @commands.command()
     async def buy(self, ctx, choice_no: int = 0):
@@ -156,13 +156,13 @@ class Shop(commands.Cog):
         user_bal = await bank.get_balance(author)
 
         # Buying Custom Command -- DONE
-        if choice_no == 1 and user_bal >= cc_cost:
+        if choice_no == 2 and user_bal >= cc_cost:
             await self.buycc(ctx)
             # await ctx.send("Custom Command was sucessfully created! You have been charged {}".format(cc_cost))
             return  # useless code
 
         # Getting Rare
-        elif choice_no == 2 and user_bal >= rarecost:  # if user wants a rare role
+        elif choice_no == 3 and user_bal >= rarecost:  # if user wants a rare role
             if rare in current_roles or epic in current_roles or legendary in current_roles:  # user has any of rare/epic/legendary
                 await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
             else:
@@ -172,7 +172,7 @@ class Shop(commands.Cog):
                     author.mention, rarecost))
 
         # Getting epic
-        elif choice_no == 3 and user_bal >= epiccost:  # if user wants an epic role
+        elif choice_no == 4 and user_bal >= epiccost:  # if user wants an epic role
             if epic in current_roles or legendary in current_roles:  # checks if the user already has the role or higher
                 await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
                 return
@@ -188,7 +188,7 @@ class Shop(commands.Cog):
                 return
 
         # Getting legendary
-        elif choice_no == 4 and user_bal >= legendarycost:  # if user wants a legendary role
+        elif choice_no == 5 and user_bal >= legendarycost:  # if user wants a legendary role
             if legendary in current_roles:  # checks if the user already has the role required
                 await ctx.send("DON'T WASTE YOUR TIME HERE GO ABUSE GENS WALLET. ")
                 return
@@ -205,7 +205,7 @@ class Shop(commands.Cog):
                 return
 
         # Custom Emote -- DONE
-        elif choice_no == 5 and user_bal >= int(emoji_cost):
+        elif choice_no == 1 and user_bal >= int(emoji_cost):
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
 
