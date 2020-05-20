@@ -18,6 +18,7 @@ class Shop(commands.Cog):
 
     def __init__(self, bot):
         self.config = Config.get_conf(self, identifier=32539819)
+
         default_guild = {
             'emoji_cost': 80000,
             'cc_cost': 90000,
@@ -32,13 +33,16 @@ class Shop(commands.Cog):
             'level100id': 618205748022738950,
             'logchannel': 711696407580377168,
         }
+
         self.config.register_guild(**default_guild)
         self.bot = bot
+        self.cc_main = self.bot.get_cog('CustomCommands')
         self.cc = self.bot.get_cog('CustomCommands').cc_create
         self.prepare_args = self.bot.get_cog('CustomCommands').prepare_args
 
     async def buycc(self, ctx):
         bot = self.bot
+
         async def action_confirm(what, value):
             await user.send('Do you confirm "{}" as your {}?'.format(value, what))
             # await user.send("Reply with YES for a confirmation. Anything else for NO")
@@ -71,10 +75,11 @@ class Shop(commands.Cog):
                 if cmd.content.lower() == "stop":
                     raise UserEnd
                 # Check if existing command exists
+                checker = await self.cc_main.config.guild(ctx.guild).commands.get_raw(final_command, default=None)
                 if final_command in (
-                        *self.bot.all_commands, *commands.RESERVED_COMMAND_NAMES):
+                        *self.bot.all_commands, *commands.RESERVED_COMMAND_NAMES, commands) or checker is not None:
                     await user.send("There already exists a command with the same name.")
-                    break
+                    continue
                 confirmed = await action_confirm("command", '!' + final_command)
                 user.send(confirmed)
 
@@ -102,7 +107,7 @@ class Shop(commands.Cog):
             await user.send("Great! Command has been created!")
         except Exception as e:
             await user.send("Error. Please DM ModMail with ```{}```".format(e))
-            
+
     async def action_confirm(self, ctx):
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
@@ -168,7 +173,7 @@ class Shop(commands.Cog):
 
         # Getting epic
         elif choice_no == 3 and user_bal >= epiccost:  # if user wants an epic role
-            if epic in current_roles or legendary in current_roles: # checks if the user already has the role or higher
+            if epic in current_roles or legendary in current_roles:  # checks if the user already has the role or higher
                 await ctx.send("BRUH IF U WASTE MY TIME I MIGHT BS YOU")
                 return
             elif rare in current_roles:
@@ -305,7 +310,6 @@ class Shop(commands.Cog):
             await ctx.send("Hehe, you need to earn more money {}".format(author.mention))
             return
 
-
     # todo probably remove this or make it better (very weak rn)
     @checks.mod_or_permissions()
     @commands.command()
@@ -315,7 +319,6 @@ class Shop(commands.Cog):
         a = self.config.guild(ctx.guild).get_attr(attr)
         await ctx.send("Set {} to {}".format(attr, await a()))
 
-
     @checks.mod_or_permissions()
     @commands.command()
     async def setrole(self, ctx, attr, role: discord.Role):
@@ -324,7 +327,6 @@ class Shop(commands.Cog):
         await self.config.guild(ctx.guild).get_attr(attr).set(int(id))
         a = self.config.guild(ctx.guild).get_attr(attr)
         await ctx.send("Set {} to {}".format(attr, await a()))
-
 
     @commands.command()
     async def getval(self, ctx, attr: str):
