@@ -248,7 +248,7 @@ class Shop(commands.Cog):
         # Nitro classic / pass royale -- COMPLETE
         elif choice_no == 6 and user_bal >= passroyale_cost:
             if legendary in current_roles or level100 in current_roles:
-                await ctx.send("Are you sure you would like to buy pass royale?")
+                await ctx.send("Are you sure you would like to buy pass royale?(Answer in yes or no.)")
                 try:
                     if await self.action_confirm(ctx):
                         await bank.withdraw_credits(author, passroyale_cost)
@@ -276,7 +276,7 @@ class Shop(commands.Cog):
 
         elif choice_no == 7 and user_bal >= nitroclassic_cost:
             if legendary in current_roles or level100 in current_roles:
-                await ctx.send("Are you sure you would like to buy Nitro Classic?")
+                await ctx.send("Are you sure you would like to buy Nitro Classic?(Answer in yes or no.)")
                 try:
                     if await self.action_confirm(ctx):
                         await bank.withdraw_credits(author, nitroclassic_cost)
