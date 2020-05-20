@@ -1,4 +1,5 @@
 from redbot.core import commands, bank, Config, checks
+from redbot.core.utils import predicates
 import discord
 import asyncio
 
@@ -37,60 +38,56 @@ class Shop(commands.Cog):
         self.prepare_args = self.bot.get_cog('CustomCommands').prepare_args
 
     async def buycc(self, ctx):
-        await ctx.send("Please check your DM's...")
+        bot = self.bot
+        async def action_confirm(what, value):
+            await user.send('Do you confirm "{}" as your {}?'.format(value, what))
+            # await user.send("Reply with YES for a confirmation. Anything else for NO")
+            pred = predicates.MessagePredicate.yes_or_no(ctx, dm_channel, user)
+            await bot.wait_for("message", check=pred)
+            return pred.result
 
+        await ctx.send("Please check your DM's...")
         user = ctx.author
         dm_channel = user.dm_channel
-
         if dm_channel is None:
             dm_channel = await user.create_dm()
 
-        # checks to see if the response is truely from the User DM's
+        # checks to see if the response is truly from the User DM's
         def check(m):
             return m.channel == dm_channel and m.author == user
-
-        # todo integrate into larger action_confirm function
-        # confirmation of selection
-        async def confirm(what, value):
-            await user.send('Do you confirm "{}" as your {}?'.format(value, what))
-            await user.send("Reply with YES for a confirmation. Anything else for NO")
-            res = await self.bot.wait_for('message', timeout=60, check=check)
-            return res.content.lower() == 'yes'
 
         try:
             await user.send("We got a few questions on the custom command... "
                             "\nType STOP to stop this and refund credits")
-
             # Choosing the command name
             confirmed = False
             while not confirmed:
                 await user.send("What do you want the command to be (spaces will be automatically replaced with `_`)?")
                 cmd = await self.bot.wait_for('message', timeout=60, check=check)
-                final_command = cmd.content.replace(' ', '_')  # Auto replace spaces
-                final_command = final_command.strip('!/.')  # Remove the prefix if they added one
-
+                final_command = cmd.content.replace(
+                    ' ', '_')  # Auto replace spaces
+                # Remove the prefix if they added one
+                final_command = final_command.strip('!/.')
                 if cmd.content.lower() == "stop":
                     raise UserEnd
-
+                # Check if existing command exists
                 if final_command in (
                         *self.bot.all_commands, *commands.RESERVED_COMMAND_NAMES):
                     await user.send("There already exists a command with the same name.")
                     break
-
-                confirmed = await confirm("command", '!' + final_command)
+                confirmed = await action_confirm("command", '!' + final_command)
+                user.send(confirmed)
 
             # Choosing the command response
             confirmed = False
             while not confirmed:
                 await user.send("What do you want the command to say?")
                 rsp = await self.bot.wait_for('message', timeout=60, check=check)
-
                 if rsp.content.lower() == 'stop':
                     raise UserEnd
-
-                confirmed = await confirm("commmand's response", rsp.content)
-
                 final_response = rsp.content
+                confirmed = await action_confirm("commmand's response", rsp.content)
+
 
         except asyncio.exceptions.TimeoutError:
             await user.send("Timeout... your credits have been refunded")
@@ -105,7 +102,7 @@ class Shop(commands.Cog):
             await user.send("Great! Command has been created!")
         except Exception as e:
             await user.send("Error. Please DM ModMail with ```{}```".format(e))
-
+            
     async def action_confirm(self, ctx):
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
