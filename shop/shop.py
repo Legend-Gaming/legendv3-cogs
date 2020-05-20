@@ -118,7 +118,7 @@ class Shop(commands.Cog):
     # todo make a seperate command called "shop" - don't put them together that's just lazy
     @commands.command()
     async def shop(self, ctx):
-        await ctx.send("Insert Shop") #Fyn8 embed this as the format in #shop
+        await ctx.send("Insert Shop")
 
     @commands.command()
     async def buy(self, ctx, choice_no: int = 0):
@@ -213,6 +213,9 @@ class Shop(commands.Cog):
                 await ctx.send("Enter your emote:")
                 resp = await self.bot.wait_for('message', timeout=60, check=check)
                 emoji = resp.content
+                if emoji.lower() == 'stop':
+                    await ctx.send("Process stopped by user")
+                    return 
 
                 # if len(emoji) != 1:
                 #     await ctx.send("That wasn't an emote")
@@ -240,6 +243,7 @@ class Shop(commands.Cog):
                         await ctx.send("I don't have the permission to do that. Please DM ModMail!")
                     except discord.HTTPException:
                         await ctx.send("Name too long. Please DM ModMail")
+
                 else:
                     await ctx.send("Alright! We kept your current nickname!")
             except asyncio.exceptions.TimeoutError:
@@ -334,3 +338,4 @@ class Shop(commands.Cog):
         a = self.config.guild(ctx.guild).get_attr(attr)
         await ctx.send(await a())
         await ctx.send(await a())
+
