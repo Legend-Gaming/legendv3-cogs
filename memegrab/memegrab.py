@@ -93,8 +93,3 @@ class MemeGrab(commands.Cog):
         embed.set_footer(text="Bot by: Generaleoley | Legend Family")
         await ctx.send(embed=embed)
        
-    @commands.command()
-    async def listlen(self, ctx):
-        lst = await self.config.idlist()
-        await ctx.send(str(len(lst)))
-    
