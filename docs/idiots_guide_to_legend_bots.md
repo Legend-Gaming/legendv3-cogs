@@ -69,12 +69,12 @@ If you don't know Python but would like to learn about it, here are a few links 
 └── <your_cog_name>.py
 ```
 2. Setup your README.md file:
-- This file should have enough information about what the cog does, all commands, things that can help users and/or future developers to use it or code/upgrade it. Imagine that you are waking up from a 30 year coma, and you have to go back to enhancing/fixing your code... this file should really help you get started!
-- [README Markup Syntax](https://help.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax)
+   - This file should have enough information about what the cog does, all commands, things that can help users and/or future developers to use it or code/upgrade it. Imagine that you are waking up from a 30 year coma, and you have to go back to enhancing/fixing your code... this file should really help you get started!
+   - [README Markup Syntax](https://help.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax)
 
 3. Setup your info.json file as follows:
-- NOTE: [RED Info.json documentation](https://docs.discord.red/en/3.1.8/framework_downloader.html)
-- NOTE2: if you need to learn what [JSON format is](https://www.tutorialspoint.com/json/index.htm)
+   - NOTE: [RED Info.json documentation](https://docs.discord.red/en/3.1.8/framework_downloader.html)
+   - NOTE2: if you need to learn what [JSON format is](https://www.tutorialspoint.com/json/index.htm)
 ```
 {
   "author": [
