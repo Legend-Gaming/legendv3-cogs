@@ -52,8 +52,8 @@ If you don't know Python but would like to learn about it, here are a few links 
 #### Setting up a bot application
 - [RED's guide to Creating a Bot Account](https://discordpy.readthedocs.io/en/v1.3.3/discord.html#creating-a-bot-account)
 - Just for your convenience, the Javascript guide for the same below:
- - [Follow these steps to create your actual discord bot application via Discord's website](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)
- - [Follow these steps to add your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links)
+  - [Follow these steps to create your actual discord bot application via Discord's website](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)
+  - [Follow these steps to add your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links)
 
 #### Setup your RED server
 - [Follow these steps to get RED up and running locally so you can host your own bot and test it](https://docs.discord.red/en/stable/getting_started.html)
