@@ -1,4 +1,4 @@
-z
+{ 
   "author": [
     "vanhorn",
     "Legend Development Team"
@@ -10,7 +10,7 @@ z
     "coding"
   ],
   "requirements": [
-    "redbot"
+    "pytz"
   ],
   "type": "COG"
 }
