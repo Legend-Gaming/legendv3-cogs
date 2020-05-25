@@ -20,11 +20,11 @@ If you don't know Python but would like to learn about it, here are a few links 
 
 - [CodeCademy's interactive Python3 course](https://www.codecademy.com/learn/learn-python-3)
 - Books (If you decide to only read a few books, make sure you read those):
- - [Dive Into Python3](https://diveintopython3.net/), a free online book.
- - [Problem Solving with Algorithms and Data Structures using Python](https://runestone.academy/runestone/books/published/pythonds/index.html) a free online course!
- - [Automate the boring stuff with Python](https://automatetheboringstuff.com/)
- - [Python Cookbook](http://shop.oreilly.com/product/0636920027072.do)
- - [Think Python: How to Think Like a Computer Scientist](http://greenteapress.com/thinkpython/html/index.html)
+  - [Dive Into Python3](https://diveintopython3.net/), a free online book.
+  - [Problem Solving with Algorithms and Data Structures using Python](https://runestone.academy/runestone/books/published/pythonds/index.html) a free online course!
+  - [Automate the boring stuff with Python](https://automatetheboringstuff.com/)
+  - [Python Cookbook](http://shop.oreilly.com/product/0636920027072.do)
+  - [Think Python: How to Think Like a Computer Scientist](http://greenteapress.com/thinkpython/html/index.html)
 - [Python Official Documentation](https://docs.python.org/3/)
 - Google, your best friend
 - Take your pick, learn some Python, and once you feel like you're confident enough to make a bot, come back and get started!
@@ -118,7 +118,7 @@ def setup(bot):
 ```
 
 6. Now, code your bot (Make sure that you follow [Redjumpman coding guide](https://github.com/Redjumpman/Jumper-Plugins/wiki/Red-Coding-Guide-V3))
-- Things to look out for:
- - [Using configuration files (persistent data)](https://docs.discord.red/en/latest/framework_config.html#redbot.core.config.Config.register_global)
- - [Building Embeds](https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/first-bot/using-embeds-in-messages.md)
- - The following tool can help you tremendously with Embeds: [EMBED visualizer](https://leovoel.github.io/embed-visualizer/)
+   - Things to look out for:
+     - [Using configuration files (persistent data)](https://docs.discord.red/en/latest/framework_config.html#redbot.core.config.Config.register_global)
+     - [Building Embeds](https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/first-bot/using-embeds-in-messages.md)
+     - The following tool can help you tremendously with Embeds: [EMBED visualizer](https://leovoel.github.io/embed-visualizer/)
