@@ -122,3 +122,32 @@ def setup(bot):
      - [Using configuration files (persistent data)](https://docs.discord.red/en/latest/framework_config.html#redbot.core.config.Config.register_global)
      - [Building Embeds](https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/first-bot/using-embeds-in-messages.md)
      - The following tool can help you tremendously with Embeds: [EMBED visualizer](https://leovoel.github.io/embed-visualizer/)
+
+7. Check our very simple first tutorial_cog for an idea:
+   - ```__init__.py```
+```from .tutorial_cog import Tutorial_Cog
+
+def setup(bot):
+    bot.add_cog(Tutorial_Cog(bot))```
+   - ```tutorial_cog.py```
+    ```from redbot.core import commands
+
+class Tutorial_Cog(commands.Cog):
+    """Minimal tutorial bot"""
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.group()
+    async def simple_cog(self, ctx):
+        pass
+
+    @simple_cog.command()
+    async def hello(self, ctx, *, message):
+        """Says something in a text channel"""
+        await ctx.send(f"Cog says: Hello World! {message}")```
+    - Then, on your discord test server, enter the following commands:
+      - ```!load tutorial_cog```
+      - ```!help simple_cog```
+      - ```!simple_cog hello 'My message'```
+    - And you can always reload the cog by doing:
+      - ```!reload tutorial_cog```
