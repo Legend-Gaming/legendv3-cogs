@@ -125,7 +125,6 @@ def setup(bot):
 
 7. Check our very simple first tutorial_cog for an idea:
    - ```__init__.py```
-
 ```
 from .tutorial_cog import Tutorial_Cog
 
@@ -148,10 +147,9 @@ class Tutorial_Cog(commands.Cog):
         "Says something in a text channel"
         await ctx.send(f"Cog says: Hello World! {message}")
  ```
- 
    - Then, on your discord test server, enter the following commands:
-      - !load tutorial_cog
-      - !help simple_cog
-      - !simple_cog hello 'My message'   
-    - And you can always reload the cog by doing:
-      - !reload tutorial_cog
+     - !load tutorial_cog
+     - !help simple_cog
+     - !simple_cog hello 'My message'   
+   - And you can always reload the cog by doing:
+     - !reload tutorial_cog
