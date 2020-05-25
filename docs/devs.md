@@ -16,7 +16,6 @@ We would like to thank the (handful/dozens/hundreds/thousands?!) of people who h
 ### Head Developers
 - FyN8 <Discord: FyN8#8888>
 - Generaleoley <Discord: Generaleoley#8888>
--
 
 ### Devs
 - TheChosenOne07 <Discord: TheChosenOne07#6397>
