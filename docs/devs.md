@@ -9,6 +9,10 @@ Much of the success of our bots/cogs stems from the dedication of the members in
 
 ## Our Devs and Contributors
 We would like to thank the (handful/dozens/hundreds/thousands?!) of people who have also contributed to Legend Development efforts over the years, including the following:
+
+### Honorary Mention :
+- GR8 <Discord: GR8#8888>
+
 ### Head Developers
 - FyN8 <Discord: FyN8#8888>
 - Generaleoley <Discord: Generaleoley#8888>
