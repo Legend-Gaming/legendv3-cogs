@@ -1,0 +1,16 @@
+z
+  "author": [
+    "vanhorn",
+    "Legend Development Team"
+  ],
+  "description": "Simple tutorial cog with just skeleton code.",
+  "short": "Tutorial cog.",
+  "tags": [
+    "tutorial",
+    "coding"
+  ],
+  "requirements": [
+    "redbot"
+  ],
+  "type": "COG"
+}
