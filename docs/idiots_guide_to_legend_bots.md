@@ -132,8 +132,8 @@ def setup(bot):
     bot.add_cog(Tutorial_Cog(bot))
 ```
    - ```tutorial_cog.py```
-
-```from redbot.core import commands
+```
+from redbot.core import commands
 
 class Tutorial_Cog(commands.Cog):
     "Minimal tutorial bot"
@@ -146,7 +146,7 @@ class Tutorial_Cog(commands.Cog):
     async def hello(self, ctx, *, message):
         "Says something in a text channel"
         await ctx.send(f"Cog says: Hello World! {message}")
- ```
+```
    - Then, on your discord test server, enter the following commands:
      - !load tutorial_cog
      - !help simple_cog
