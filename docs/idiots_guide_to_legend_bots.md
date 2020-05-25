@@ -20,11 +20,11 @@ If you don't know Python but would like to learn about it, here are a few links 
 
 - [CodeCademy's interactive Python3 course](https://www.codecademy.com/learn/learn-python-3)
 - Books (If you decide to only read a few books, make sure you read those):
--- [Dive Into Python3](https://diveintopython3.net/), a free online book.
--- [Problem Solving with Algorithms and Data Structures using Python](https://runestone.academy/runestone/books/published/pythonds/index.html) a free online course!
--- [Automate the boring stuff with Python](https://automatetheboringstuff.com/)
--- [Python Cookbook](http://shop.oreilly.com/product/0636920027072.do)
--- [Think Python: How to Think Like a Computer Scientist](http://greenteapress.com/thinkpython/html/index.html)
+ - [Dive Into Python3](https://diveintopython3.net/), a free online book.
+ - [Problem Solving with Algorithms and Data Structures using Python](https://runestone.academy/runestone/books/published/pythonds/index.html) a free online course!
+ - [Automate the boring stuff with Python](https://automatetheboringstuff.com/)
+ - [Python Cookbook](http://shop.oreilly.com/product/0636920027072.do)
+ - [Think Python: How to Think Like a Computer Scientist](http://greenteapress.com/thinkpython/html/index.html)
 - [Python Official Documentation](https://docs.python.org/3/)
 - Google, your best friend
 - Take your pick, learn some Python, and once you feel like you're confident enough to make a bot, come back and get started!
@@ -52,8 +52,8 @@ If you don't know Python but would like to learn about it, here are a few links 
 #### Setting up a bot application
 - [RED's guide to Creating a Bot Account](https://discordpy.readthedocs.io/en/v1.3.3/discord.html#creating-a-bot-account)
 - Just for your convenience, the Javascript guide for the same below:
--- [Follow these steps to create your actual discord bot application via Discord's website](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)
--- [Follow these steps to add your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links)
+ - [Follow these steps to create your actual discord bot application via Discord's website](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)
+ - [Follow these steps to add your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links)
 
 #### Setup your RED server
 - [Follow these steps to get RED up and running locally so you can host your own bot and test it](https://docs.discord.red/en/stable/getting_started.html)
@@ -74,7 +74,7 @@ If you don't know Python but would like to learn about it, here are a few links 
 
 3. Setup your info.json file as follows:
 - NOTE: [RED Info.json documentation](https://docs.discord.red/en/3.1.8/framework_downloader.html)
-- NOTE3: if you need to learn what [JSON format is](https://www.tutorialspoint.com/json/index.htm)
+- NOTE2: if you need to learn what [JSON format is](https://www.tutorialspoint.com/json/index.htm)
 ```
 {
   "author": [
@@ -109,7 +109,7 @@ class Mycog(commands.Cog):
         await ctx.send("I can do stuff!")
 ```
 
-5. Setup your __init__.py file as follows:
+5. Setup your ```__init__.py``` file as follows:
 ```
 from .mycog import Mycog
 
@@ -119,6 +119,6 @@ def setup(bot):
 
 6. Now, code your bot (Make sure that you follow [Redjumpman coding guide](https://github.com/Redjumpman/Jumper-Plugins/wiki/Red-Coding-Guide-V3))
 - Things to look out for:
--- [Using configuration files (persistent data)](https://docs.discord.red/en/latest/framework_config.html#redbot.core.config.Config.register_global)
--- [Building Embeds](https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/first-bot/using-embeds-in-messages.md)
--- The following tool can help you tremendously with Embeds: [EMBED visualizer](https://leovoel.github.io/embed-visualizer/)
+ - [Using configuration files (persistent data)](https://docs.discord.red/en/latest/framework_config.html#redbot.core.config.Config.register_global)
+ - [Building Embeds](https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/first-bot/using-embeds-in-messages.md)
+ - The following tool can help you tremendously with Embeds: [EMBED visualizer](https://leovoel.github.io/embed-visualizer/)
