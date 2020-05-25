@@ -2,7 +2,7 @@
 Below you will find a *lot* of documentation! Be sure to read everything and trying to write your own very first (simple) bot before trying to jump into more complicated stuff!
 
 ## Writing your own cogs - basic guide
-- [Write a Legend Cog](docs/idiots_guide_to_legend_bots.md)
+- [Write a Legend Cog](idiots_guide_to_legend_bots.md)
 
 ### RED
 - [Red Coding Guide V3](https://github.com/Redjumpman/Jumper-Plugins/wiki/Red-Coding-Guide-V3)
