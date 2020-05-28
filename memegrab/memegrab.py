@@ -59,6 +59,7 @@ class MemeGrab(commands.Cog):
             idlist = self.refresh_memes(dailymax)
             await self.config.idlist.set(idlist)
             await self.config.index.set(0)
+            memeind = -1
 
         if memeind >= dailymax:
             dailymax *= 2
