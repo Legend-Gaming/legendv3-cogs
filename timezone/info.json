@@ -1,0 +1,17 @@
+{
+  "author": [
+    "aikaterna",
+    "fishyfing",
+    "generaleoley"
+  ],
+  "description": "Check timezones, user times, or times in specific places. Originally made by Fishyfing and aikaterna; Upgraded by Generaleoley.",
+  "short": "Check times for users and places and converts time.",
+  "tags": [
+    "time",
+    "timezone"
+  ],
+  "requirements": [
+    "pytz"
+  ],
+  "type": "COG"
+}
