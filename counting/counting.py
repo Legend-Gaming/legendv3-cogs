@@ -118,6 +118,13 @@ class Counting(commands.Cog):
         await self.config.guild(ctx.guild).payout.set(vals)
         await ctx.send("Done...")
 
+    @checks.admin_or_permissions()
+    @setcount.command()
+    async def expected(self, ctx, count: int):
+        """Manually set the count, note that this will mess up the payouts and nothing will be paid for the skipped numbers"""
+        await self.config.guild(ctx.guild).expected.set(str(count))
+        await ctx.send("Done... ")
+
     # Listeners
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -135,21 +142,31 @@ class Counting(commands.Cog):
         expected = await data.expected()
         user = await data.user()
         players = await data.players()
+        # print(players)
         winpay = await data.payout()
         record = await data.record()
 
         num = str(message.content)
 
-        if num == expected and user != message.author.id:
+        if num[:2] == '\%':
+            return
+
+        author = str(message.author.id)
+
+        if num == expected and user != author:
             await message.add_reaction(emoji='✅')
             new = int(expected) + 1
             await data.expected.set(str(new))
-            await data.user.set(message.author.id)
-            if players.get(message.author.id) is None:
-                players[message.author.id] = 1
+            await data.user.set(author)
+            if players.get(author) is None:
+                players[author] = 1
+                # print("here")
+                # print(players[message.author.id])
             else:
-                players[message.author.id] += 1
+                players[author] += 1
+                # print(players[message.author.id])
 
+            # print(players)
             await data.players.set(players)
 
             # print(record)
