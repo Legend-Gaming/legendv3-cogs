@@ -428,7 +428,9 @@ class Cleverbotcog(commands.Cog):
                 line = self.browser.find_element_by_id('line1')
                 await asyncio.sleep(wait_time)
                 new_line = self.browser.find_element_by_id('line1')
-                if line.text == new_line.text and new_line.text != ' ' and new_line.text != '':
+                if ((line.text == new_line.text 
+                       and new_line.text not in [' ', ''] 
+                       and new_line[-1] in ['.', '?', '!'])):
                     line = self.browser.find_element_by_id('line1')
                 else:
                     continue
