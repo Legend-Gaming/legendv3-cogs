@@ -1,6 +1,7 @@
 {
     "author": [
-        "Nevus"
+        "Nevus",
+        "Legend Clan Development Team"
     ],
     "description": "Simple cog to mock cleverbot api using selenium.",
     "short": "Cleverbot cog.",
