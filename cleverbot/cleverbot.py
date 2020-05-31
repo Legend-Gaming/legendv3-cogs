@@ -430,7 +430,7 @@ class Cleverbotcog(commands.Cog):
                 new_line = self.browser.find_element_by_id('line1')
                 if ((line.text == new_line.text 
                        and new_line.text not in [' ', ''] 
-                       and new_line[-1] in ['.', '?', '!'])):
+                       and new_line.text[-1] in ['.', '?', '!'])):
                     line = self.browser.find_element_by_id('line1')
                 else:
                     continue
