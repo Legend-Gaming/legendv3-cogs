@@ -1,0 +1,12 @@
+{
+    "author": [
+        "Nevus"
+    ],
+    "description": "Simple cog to mock cleverbot api using selenium.",
+    "short": "Cleverbot cog.",
+    "requirements": [
+        "psutil",
+        "selenium"
+    ],
+    "type": "COG"
+}
