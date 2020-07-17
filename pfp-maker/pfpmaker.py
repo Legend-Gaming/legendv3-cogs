@@ -57,6 +57,9 @@ class PFPMaker(commands.Cog):
 
         Enter the name on the PFP without quotes after that. Note that on really long names it will be unreadable, try to keep it under 12 characters.
         """
+        text_color = text_color.replace(" ", "")
+        border_color = border_color.replace(" ", "")
+        
         path = self.profile_generator_4th_bday(name, text_color, border_color)
         await ctx.send("Done! Here's your PFP! *Profile Picture Generator Designed by Generaleoley*",
                        file=discord.File(path))
