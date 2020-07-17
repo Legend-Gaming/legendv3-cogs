@@ -52,14 +52,12 @@ class PFPMaker(commands.Cog):
     async def forthbirthdaypfp(self, ctx, text_color: str, border_color: str, * , name: str):
         """
         For text colors and border colors, all colors here are supported: https://en.wikipedia.org/wiki/X11_color_names
+        **ENTER COLOR WIHOUT SPACES**
 
         \nYou can enter "None" for border_color if you don't want a border
 
         Enter the name on the PFP without quotes after that. Note that on really long names it will be unreadable, try to keep it under 12 characters.
         """
-        text_color = text_color.replace(" ", "")
-        border_color = border_color.replace(" ", "")
-        
         path = self.profile_generator_4th_bday(name, text_color, border_color)
         await ctx.send("Done! Here's your PFP! *Profile Picture Generator Designed by Generaleoley*",
                        file=discord.File(path))
