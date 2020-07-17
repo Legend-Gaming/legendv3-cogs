@@ -1,5 +1,8 @@
 from redbot.core import commands, Config, bank, checks
 from redbot.core.data_manager import bundled_data_path
+
+# You need to install pillow:
+# pip install --upgrade Pillow
 from PIL import Image, ImageDraw, ImageFont
 import os
 import discord
@@ -52,11 +55,13 @@ class PFPMaker(commands.Cog):
     async def forthbirthdaypfp(self, ctx, text_color: str, border_color: str, * , name: str):
         """
         For text colors and border colors, all colors here are supported: https://en.wikipedia.org/wiki/X11_color_names
-        **ENTER COLOR WIHOUT SPACES**
+        **ENTER COLOR WIHHOUT SPACES** -- If you wanted light blue for example, enter lightblue
 
         \nYou can enter "None" for border_color if you don't want a border
 
         Enter the name on the PFP without quotes after that. Note that on really long names it will be unreadable, try to keep it under 12 characters.
+        
+        Sample Command: `!4thbirthdaypfp lightgreen skyblue General Leoley`
         """
         path = self.profile_generator_4th_bday(name, text_color, border_color)
         await ctx.send("Done! Here's your PFP! *Profile Picture Generator Designed by Generaleoley*",
