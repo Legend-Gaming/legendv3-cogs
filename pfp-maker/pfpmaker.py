@@ -55,7 +55,7 @@ class PFPMaker(commands.Cog):
     async def forthbirthdaypfp(self, ctx, text_color: str, border_color: str, * , name: str):
         """
         For text colors and border colors, all colors here are supported: https://en.wikipedia.org/wiki/X11_color_names
-        **ENTER COLOR WIHHOUT SPACES** -- If you wanted light blue for example, enter lightblue
+        **ENTER COLOR WITHOUT SPACES** -- If you wanted light blue for example, enter lightblue
 
         \nYou can enter "None" for border_color if you don't want a border
 
