@@ -20,6 +20,9 @@ class TagAlreadySaved(Exception):
     pass
 
 
+class MainAlreadySaved(Exception):
+    pass
+
 class InvalidArgument(Exception):
     pass
 
