@@ -316,6 +316,8 @@ class ClashRoyaleTools(commands.Cog):
     async def savetagcr(self, ctx, tag: str, user: discord.User = None):
         """Save your CR Tag"""
 
+        tag = self.formatTag(tag=tag)
+
         # Trying to save tag for someone else
         if user is not None and user != ctx.author:
             if self.bot.is_mod(ctx.author) is False:
