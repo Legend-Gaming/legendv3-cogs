@@ -313,7 +313,8 @@ class ClashRoyaleTools(commands.Cog):
         token = await self.bot.get_shared_api_tokens("clashroyale")
         if token.get('token') is None:
             print("CR Token is not SET. Use !set api clashroyale token,YOUR_TOKEN to set it")
-        self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True)
+        self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True,
+                                                  url="https://proxy.royaleapi.dev/v1")
 
     @commands.group(name='crtools')
     async def _crtools(self, ctx):
