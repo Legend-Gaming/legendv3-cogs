@@ -4,7 +4,7 @@ import clashroyale
 from json import load
 from redbot.core import commands, checks, Config
 from redbot.core.data_manager import bundled_data_path
-
+import aiohttp
 
 class InvalidTag(Exception):
     pass
@@ -22,6 +22,7 @@ class TagAlreadySaved(Exception):
 
 class MainAlreadySaved(Exception):
     pass
+
 
 class InvalidArgument(Exception):
     pass
@@ -287,11 +288,17 @@ class Tags:
 
 
 class ClashRoyaleTools(commands.Cog):
-    """Assorment of commands for clash royale"""
+    """Assortment of commands for clash royale"""
 
     def __init__(self, bot):
         self.bot = bot
         self.constants = Constants()
+        self.config = Config.get_conf(self, identifier=69420)
+        default_global = {
+            'emote_servers': False,
+            'server_with_space': None
+        }
+        self.config.register_global(**default_global)
 
     async def crtoken(self):
         # SQL Server
@@ -304,7 +311,7 @@ class ClashRoyaleTools(commands.Cog):
                   "replacing HOST_IP, USERNAME, PASSWORD, DATABASE with your credentials")
         # Clash Royale API
         token = await self.bot.get_shared_api_tokens("clashroyale")
-        if token['token'] is None:
+        if token.get('token') is None:
             print("CR Token is not SET. Use !set api clashroyale token,YOUR_TOKEN to set it")
         self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True)
 
@@ -315,8 +322,6 @@ class ClashRoyaleTools(commands.Cog):
     @_crtools.command(name="save")
     async def savetagcr(self, ctx, tag: str, user: discord.User = None):
         """Save your CR Tag"""
-
-        tag = self.formatTag(tag=tag)
 
         # Trying to save tag for someone else
         if user is not None and user != ctx.author:
@@ -452,3 +457,12 @@ class ClashRoyaleTools(commands.Cog):
 
         except InvalidTag:
             return await ctx.send("Invalid Tag")
+
+
+
+
+
+
+
+
+
