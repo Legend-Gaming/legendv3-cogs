@@ -38,10 +38,10 @@ class ClashRoyaleClans(commands.Cog):
         self.config = Config.get_conf(self, identifier=2286464642345664456)
         default_global = {"clans": list()}
         self.config.register_global(**default_global)
-        self.claninfo_path = str(bundled_data_path(self) / "clans.json")
+        self.claninfo_path = str(cog_data_path(self) / "clans.json")
         with open(self.claninfo_path) as file:
             self.family_clans = dict(json.load(file))
-        self.bot.loop.create_task(self.refresh_data())
+        self.refresh_task = self.bot.loop.create_task(self.refresh_data())
 
     async def crtoken(self):
         # Clash Royale API
@@ -52,6 +52,8 @@ class ClashRoyaleClans(commands.Cog):
                                                   is_async=True,
                                                   url="https://proxy.royaleapi.dev/v1")
 
+    def cog_unload(self):
+        self.refresh_task.cancel()
 
     @commands.command(name="legend")
     async def command_legend(self, ctx, member: Optional[discord.Member] = None, account:int = 1):
@@ -140,7 +142,7 @@ class ClashRoyaleClans(commands.Cog):
                         cwr_fulfilled = False
 
             if wd_wins > 0:
-                title += "{} War Day Wins".format(wd_wins)
+                title += "{}+ War Day Wins ".format(wd_wins)
             if bonus is not None:
                 title += bonus
 
@@ -163,7 +165,10 @@ class ClashRoyaleClans(commands.Cog):
                     or ((clan["required_trophies"] <= 4000) and
                         (member_count != 50) and
                         (2000 < player_trophies < 5000) and
-                        (clan["type"] != 'closed'))
+                        (clan["type"] != 'closed') and
+                        (player_wd_wins >= wd_wins) and
+                        (cwr_fulfilled)
+                    )
             ):
                 found_clan = True
                 embed.add_field(name=title, value=desc, inline=False)
@@ -220,7 +225,6 @@ class ClashRoyaleClans(commands.Cog):
             readiness[league] = 0
             for card in cards:
                 if await self.constants.get_new_level(card) >= leagueLevels[league]:
-                    print(league, card.name, "\n")
                     readiness[league] += 1
             readiness[league] = int((readiness[league] / len(cards)) * 100)
 
