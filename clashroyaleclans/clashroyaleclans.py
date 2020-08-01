@@ -319,7 +319,7 @@ class ClashRoyaleClans(commands.Cog):
 
         valid_keys = [k['nickname'].lower() for k in self.family_clans.values()]
         if clankey not in valid_keys:
-            return await smart_embed(ctx, ctx, "Please use a valid clanname:\n{}".format(humanize_list(list(valid_keys))), False)
+            return await smart_embed(ctx, "Please use a valid clanname:\n{}".format(humanize_list(list(valid_keys))), False)
 
         clan_to_approve = None
         for name, data in self.family_clans.items():
@@ -443,4 +443,4 @@ class ClashRoyaleClans(commands.Cog):
                                "we are unable to send you Direct Messages.".format(member.mention)
                 )
         else:
-            await smart_embed(ctx, ctx, "Approval failed, {} is already a part of a clan in the family.".format(member.display_name), True)
+            await smart_embed(ctx, "Approval failed, {} is already a part of a clan in the family.".format(member.display_name), False)
