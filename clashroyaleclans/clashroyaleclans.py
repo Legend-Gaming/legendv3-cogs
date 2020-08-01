@@ -453,3 +453,174 @@ class ClashRoyaleClans(commands.Cog):
                 )
         else:
             await smart_embed(ctx, "Approval failed, {} is already a part of a clan in the family.".format(member.display_name), False)
+
+    @commands.command()
+    async def newmember(self, ctx, member: discord.Member = None):
+        """
+            Setup nickname, and roles for a new member
+            Credit: GR8
+            Updated by: Nevus
+        """
+
+        # Allow command to run only in Legend server
+        guild = ctx.guild
+        author = ctx.author
+        legendServer = ["374596069989810176"]
+        if member is None:
+            member = ctx.author
+        # if server.id not in legendServer:
+        #     return await ctx.send("This command can only be executed in the Legend Family Server")
+
+        if member is not None and member.id != ctx.author.id:
+            if not self.bot.is_mod(ctx.author):
+                return await ctx.send(
+                    "Sorry! You do not have enough permissions to run this command on others. "
+                )
+
+        # Check if user already has any of member roles:
+        # Use `!changeclan` to change already registered member's clan cause it needs role checking to remove existing roles
+        if (await self._is_member(member)):
+            return await ctx.send("Error, " + member.mention + " is not a new member.")
+
+        is_clan_member = False
+        player_tags = self.tags.getAllTags(member.id)
+        clans_joined = []
+        clan_roles = []
+        clan_nicknames = []
+        ign = ""
+        if len(player_tags) ==  0:
+            return await ctx.send("You must associate a tag with this member first using ``{}save #tag @member``".format(ctx.prefix))
+
+        # Get a list of all family clans joined.
+        try:
+            for tag in player_tags:
+                player_data = await self.cr.get_player(tag)
+                if player_data.clan is None:
+                    player_clan_tag = ""
+                    player_clan_name = ""
+                else:
+                    player_clan_tag = player_data.clan.tag.strip("#")
+                    player_clan_name = player_data.clan.name
+                for name, data in self.family_clans.items():
+                    if data['tag'] == player_clan_tag:
+                        is_clan_member = True
+                        clans_joined.append(name)
+                        clan_roles.append(data['clanrole'])
+                        clan_nicknames.append(data['nickname'])
+                # Set ign to first available name
+                if not ign and player_data.name:
+                    ign = player_data.name
+        except clashroyale.RequestError:
+            return await smart_embed(ctx, "Error: cannot reach Clash Royale Servers. Please try again later.")
+
+        if ign:
+            newname = ign
+        else:
+            return await smart_embed(ctx, "Cannot find ign for user.", False)
+
+        output_msg = ""
+        if is_clan_member:
+            newclanname = " | ".join(clan_nicknames)
+            newname += (" | " + newclanname)
+
+            try:
+                await member.edit(nick=newname)
+            except discord.HTTPException:
+                await smart_embed(ctx, "I don't have permission to change nick for this user.", False)
+            else:
+                output_msg += "Nickname changed to **{}**\n".format(newname)
+
+            clan_roles.append('Member')
+            try:
+                await self._add_roles(member, clan_roles)
+                output_msg += f"**{humanize_list(clan_roles)}** roles added."
+            except discord.Forbidden:
+                await ctx.send(
+                    "{} does not have permission to edit {}’s roles.".format(
+                        ctx.author.display_name, member.display_name))
+            except discord.HTTPException:
+                await ctx.send("failed to add {}.".format(', '.join(clan_names)))
+            except InvalidRole:
+                await ctx.send("Server roles are not setup properly. "
+                    "Please check if you have {} roles in server.".format(humanize_list(clan_names)))
+            if output_msg:
+                await smart_embed(ctx, output_msg, True)
+
+            # TODO: Add welcome message to global chat
+            await self._remove_roles(member, ['Guest'])
+
+            roleName = discord.utils.get(guild.roles, name=clan_roles[0])
+            recruitment_channel = self.bot.get_channel(736892236134088735)  # 375839851955748874')
+            if recruitment_channel:
+                await recruitment_channel.send("**{}** recruited **{} (#{})** to {}".format(
+                    ctx.message.author.display_name,
+                    ign,
+                    tag,
+                    roleName.mention)
+                )
+            # TODO: DM new member rules and stuff
+            await member.send(("Hi There! Congratulations on getting accepted into our family. "
+                              "We have unlocked all the member channels for you in LeGeND Discord Server. \n\n"
+                              "Please do not leave our Discord server while you are in the clan. Thank you."))
+
+            # await asyncio.sleep(300)
+            # await member.send(self.rules_text)
+
+        else:
+            await ctx.send("You must be accepted into a clan before I can give you clan roles. "
+                               "Would you like me to check again in 2 minutes? (Yes/No)")
+            pred = MessagePredicate.yes_or_no(ctx)
+            await self.bot.wait_for("message", check=pred)
+            if not pred.result:
+                return
+            await ctx.send("Okay, I will retry this command in 2 minutes.")
+            await asyncio.sleep(120)
+            message = ctx.message
+            message.content = ctx.prefix + "newmember {}".format(member.mention)
+            await self.bot.process_commands(message)
+
+    async def _is_member(self, member):
+        """
+            Check if member already has any of roles
+            Credits: Gr8
+        """
+        guild = member.guild
+        _membership_roles = [discord.utils.get(guild.roles, name=r) for r in ["Member",
+                                                                              "Co-Leader",
+                                                                              "Hub Officer",
+                                                                              "Hub Supervisor"
+                                                                              "Clan Deputy",
+                                                                              "Clan Manager"]]
+        _membership_roles = set(_membership_roles)
+        author_roles = set(member.roles)
+        return bool(len(author_roles.intersection(_membership_roles)) > 0)
+
+    async def _add_roles(self, member, role_names):
+        """Add roles"""
+        roles = [discord.utils.get(member.guild.roles, name=role_name) for role_name in role_names]
+        if any([x is None for x in roles]):
+            raise InvalidRole
+        try:
+            await member.add_roles(*roles)
+        except discord.Forbidden:
+            raise
+        except discord.HTTPException:
+            raise
+
+    async def _remove_roles(self, member, role_names):
+        """Remove roles"""
+        roles = [discord.utils.get(member.guild.roles, name=role_name) for role_name in role_names]
+        try:
+            await member.remove_roles(*roles)
+        except:
+            pass
+
+    async def getUserCount(self, guild, name):
+        """Returns the numbers of people with the member role"""
+        members = guild.members
+        count = 0
+        for member in members:
+            for role in member.roles:
+                if role.name == name:
+                    count += 1
+        return count
