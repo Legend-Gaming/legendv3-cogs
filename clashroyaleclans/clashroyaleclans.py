@@ -75,6 +75,7 @@ class ClashRoyaleClans(commands.Cog):
                 player_maxtrophies = player_data.best_trophies
                 player_maxwins = player_data.challenge_max_wins
                 player_cwr = await self.clanwarReadiness(player_cards)
+                player_wd_wins = player_data.warDayWins
 
                 if player_data.clan is None:
                     player_clanname = "*None*"
@@ -101,12 +102,13 @@ class ClashRoyaleClans(commands.Cog):
         for clan in clans:
             cwr_fulfilled = True
             clan_name = clan["name"]
-            clan_requirements = self.family_clans.get("requirements", dict())
+            clan_requirements = self.family_clans[clan_name].get("requirements", dict())
             waiting = clan_requirements.get("waiting", list())
             num_waiting = len(waiting)
             pb = clan_requirements.get('personalbest', 0)
             cwr = clan_requirements.get('cwr', {"legend": 0, "gold": 0, "silver": 0, "bronze": 0})
             bonus = clan_requirements.get('bonus', "")
+            wd_wins = clan_requirements.get('wdwins', 0)
             emoji = self.family_clans[clan_name].get('emoji', "")
             total_waiting += num_waiting
 
@@ -137,6 +139,8 @@ class ClashRoyaleClans(commands.Cog):
                     if player_cwr[league] < cwr[league]:
                         cwr_fulfilled = False
 
+            if wd_wins > 0:
+                title += "{} War Day Wins".format(wd_wins)
             if bonus is not None:
                 title += bonus
 
@@ -152,12 +156,13 @@ class ClashRoyaleClans(commands.Cog):
                     or ((player_trophies >= clan["required_trophies"] ) and
                         (player_maxtrophies >= pb) and
                         (cwr_fulfilled) and
-                        (player_trophies - clan["required_trophies"] < 1200) and
-                        (clan["type"] != 'closed')
+                        (player_trophies - clan["required_trophies"] < 1500) and
+                        (clan["type"] != 'closed') and
+                        (player_wd_wins >= wd_wins)
                     )
-                    or ((clan["required_trophies"] < 2000) and
+                    or ((clan["required_trophies"] <= 4000) and
                         (member_count != 50) and
-                        (2000 < player_trophies < 4000) and
+                        (2000 < player_trophies < 5000) and
                         (clan["type"] != 'closed'))
             ):
                 found_clan = True
