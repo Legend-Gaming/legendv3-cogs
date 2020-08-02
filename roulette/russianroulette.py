@@ -65,11 +65,10 @@ class RussianRoulette(commands.Cog):
                     await ctx.send("Hahahaha, your disgraceful offer has been rejected, at least put {} credits on the line.".format(basecost))
 
         else:
-            round(a)
-            round(last_used)
-            time_left = (wait_time - (a - last_used)/60)
+            time_left = (wait_time - (a - last_used))//60
             formatted_minutes = round(time_left)
-            formatted_seconds = round((wait_time - (a - last_used)%60))
+            formatted_seconds = int((wait_time - (a - last_used))%60)
+            
             await ctx.send("The musketeer is sleeping right now, try again after approximately {} minutes and {} seconds.".format(formatted_minutes, formatted_seconds))
                          
     @commands.guild_only()
@@ -165,8 +164,8 @@ class RussianRoulette(commands.Cog):
             await ctx.send(
                 "{0} {1.author.mention} is gathering players for a game of russian "
                 "roulette!\nType `{1.prefix}russian` to enter. "
-                "The round will start in {2} seconds."
-                "The bet is set to {}".format(role.mention, ctx, wait, cost)
+                "The round will start in {2} seconds. "
+                "The bet is set to **{3}** credits.".format(role.mention, ctx, wait, cost)
             )
             await asyncio.sleep(wait)
             await self.start_game(ctx)
