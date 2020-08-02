@@ -67,9 +67,9 @@ class RussianRoulette(commands.Cog):
         else:
             round(a)
             round(last_used)
-            time_left = (wait_time - (a - last_used)/60
+            time_left = (wait_time - (a - last_used)/60)
             formatted_minutes = round(time_left)
-            formatted_seconds = round((wait_time - (a - last_used)%60)
+            formatted_seconds = round((wait_time - (a - last_used)%60))
             await ctx.send("The musketeer is sleeping right now, try again after approximately {} minutes and {} seconds.".format(formatted_minutes, formatted_seconds))
                          
     @commands.guild_only()
