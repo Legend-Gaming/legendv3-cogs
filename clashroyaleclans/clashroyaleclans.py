@@ -13,6 +13,7 @@ import clashroyale
 from redbot.core import commands, checks, Config
 from redbot.core.data_manager import bundled_data_path, cog_data_path
 from redbot.core.utils.chat_formatting import humanize_list
+from redbot.core.utils.predicates import MessagePredicate
 
 credits = "Bot by Legend Gaming"
 creditIcon = "https://cdn.discordapp.com/emojis/402178957509918720.png?v=1"
