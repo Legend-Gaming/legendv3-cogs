@@ -65,9 +65,13 @@ class RussianRoulette(commands.Cog):
                     await ctx.send("Hahahaha, your disgraceful offer has been rejected, at least put {} credits on the line.".format(basecost))
 
         else:
-            time_left = int((wait_time - (a - last_used))/60)
-            formatted_time = round(time_left)
-            await ctx.send("The musketeer is sleeping right now, try again after approximately {} minutes.".format(formatted_time))
+            round(a)
+            round(last_used)
+            time_left = (wait_time - (a - last_used)/60
+            formatted_minutes = round(time_left)
+            formatted_seconds = round((wait_time - (a - last_used)%60)
+            await ctx.send("The musketeer is sleeping right now, try again after approximately {} minutes and {} seconds.".format(formatted_minutes))
+                         
     @commands.guild_only()
     @checks.admin_or_permissions(administrator=True)
     @commands.command(hidden=True)
