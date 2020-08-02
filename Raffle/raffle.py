@@ -1,3 +1,4 @@
+from discord import role
 from redbot.core import Config, commands, bank, checks
 import discord
 import random
@@ -66,7 +67,6 @@ class Raffle(commands.Cog):
     
                 elif len(winner_list) == number:
                     status = True
-                    break
 
         for winner in winner_list:
             winner_obj = ctx.guild.get_member(winner)        
@@ -114,7 +114,7 @@ class Raffle(commands.Cog):
                     await self.get_winners(ctx)
                     await guild_data.base_ticket_price.clear()
                     for role in ctx.guild.roles:
-                        await self.config.role(role).new_price.set(0)
+                        await self.config.role(role).clear()
                     await guild_data.total_prizes.clear()
                     await guild_data.raffle_name.clear()
                     await guild_data.raffle_running.set(False)
@@ -278,7 +278,6 @@ class Raffle(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @checks.mod_or_permissions()
     async def getsettings(self, ctx):
         """Displays all the setable values from the config"""
         data = self.config.guild(ctx.guild)
@@ -297,7 +296,6 @@ class Raffle(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @checks.mod_or_permissions()
     async def getrolesettings(self, ctx, role:discord.Role):
         """Tells the price of one ticket corresponding to the role"""
         role_price = await self.config.role(role).new_price()
