@@ -45,6 +45,9 @@ class ClashRoyaleClans(commands.Cog):
             self.family_clans = dict(json.load(file))
         self.refresh_data.start()
         self.discord_helper = Helper(bot)
+        self.greetings_path = str(bundled_data_path(self) / "welcome_messages.json")
+        with open(self.greetings_path) as file:
+            self.greetings = list((json.load(file)).get("GREETING"))
 
     async def crtoken(self):
         # Clash Royale API
@@ -217,6 +220,7 @@ class ClashRoyaleClans(commands.Cog):
 
     @tasks.loop(seconds=120)
     async def refresh_data(self):
+        await self.bot.wait_until_ready()
         with open(self.claninfo_path) as file:
             self.family_clans = dict(json.load(file))
         clan_data = list()
@@ -385,7 +389,7 @@ class ClashRoyaleClans(commands.Cog):
                 embed.add_field(name="Clan", value=clan_name, inline=True)
                 embed.set_footer(text=credits, icon_url=creditIcon)
 
-                channel = self.bot.get_channel(736892236134088735)
+                channel = self.bot.get_channel(375839851955748874)
                 if channel and role_to_ping:
                     await channel.send(role_to_ping.mention, embed=embed)
                 elif not channel:
@@ -508,6 +512,11 @@ class ClashRoyaleClans(commands.Cog):
                     tag,
                     roleName.mention)
                 )
+
+            global_channel = self.bot.get_channel(374596069989810178)
+            greeting_to_send = (random.choice(self.greetings)).format(member)
+            await global_channel.send(greeting_to_send)
+
             # TODO: DM new member rules and stuff
             await member.send(embed=discord.Embed(description=("Hi There! Congratulations on getting accepted into our family. "
                               "We have unlocked all the member channels for you in LeGeND Discord Server. "
