@@ -12,13 +12,39 @@ from discord.ext import tasks
 import clashroyale
 from redbot.core import commands, checks, Config
 from redbot.core.data_manager import bundled_data_path, cog_data_path
-from redbot.core.utils.chat_formatting import humanize_list
+from redbot.core.utils.chat_formatting import humanize_list, pagify
 from redbot.core.utils.predicates import MessagePredicate
 
 credits = "Bot by Legend Gaming"
 creditIcon = "https://cdn.discordapp.com/emojis/402178957509918720.png?v=1"
 
+class InvalidRole(Exception):
+    pass
+
 log = logging.getLogger("red.cogs.clashroyaleclans")
+esports_text = """
+__***LeGeND eSports***__
+
+Our **LeGeND eSports League** is recruiting all active and aspiring competitive players!!
+
+With the goal of encouraging competitive play through out family we have teams for every level of player.
+
+__**Pro Team**__- The best of LeGeNDs members are on this team, if you aspire to play on a team with the likes of Demomzinator and Babyd this is the team for you!
+
+__**Main Team**__- Tons of amazing players on this team, these players are working towards becoming Pro, this is a great team for you if you want to start getting into the competitive scene.
+
+__**Academy**__- If you are looking to start getting more serious with the game, or if you are looking for some more practice to improve this is the team for you.
+
+We have scrims across all of the time zones, so don't worry about that !!
+
+Our strongest players will compete side by side with the very best in Leagues such as **CCTS**, **CPL**, and even **RPL!**
+
+While we have a clan called LeGeND eSports!, the team operates separately from the clan, and sends members from all of our family clans to events.
+
+But please remember that this is a more **professional** setting than the rest of the family and poor behavior will not be **tolerated!!**.
+Join now: https://discord.gg/7yUWpZD
+Please note that if you just lurk in the server and not participate for a long period of time you will be kicked off the server.
+"""
 
 async def smart_embed(ctx, message, success=None):
     if success is True:
@@ -27,7 +53,9 @@ async def smart_embed(ctx, message, success=None):
         colour = discord.Colour.dark_red()
     else:
         colour = discord.Colour.blue()
-    return await ctx.send(embed=discord.Embed(description=message, color=colour))
+    embed = discord.Embed(description=message, color=colour)
+    embed.set_footer(text=credits, icon_url=creditIcon)
+    return await ctx.send(embed=embed)
 
 
 class ClashRoyaleClans(commands.Cog):
@@ -43,11 +71,14 @@ class ClashRoyaleClans(commands.Cog):
         self.claninfo_path = str(cog_data_path(self) / "clans.json")
         with open(self.claninfo_path) as file:
             self.family_clans = dict(json.load(file))
-        self.refresh_data.start()
         self.discord_helper = Helper(bot)
         self.greetings_path = str(bundled_data_path(self) / "welcome_messages.json")
         with open(self.greetings_path) as file:
             self.greetings = list((json.load(file)).get("GREETING"))
+        self.rules_path = str(bundled_data_path(self) / "rules.txt")
+        with open(self.rules_path) as file:
+            self.rules_text = file.read()
+        self.refresh_task = self.refresh_data.start()
 
     async def crtoken(self):
         # Clash Royale API
@@ -59,7 +90,7 @@ class ClashRoyaleClans(commands.Cog):
                                                   url="https://proxy.royaleapi.dev/v1")
 
     def cog_unload(self):
-        self.refresh_data.cancel()
+        self.refresh_task.cancel()
 
     @commands.command(name="legend")
     async def command_legend(self, ctx, member: Optional[discord.Member] = None, account:int = 1):
@@ -241,11 +272,12 @@ class ClashRoyaleClans(commands.Cog):
         log.info("Updated data for all clans.")
 
     @refresh_data.before_loop
-    async def before_refresh(self):
+    async def before_refresh_data(self):
         print('waiting to update clan data...')
         await self.bot.wait_until_ready()
 
     @commands.command(name="refresh")
+    @checks.mod_or_permissions()
     async def command_refresh(self, ctx):
         with open(self.claninfo_path) as file:
             self.family_clans = dict(json.load(file))
@@ -267,6 +299,7 @@ class ClashRoyaleClans(commands.Cog):
                           reverse=True)
         await self.config.clans.set(clan_data)
         log.info("Updated data for all clans at {}.".format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
+        await smart_embed(ctx, "Use this command only when automated refresh is not working. Inform <@683771700386857026> if that happens.")
         await ctx.tick()
 
     @commands.command(name="approve")
@@ -274,8 +307,8 @@ class ClashRoyaleClans(commands.Cog):
     async def command_approve(self, ctx, member:discord.Member, clankey:str, account:int = 1):
         guild = ctx.guild
         legendServer = ["374596069989810176"]
-        # if guild.id not in legendServer:
-        #     return await ctx.send("This command can only be executed in the Legend Family Server")
+        if guild.id not in legendServer:
+            return await ctx.send("This command can only be executed in the Legend Family Server")
         valid_keys = [k['nickname'].lower() for k in self.family_clans.values()]
         if clankey not in valid_keys:
             return await smart_embed(ctx, "Please use a valid clanname:\n{}".format(humanize_list(list(valid_keys))), False)
@@ -359,18 +392,17 @@ class ClashRoyaleClans(commands.Cog):
             try:
                 recruitCode = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
 
-                await member.send(embed=discord.Embed(description="Congratulations, You have been approved to join "
-                                                    f"[{clan_name} (#{clan_tag})](https://link.clashroyale.com/?clanInfo?id={clan_tag})."
-                                                    "\n\n"
-                                                    f"Your **RECRUIT CODE** is: ``{recruitCode}`` \n\n"
-                                                    f"Click [here](https://link.clashroyale.com/?clanInfo?id={clan_tag}) "
-                                                    f"or search for #{clan_tag} in-game.\n"
-                                                    "Send a request **using recruit code** above and wait for your clan leadership to accept you. " +
-                                                    "It usually takes a few minutes to get accepted, but it may take up to a few hours. \n\n" +
-                                                    "**IMPORTANT**: Once your clan leadership has accepted your request, " +
-                                                    "let a staff member in discord know that you have been accepted. " +
-                                                    "They will then unlock all the member channels for you.",
-                                                    color = discord.Colour.blue())
+                await smart_embed(member, "Congratulations, You have been approved to join "
+                                          f"[{clan_name} (#{clan_tag})](https://link.clashroyale.com/?clanInfo?id={clan_tag})."
+                                          "\n\n"
+                                          f"Your **RECRUIT CODE** is: ``{recruitCode}`` \n\n"
+                                          f"Click [here](https://link.clashroyale.com/?clanInfo?id={clan_tag}) "
+                                          f"or search for #{clan_tag} in-game.\n"
+                                          "Send a request **using recruit code** above and wait for your clan leadership to accept you. " +
+                                          "It usually takes a few minutes to get accepted, but it may take up to a few hours. \n\n" +
+                                          "**IMPORTANT**: Once your clan leadership has accepted your request, " +
+                                          "let a staff member in discord know that you have been accepted. " +
+                                          "They will then unlock all the member channels for you."
                 )
                 await ctx.send(member.mention + " has been approved for **" + clan_name + "**. Please check your DM for instructions on how to join.")
 
@@ -422,8 +454,8 @@ class ClashRoyaleClans(commands.Cog):
         legendServer = ["374596069989810176"]
         if member is None:
             member = ctx.author
-        # if server.id not in legendServer:
-        #     return await ctx.send("This command can only be executed in the Legend Family Server")
+        if server.id not in legendServer:
+            return await ctx.send("This command can only be executed in the Legend Family Server")
 
         if member is not None and member.id != ctx.author.id:
             if not (await self.bot.is_mod(ctx.author)):
@@ -440,6 +472,7 @@ class ClashRoyaleClans(commands.Cog):
         player_tags = self.tags.getAllTags(member.id)
         clans_joined = []
         clan_roles = []
+        discord_invites = []
         clan_nicknames = []
         ign = ""
         if len(player_tags) ==  0:
@@ -461,6 +494,8 @@ class ClashRoyaleClans(commands.Cog):
                         clans_joined.append(name)
                         clan_roles.append(data['clanrole'])
                         clan_nicknames.append(data['nickname'])
+                        if data.get('invite'):
+                            discord_invites.append(data['invite'])
                 # Set ign to first available name
                 if not ign and player_data.name:
                     ign = player_data.name
@@ -514,17 +549,33 @@ class ClashRoyaleClans(commands.Cog):
                 )
 
             global_channel = self.bot.get_channel(374596069989810178)
-            greeting_to_send = (random.choice(self.greetings)).format(member)
-            await global_channel.send(greeting_to_send)
+            if global_channel:
+                greeting_to_send = (random.choice(self.greetings)).format(member)
+                await global_channel.send(greeting_to_send)
 
-            # TODO: DM new member rules and stuff
-            await member.send(embed=discord.Embed(description=("Hi There! Congratulations on getting accepted into our family. "
-                              "We have unlocked all the member channels for you in LeGeND Discord Server. "
-                              "DM <@598662722821029888> if you have any problems.\n"
-                              "Please do not leave our Discord server while you are in the clan. Thank you."),
-                              color=discord.Colour.blue()))
-            # await asyncio.sleep(300)
-            # await member.send(self.rules_text)
+            if len(discord_invites) == 0:
+                await smart_embed(member, "Hi There! Congratulations on getting accepted into our family. "
+                                          "We have unlocked all the member channels for you in LeGeND Discord Server. "
+                                          "DM <@598662722821029888> if you have any problems.\n"
+                                          "Please do not leave our Discord server while you are in the clan. Thank you."
+                                  )
+            else:
+                await member.send(("Hi There! Congratulations on getting accepted into our family. "
+                                  "We have unlocked all the member channels for you in LeGeND Discord Server. "
+                                  "Now you have to carefuly read this message and follow the steps mentioned below: \n\n"
+                                  "Please click on the link below to join your clan Discord server. \n\n"
+                                   "{invites}".format(invites="\n".join(discord_invites)) +
+                                   "\n\n"
+                                  "Please do not leave our main or clan servers while you are in the clan. Thank you."
+                                  )
+                                  )
+
+            await asyncio.sleep(60)
+            for page in pagify(self.rules_text, delims=["\n\n\n"]):
+                await member.send(page)
+            await asyncio.sleep(60)
+            for page in pagify(esports_text, delims=["\n\n\n"]):
+                await member.send(page)
 
         else:
             await ctx.send("You must be accepted into a clan before I can give you clan roles. "
