@@ -100,157 +100,158 @@ class ClashRoyaleClans(commands.Cog):
         """ Show Legend clans, can also show clans based on a member's trophies"""
         # if member is None:
         #     # Show all clans
-        player_trophies = 9999
-        player_maxtrophies = 9999
-        player_cwr = {"legendary": {"percent":0}, "gold": {"percent":0}, "silver": {"percent":0}, "bronze": {"percent":0}}
-        if member is not None:
-            try:
-                player_tag = self.tags.getTag(member.id, account)
-                if player_tag is None:
-                    await ctx.send(
-                        "You must associate a tag with this member first using ``{}save #tag @member``".format(
-                            ctx.prefix))
-                    return
-                player_data = await self.cr.get_player(player_tag)
-                player_trophies = player_data.trophies
-                player_cards = player_data.cards
-                player_maxtrophies = player_data.best_trophies
-                player_maxwins = player_data.challenge_max_wins
-                player_cwr = await self.discord_helper.clanwarReadiness(player_cards)
-                player_wd_wins = player_data.warDayWins
+        async with ctx.channel.typing():
+            player_trophies = 9999
+            player_maxtrophies = 9999
+            player_cwr = {"legendary": {"percent":0}, "gold": {"percent":0}, "silver": {"percent":0}, "bronze": {"percent":0}}
+            if member is not None:
+                try:
+                    player_tag = self.tags.getTag(member.id, account)
+                    if player_tag is None:
+                        await ctx.send(
+                            "You must associate a tag with this member first using ``{}save #tag @member``".format(
+                                ctx.prefix))
+                        return
+                    player_data = await self.cr.get_player(player_tag)
+                    player_trophies = player_data.trophies
+                    player_cards = player_data.cards
+                    player_maxtrophies = player_data.best_trophies
+                    player_maxwins = player_data.challenge_max_wins
+                    player_cwr = await self.discord_helper.clanwarReadiness(player_cards)
+                    player_wd_wins = player_data.warDayWins
 
-                if player_data.clan is None:
-                    player_clanname = "*None*"
+                    if player_data.clan is None:
+                        player_clanname = "*None*"
+                    else:
+                        player_clanname = player_data.clan.name
+
+                    ign = player_data.name
+                except clashroyale.RequestError:
+                    return await ctx.send("Error: cannot reach Clash Royale Servers. Please try again later.")
+
+            embed = discord.Embed(color=0xFAA61A)
+            embed.set_author(name="Legend Family Clans",
+                            url="http://royaleapi.com/clan/family/legend",
+                            icon_url="https://i.imgur.com/dtSMITE.jpg")
+
+            embed.set_footer(text=credits, icon_url=creditIcon)
+
+            found_clan = False
+            total_members = 0
+            total_waiting = 0
+            clans = await self.config.clans()
+            if clans is None or len(clans) == 0:
+                return await ctx.send("Use `{}refresh` to get clan data.".format(ctx.prefix))
+            for clan in clans:
+                cwr_fulfilled = True
+                clan_name = clan["name"]
+                clan_requirements = self.family_clans[clan_name].get("requirements", dict())
+                waiting = clan_requirements.get("waiting", list())
+                num_waiting = len(waiting)
+                pb = clan_requirements.get('personalbest', 0)
+                cwr = clan_requirements.get('cwr', {"legendary": 0, "gold": 0, "silver": 0, "bronze": 0})
+                bonus = clan_requirements.get('bonus', "")
+                wd_wins = clan_requirements.get('wdwins', 0)
+                emoji = self.family_clans[clan_name].get('emoji', "")
+                total_waiting += num_waiting
+
+                if num_waiting > 0:
+                    title = "[" + str(num_waiting) + " Waiting] "
                 else:
-                    player_clanname = player_data.clan.name
+                    title = ""
 
-                ign = player_data.name
-            except clashroyale.RequestError:
-                return await ctx.send("Error: cannot reach Clash Royale Servers. Please try again later.")
+                member_count = clan.get("members")
+                total_members += member_count
 
-        embed = discord.Embed(color=0xFAA61A)
-        embed.set_author(name="Legend Family Clans",
-                         url="http://royaleapi.com/clan/family/legend",
-                         icon_url="https://i.imgur.com/dtSMITE.jpg")
+                if member_count < 50:
+                    shown_members = str(member_count) + "/50"
+                else:
+                    shown_members = "**FULL**  "
 
-        embed.set_footer(text=credits, icon_url=creditIcon)
+                if str(clan.get("type")) != 'inviteOnly':
+                    title += f"[{str(clan.get('type')).title()}] "
 
-        found_clan = False
-        total_members = 0
-        total_waiting = 0
-        clans = await self.config.clans()
-        if clans is None or len(clans) == 0:
-            return await ctx.send("Use `{}refresh` to get clan data.".format(ctx.prefix))
-        for clan in clans:
-            cwr_fulfilled = True
-            clan_name = clan["name"]
-            clan_requirements = self.family_clans[clan_name].get("requirements", dict())
-            waiting = clan_requirements.get("waiting", list())
-            num_waiting = len(waiting)
-            pb = clan_requirements.get('personalbest', 0)
-            cwr = clan_requirements.get('cwr', {"legendary": 0, "gold": 0, "silver": 0, "bronze": 0})
-            bonus = clan_requirements.get('bonus', "")
-            wd_wins = clan_requirements.get('wdwins', 0)
-            emoji = self.family_clans[clan_name].get('emoji', "")
-            total_waiting += num_waiting
+                title += f"{clan['name']}({clan['tag']}) "
 
-            if num_waiting > 0:
-                title = "[" + str(num_waiting) + " Waiting] "
-            else:
-                title = ""
+                if pb > 0:
+                    title += f"PB: {str(pb)}+  "
 
-            member_count = clan.get("members")
-            total_members += member_count
+                for league in cwr:
+                    if cwr[league] > 0:
+                        title += "{}: {}%  ".format(league[:1].capitalize(), cwr[league])
+                        if player_cwr[league]["percent"] < cwr[league]:
+                            cwr_fulfilled = False
 
-            if member_count < 50:
-                shown_members = str(member_count) + "/50"
-            else:
-                shown_members = "**FULL**  "
+                if wd_wins > 0:
+                    title += "{}+ War Day Wins ".format(wd_wins)
+                if bonus is not None:
+                    title += bonus
 
-            if str(clan.get("type")) != 'inviteOnly':
-                title += f"[{str(clan.get('type')).title()}] "
+                desc = ("{}   {} {} "
+                        "{}+  {} {}".format(
+                    self.discord_helper.emoji(emoji),
+                    shown_members,
+                    self.discord_helper.emoji("crtrophy"),
+                    clan["required_trophies"],
+                    self.discord_helper.getLeagueEmoji(clan["clan_war_trophies"]),
+                    clan["clan_war_trophies"]))
 
-            title += f"{clan['name']}({clan['tag']}) "
+                if (
+                        (member is None)
+                        or ((player_trophies >= clan["required_trophies"] ) and
+                            (player_maxtrophies >= pb) and
+                            (cwr_fulfilled) and
+                            (player_trophies - clan["required_trophies"] < 1500) and
+                            (clan["type"] != 'closed') and
+                            (player_wd_wins >= wd_wins)
+                        )
+                        or ((clan["required_trophies"] <= 4000) and
+                            (member_count != 50) and
+                            (2000 < player_trophies < 5000) and
+                            (clan["type"] != 'closed') and
+                            (player_wd_wins >= wd_wins) and
+                            (cwr_fulfilled)
+                        )
+                ):
+                    found_clan = True
+                    embed.add_field(name=title, value=desc, inline=False)
 
-            if pb > 0:
-                title += f"PB: {str(pb)}+  "
+            if not found_clan:
+                embed.add_field(name="uh oh!",
+                                value="There are no clans available for you at the moment, "
+                                    "please type !legend to see all clans.",
+                                inline=False)
 
-            for league in cwr:
-                if cwr[league] > 0:
-                    title += "{}: {}%  ".format(league[:1].capitalize(), cwr[league])
-                    if player_cwr[league]["percent"] < cwr[league]:
-                        cwr_fulfilled = False
+            embed.description = ("Our Family is made up of {} "
+                                "clans with a total of {} "
+                                "members. We have {} spots left "
+                                "and {} members in waiting lists.".format(
+                len(clans),
+                total_members,
+                (len(clans) * 50) - total_members,
+                total_waiting
+            )
+            )
+            await ctx.send(embed=embed)
 
-            if wd_wins > 0:
-                title += "{}+ War Day Wins ".format(wd_wins)
-            if bonus is not None:
-                title += bonus
-
-            desc = ("{}   {} {} "
-                    "{}+  {} {}".format(
-                self.discord_helper.emoji(emoji),
-                shown_members,
-                self.discord_helper.emoji("crtrophy"),
-                clan["required_trophies"],
-                self.discord_helper.getLeagueEmoji(clan["clan_war_trophies"]),
-                clan["clan_war_trophies"]))
-
-            if (
-                    (member is None)
-                    or ((player_trophies >= clan["required_trophies"] ) and
-                        (player_maxtrophies >= pb) and
-                        (cwr_fulfilled) and
-                        (player_trophies - clan["required_trophies"] < 1500) and
-                        (clan["type"] != 'closed') and
-                        (player_wd_wins >= wd_wins)
-                    )
-                    or ((clan["required_trophies"] <= 4000) and
-                        (member_count != 50) and
-                        (2000 < player_trophies < 5000) and
-                        (clan["type"] != 'closed') and
-                        (player_wd_wins >= wd_wins) and
-                        (cwr_fulfilled)
-                    )
-            ):
-                found_clan = True
-                embed.add_field(name=title, value=desc, inline=False)
-
-        if not found_clan:
-            embed.add_field(name="uh oh!",
-                            value="There are no clans available for you at the moment, "
-                                  "please type !legend to see all clans.",
-                            inline=False)
-
-        embed.description = ("Our Family is made up of {} "
-                             "clans with a total of {} "
-                             "members. We have {} spots left "
-                             "and {} members in waiting lists.".format(
-            len(clans),
-            total_members,
-            (len(clans) * 50) - total_members,
-            total_waiting
-        )
-        )
-        await ctx.send(embed=embed)
-
-        if member is not None:
-            await ctx.send(("Hello **{}**, above are all the clans "
-                            "you are allowed to join, based on your statistics. "
-                            "Which clan would you like to join? \n\n"
-                            "**Name:** {} (#{})\n**Trophies:** {}/{}\n"
-                            "**CW Readiness:** {}\n"
-                            "**Max Challenge Wins:** {}\n"
-                            "**Clan:** {}\n\n"
-                            ":warning: **YOU WILL BE REJECTED "
-                            "IF YOU JOIN ANY CLAN WITHOUT "
-                            "APPROVAL**".format(ign,
-                                                ign,
-                                                player_tag,
-                                                player_trophies,
-                                                player_maxtrophies,
-                                                await self.discord_helper.getBestLeague(player_cards),
-                                                player_maxwins,
-                                                player_clanname)))
+            if member is not None:
+                await ctx.send(("Hello **{}**, above are all the clans "
+                                "you are allowed to join, based on your statistics. "
+                                "Which clan would you like to join? \n\n"
+                                "**Name:** {} (#{})\n**Trophies:** {}/{}\n"
+                                "**CW Readiness:** {}\n"
+                                "**Max Challenge Wins:** {}\n"
+                                "**Clan:** {}\n\n"
+                                ":warning: **YOU WILL BE REJECTED "
+                                "IF YOU JOIN ANY CLAN WITHOUT "
+                                "APPROVAL**".format(ign,
+                                                    ign,
+                                                    player_tag,
+                                                    player_trophies,
+                                                    player_maxtrophies,
+                                                    await self.discord_helper.getBestLeague(player_cards),
+                                                    player_maxwins,
+                                                    player_clanname)))
 
     @tasks.loop(seconds=120)
     async def refresh_data(self):
@@ -453,7 +454,7 @@ class ClashRoyaleClans(commands.Cog):
         legendServer = ["374596069989810176"]
         if member is None:
             member = ctx.author
-        if server.id not in legendServer:
+        if guild.id not in legendServer:
             return await ctx.send("This command can only be executed in the Legend Family Server")
 
         if member is not None and member.id != ctx.author.id:
@@ -624,21 +625,12 @@ class ClashRoyaleClans(commands.Cog):
             except clashroyale.RequestError:
                 return await ctx.send("Error: cannot reach Clash Royale Servers. Please try again later.")
 
-            embed = discord.Embed(color=0xFAA61A, description="Clan War Readiness")
-            embed.set_author(name=profiledata.name + " ("+profiledata.tag+")",
-                             icon_url=await self.constants.get_clan_image(profiledata),
-                             url="https://royaleapi.com/player/"+profiledata.tag.strip("#"))
-            embed.add_field(name="War Day Wins", value="{} {}".format(self.discord_helper.emoji("warwin"), profiledata.war_day_wins), inline=True)
-            embed.add_field(name="War Cards Collected", value="{} {}".format(self.discord_helper.emoji("card"), profiledata.clan_cards_collected), inline=True)
-            embed.set_footer(text=credits, icon_url=creditIcon)
-
-            for league in leagues.keys():
+            for league_index, league in enumerate(leagues.keys()):
                 f_title = "{} League (Lvl {}) - {}%".format(
                     leagues[league]["name"],
                     leagues[league]["levels"],
                     leagues[league]["percent"])
                 groups = self.discord_helper.grouper(leagues[league]["cards"], 30)
-                # print("Groups:\n", list(groups), "done")
 
                 for index, cards in enumerate(groups):
                     value = []
@@ -648,15 +640,24 @@ class ClashRoyaleClans(commands.Cog):
                             emoji = ''
                             if card_key:
                                 emoji = self.discord_helper.emoji(card_key)
-                                if not emoji:
-                                    self.discord_helper.emoji(card)
+                            if emoji == '':
+                                emoji = self.discord_helper.emoji(card)
                             if emoji:
                                 value.append(emoji)
                             else:
-                                value.append(card)
-                    value = humanize_list(value)
+                                value.append(f" {card} ")
+                    value = (" ".join(value))
+                    embed = discord.Embed(color=0xFAA61A, description="Clan War Readiness" if index==0 else f_title)
+                    if league_index == 0:
+                        embed.set_author(name=profiledata.name + " ("+profiledata.tag+")",
+                                        icon_url=await self.constants.get_clan_image(profiledata),
+                                        url="https://royaleapi.com/player/"+profiledata.tag.strip("#"))
+                    embed.set_footer(text=credits, icon_url=creditIcon)
+                    if league_index == 0:
+                        embed.add_field(name="War Day Wins", value="{} {}".format(self.discord_helper.emoji("warwin"), profiledata.war_day_wins), inline=True)
+                        embed.add_field(name="War Cards Collected", value="{} {}".format(self.discord_helper.emoji("card"), profiledata.clan_cards_collected), inline=True)
                     embed.add_field(name=f_title if index == 0 else '\u200b', value=value, inline=False)
-            await ctx.send(embed=embed)
+                    await ctx.send(embed=embed)
 
 
 class Helper:
