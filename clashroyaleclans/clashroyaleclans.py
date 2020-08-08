@@ -441,6 +441,8 @@ class ClashRoyaleClans(commands.Cog):
     async def command_newmember(self, ctx, member: discord.Member = None):
         """
             Setup nickname, and roles for a new member
+        """
+        """
             Credit: GR8
             Updated by: Nevus
         """
@@ -695,6 +697,8 @@ class Helper:
     async def _is_member(member:discord.Member):
         """
             Check if member already has any of roles
+        """
+        """
             Credits: Gr8
         """
         guild = member.guild
