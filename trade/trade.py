@@ -21,6 +21,8 @@ from json import load
 cards_filename = "cards.json"
 consts_filename = "constants.json"
 
+token_type = ["legendary", "epic", "rare", "common"]
+
 member_settings = {
     "want" : {
         "legendary" : [],
@@ -43,6 +45,7 @@ member_settings = {
     }
     
 credits="Bot by Legend Gaming"
+credits_url = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
 
 class Trade(commands.Cog):
     """Clash Royale Trading Helper"""
@@ -128,9 +131,9 @@ class Trade(commands.Cog):
             else:
                 return False
             
-    async def saveToken(self, member, token_type):
+    async def saveToken(self, member, token_name):
         async with self.database.member(member).token() as token:
-            token[token_type] = True
+            token[token_name] = True
         
     async def removeToken(self, member, token_type):
         async with self.database.member(member).token() as token:
@@ -178,6 +181,9 @@ class Trade(commands.Cog):
         sorted2 = {}
         
         for player in trades:
+            if player == author.id:
+                continue
+                    
             try:
                 member = server.get_member(player)
                 clan = member.display_name.split("|", 1)[1]
@@ -299,7 +305,7 @@ class Trade(commands.Cog):
         embed.set_author(name="{} Traders".format(card),
                          icon_url="https://i.imgur.com/dtSMITE.jpg")
         embed.set_thumbnail(url="https://royaleapi.github.io/cr-api-assets/cards/{}.png".format(card.replace(" ", "-").lower()))
-        embed.set_footer(text=credits)
+        embed.set_footer(text=credits, icon_url=credits_url)
         
         trades = await self.sortTrades(server, author, trades)
         givers = "\u200b"
@@ -343,32 +349,39 @@ class Trade(commands.Cog):
         pass
     
     @trade_token.command(name="add")    
-    async def token_add(self, ctx, *, token):
+    async def token_add(self, ctx, token):
         """Add trade token"""
         
-        author = ctx.message.author
-        token = token.lower()
-        
-        try:
-            await self.saveToken(author, token)
-        except KeyError:
-            return await ctx.send("Error, Invalid token")
+        if token in token_type:
             
-        await ctx.send("You now have a {} token".format(token))
+            author = ctx.message.author
+            token = token.lower()
+        
+            try:
+                await self.saveToken(author, token)
+            except KeyError:
+                return await ctx.send("Error, Invalid token")
+            
+            await ctx.send("You now have a {} token".format(token))
+        else:
+            await ctx.send("Thats not a valid token type")
         
     @trade_token.command(name="remove")
-    async def token_remove(self, ctx, *, token):
+    async def token_remove(self, ctx, token):
         """Remove trade token"""
         
-        author = ctx.message.author
-        token = token.lower()
+        if token in token_type:
+            author = ctx.message.author
+            token = token.lower()
         
-        try:
-            await self.removeToken(author, token)
-        except KeyError:
-            return await ctx.send("Error, Invalid token")
+            try:
+                await self.removeToken(author, token)
+            except KeyError:
+                return await ctx.send("Error, Invalid token")
             
-        await ctx.send("You no longer have a {} token".format(token))
+            await ctx.send("You no longer have a {} token".format(token))
+        else:
+            await ctx.send("Thats not a valid token type")            
         
     @trade.command()
     async def info(self, ctx):
@@ -381,7 +394,7 @@ class Trade(commands.Cog):
         embed.set_author(name="{} ".format(ctx.author.display_name),
                          icon_url="https://i.imgur.com/dtSMITE.jpg")
         embed.set_thumbnail(url=pfp)
-        embed.set_footer(text=credits)
+        embed.set_footer(text=credits, icon_url=credits_url)
        
         token = ""
         for rarity, value in member_data['token'].items():
