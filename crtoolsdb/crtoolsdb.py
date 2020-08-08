@@ -37,7 +37,7 @@ class Constants:
 
     def __init__(self):
         file_path = bundled_data_path(self)
-        file_path = str(file_path) + '\constants.json'
+        file_path = str(file_path /  'constants.json')
         with open (file_path, 'r') as file:
             self.constants = load(file)
         self.images = 'https://royaleapi.github.io/cr-api-assets/'

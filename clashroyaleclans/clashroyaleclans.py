@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime
+import itertools
 import json
 import os
 import logging
@@ -16,12 +17,14 @@ from redbot.core.utils.chat_formatting import humanize_list, pagify
 from redbot.core.utils.predicates import MessagePredicate
 
 credits = "Bot by Legend Gaming"
-creditIcon = "https://cdn.discordapp.com/emojis/402178957509918720.png?v=1"
+creditIcon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
+log = logging.getLogger("red.cogs.clashroyaleclans")
+
 
 class InvalidRole(Exception):
     pass
 
-log = logging.getLogger("red.cogs.clashroyaleclans")
+
 esports_text = """
 __***LeGeND eSports***__
 
@@ -99,7 +102,7 @@ class ClashRoyaleClans(commands.Cog):
         #     # Show all clans
         player_trophies = 9999
         player_maxtrophies = 9999
-        player_cwr = {"legend": 0, "gold": 0, "silver": 0, "bronze": 0}
+        player_cwr = {"legendary": {"percent":0}, "gold": {"percent":0}, "silver": {"percent":0}, "bronze": {"percent":0}}
         if member is not None:
             try:
                 player_tag = self.tags.getTag(member.id, account)
@@ -145,7 +148,7 @@ class ClashRoyaleClans(commands.Cog):
             waiting = clan_requirements.get("waiting", list())
             num_waiting = len(waiting)
             pb = clan_requirements.get('personalbest', 0)
-            cwr = clan_requirements.get('cwr', {"legend": 0, "gold": 0, "silver": 0, "bronze": 0})
+            cwr = clan_requirements.get('cwr', {"legendary": 0, "gold": 0, "silver": 0, "bronze": 0})
             bonus = clan_requirements.get('bonus', "")
             wd_wins = clan_requirements.get('wdwins', 0)
             emoji = self.family_clans[clan_name].get('emoji', "")
@@ -175,7 +178,7 @@ class ClashRoyaleClans(commands.Cog):
             for league in cwr:
                 if cwr[league] > 0:
                     title += "{}: {}%  ".format(league[:1].capitalize(), cwr[league])
-                    if player_cwr[league] < cwr[league]:
+                    if player_cwr[league]["percent"] < cwr[league]:
                         cwr_fulfilled = False
 
             if wd_wins > 0:
@@ -251,7 +254,6 @@ class ClashRoyaleClans(commands.Cog):
 
     @tasks.loop(seconds=120)
     async def refresh_data(self):
-        await self.bot.wait_until_ready()
         with open(self.claninfo_path) as file:
             self.family_clans = dict(json.load(file))
         clan_data = list()
@@ -270,11 +272,6 @@ class ClashRoyaleClans(commands.Cog):
         )
         await self.config.clans.set(clan_data)
         log.info("Updated data for all clans.")
-
-    @refresh_data.before_loop
-    async def before_refresh_data(self):
-        print('waiting to update clan data...')
-        await self.bot.wait_until_ready()
 
     @commands.command(name="refresh")
     @checks.mod_or_permissions()
@@ -366,7 +363,7 @@ class ClashRoyaleClans(commands.Cog):
             cwr_met = True
             for league in clan_cwr:
                 if clan_cwr[league] > 0:
-                    if player_cwr[league] < clan_cwr[league]:
+                    if player_cwr[league]["percent"] < clan_cwr[league]:
                         cwr_met = False
             if (not cwr_met):
                 return await smart_embed(ctx, "Approval failed, you don't meet the CW Readiness requirements.", False)
@@ -610,6 +607,56 @@ class ClashRoyaleClans(commands.Cog):
             removed_roles = ["None"]
         await smart_embed(ctx, f"Removed roles: {humanize_list(removed_roles)}\nReset nickname to {new_nickname}")
 
+    @commands.command(name="clanwarreadiness", aliases=['cwr'])
+    async def command_cwr(self, ctx, member: discord.Member=None, account:int = 1):
+        """View yours or other's clash royale CWR"""
+        member = member or ctx.author
+
+        async with ctx.channel.typing():
+            try:
+                profiletag = self.tags.getTag(member.id, account)
+                if profiletag is None:
+                    return await ctx.send("You need to first save your profile using ``{}save #tag``".format(ctx.prefix))
+                profiledata = await self.cr.get_player(profiletag)
+                leagues = await self.discord_helper.clanwarReadiness(profiledata.cards)
+            except clashroyale.RequestError:
+                return await ctx.send("Error: cannot reach Clash Royale Servers. Please try again later.")
+
+            embed = discord.Embed(color=0xFAA61A, description="Clan War Readiness")
+            embed.set_author(name=profiledata.name + " ("+profiledata.tag+")",
+                             icon_url=await self.constants.get_clan_image(profiledata),
+                             url="https://royaleapi.com/player/"+profiledata.tag.strip("#"))
+            embed.add_field(name="War Day Wins", value="{} {}".format(self.discord_helper.emoji("warwin"), profiledata.war_day_wins), inline=True)
+            embed.add_field(name="War Cards Collected", value="{} {}".format(self.discord_helper.emoji("card"), profiledata.clan_cards_collected), inline=True)
+            embed.set_footer(text=credits, icon_url=creditIcon)
+
+            for league in leagues.keys():
+                f_title = "{} League (Lvl {}) - {}%".format(
+                    leagues[league]["name"],
+                    leagues[league]["levels"],
+                    leagues[league]["percent"])
+                groups = self.discord_helper.grouper(leagues[league]["cards"], 30)
+                # print("Groups:\n", list(groups), "done")
+
+                for index, cards in enumerate(groups):
+                    value = []
+                    for card in cards:
+                        if card is not None:
+                            card_key = await self.constants.card_to_key(card)
+                            emoji = ''
+                            if card_key:
+                                emoji = self.discord_helper.emoji(card_key)
+                                if not emoji:
+                                    self.discord_helper.emoji(card)
+                            if emoji:
+                                value.append(emoji)
+                            else:
+                                value.append(card)
+                    value = humanize_list(value)
+                    embed.add_field(name=f_title if index == 0 else '\u200b', value=value, inline=False)
+            await ctx.send(embed=embed)
+
+
 class Helper:
     def __init__(self, bot):
         self.bot = bot
@@ -665,19 +712,32 @@ class Helper:
         """Calculate clanwar readiness"""
         readiness = {}
         leagueLevels = {
-            "maxed": 13,
-            "legend": 12,
+            "legendary": 12,
             "gold": 11,
             "silver": 10,
             "bronze": 9
         }
 
         for league in leagueLevels.keys():
-            readiness[league] = 0
+            readiness[league] = {"name": league.capitalize(),
+                                 "percent": 0,
+                                 "cards": [],
+                                 "levels": str(leagueLevels[league])}
             for card in cards:
                 if await self.constants.get_new_level(card) >= leagueLevels[league]:
-                    readiness[league] += 1
-            readiness[league] = int((readiness[league] / len(cards)) * 100)
+                    readiness[league]["cards"].append(card.name)
+
+            readiness[league]["percent"] = int((len(readiness[league]["cards"]) / len(cards)) * 100)
+
+        readiness["gold"]["cards"] = list(set(readiness["gold"]["cards"]) -
+                                          set(readiness["legendary"]["cards"]))
+        readiness["silver"]["cards"] = list(set(readiness["silver"]["cards"]) -
+                                            set(readiness["gold"]["cards"]) -
+                                            set(readiness["legendary"]["cards"]))
+        readiness["bronze"]["cards"] = list(set(readiness["bronze"]["cards"]) -
+                                            set(readiness["silver"]["cards"]) -
+                                            set(readiness["gold"]["cards"]) -
+                                            set(readiness["legendary"]["cards"]))
 
         return readiness
 
@@ -706,16 +766,20 @@ class Helper:
             if mapLeagues[league][0] <= trophies <= mapLeagues[league][1]:
                 return self.emoji(league)
 
+    def grouper(self, iterable, n):
+        args = [iter(iterable)] * n
+        return itertools.zip_longest(*args)
+
     async def getBestLeague(self, cards):
         """Get best leagues using readiness"""
         readiness = await self.clanwarReadiness(cards)
 
-        legend = readiness["legend"]
-        gold = readiness["gold"] - legend
-        silver = readiness["silver"] - gold - legend
-        bronze = readiness["bronze"] - silver - gold - legend
+        legend = readiness["legendary"]["percent"]
+        gold = readiness["gold"]["percent"] - legend
+        silver = readiness["silver"]["percent"] - gold - legend
+        bronze = readiness["bronze"]["percent"] - silver - gold - legend
 
-        readinessCount = {"legend": legend, "gold": gold, "silver": silver, "bronze": bronze}
+        readinessCount = {"legendary": legend, "gold": gold, "silver": silver, "bronze": bronze}
         max_key = max(readinessCount, key=lambda k: readinessCount[k])
 
-        return "{} League ({}%)".format(max_key.capitalize(), readiness[max_key])
+        return "{} League ({}%)".format(max_key.capitalize(), readiness[max_key]["percent"])
