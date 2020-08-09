@@ -451,7 +451,7 @@ class ClashRoyaleClans(commands.Cog):
         # Allow command to run only in Legend server
         guild = ctx.guild
         author = ctx.author
-        legendServer = ["374596069989810176"]
+        legendServer = [374596069989810176]
         if member is None:
             member = ctx.author
         if guild.id not in legendServer:
