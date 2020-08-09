@@ -20,6 +20,7 @@ credits = "Bot by Legend Gaming"
 creditIcon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
 log = logging.getLogger("red.cogs.clashroyaleclans")
 
+legendServer = [374596069989810176]
 
 class InvalidRole(Exception):
     pass
@@ -304,7 +305,7 @@ class ClashRoyaleClans(commands.Cog):
     @checks.mod_or_permissions()
     async def command_approve(self, ctx, member:discord.Member, clankey:str, account:int = 1):
         guild = ctx.guild
-        legendServer = ["374596069989810176"]
+        
         if guild.id not in legendServer:
             return await ctx.send("This command can only be executed in the Legend Family Server")
         valid_keys = [k['nickname'].lower() for k in self.family_clans.values()]
@@ -451,7 +452,6 @@ class ClashRoyaleClans(commands.Cog):
         # Allow command to run only in Legend server
         guild = ctx.guild
         author = ctx.author
-        legendServer = [374596069989810176]
         if member is None:
             member = ctx.author
         if guild.id not in legendServer:
