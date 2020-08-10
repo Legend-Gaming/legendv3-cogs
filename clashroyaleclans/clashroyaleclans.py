@@ -256,24 +256,27 @@ class ClashRoyaleClans(commands.Cog):
 
     @tasks.loop(seconds=120)
     async def refresh_data(self):
-        with open(self.claninfo_path) as file:
-            self.family_clans = dict(json.load(file))
-        clan_data = list()
-        for k, v in self.family_clans.items():
-            try:
-                clan_tag = v["tag"]
-                clan = await self.cr.get_clan(clan_tag)
-                clan_data.append(dict(clan))
-            except clashroyale.RequestError:
-                log.error("Error: Cannot reach ClashRoyale Server.")
-            except clashroyale.NotFoundError:
-                log.error("Invalid clan tag.")
-        clan_data = sorted(
-            clan_data,
-            key=lambda x: (x["clan_war_trophies"], x["required_trophies"], x["clan_score"]), reverse=True
-        )
-        await self.config.clans.set(clan_data)
-        log.info("Updated data for all clans.")
+        try:
+            with open(self.claninfo_path) as file:
+                self.family_clans = dict(json.load(file))
+            clan_data = list()
+            for k, v in self.family_clans.items():
+                try:
+                    clan_tag = v["tag"]
+                    clan = await self.cr.get_clan(clan_tag)
+                    clan_data.append(dict(clan))
+                except clashroyale.RequestError:
+                    log.error("Error: Cannot reach ClashRoyale Server.")
+                except clashroyale.NotFoundError:
+                    log.error("Invalid clan tag.")
+            clan_data = sorted(
+                clan_data,
+                key=lambda x: (x["clan_war_trophies"], x["required_trophies"], x["clan_score"]), reverse=True
+            )
+            await self.config.clans.set(clan_data)
+            log.info("Updated data for all clans.")
+        except Exception as e:
+            log.error("Encountered exception {} when refreshing clan data.".format(e))
 
     @commands.command(name="refresh")
     @checks.mod_or_permissions()
