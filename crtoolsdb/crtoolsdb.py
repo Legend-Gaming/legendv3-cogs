@@ -317,7 +317,8 @@ class ClashRoyaleTools(commands.Cog):
         if token.get('token') is None:
             print("CR Token is not SET. Use !set api clashroyale token,YOUR_TOKEN to set it")
             raise RuntimeError
-        self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True)
+        self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True,
+                                                  url="https://proxy.royaleapi.dev/v1")
 
 
     def cog_unload(self):
