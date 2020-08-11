@@ -37,7 +37,7 @@ class Constants:
 
     def __init__(self):
         file_path = bundled_data_path(self)
-        file_path = str(file_path /  'constants.json')
+        file_path = str(file_path) + '\constants.json'
         with open (file_path, 'r') as file:
             self.constants = load(file)
         self.images = 'https://royaleapi.github.io/cr-api-assets/'
@@ -306,15 +306,23 @@ class ClashRoyaleTools(commands.Cog):
         try:
             self.tags = Tags(database['host'], database['user'], database['password'], database['database'])
         except Exception as e:
-            print("Database Credentials are not set. Set up a mysql server and enter credentials with the command"
+            print("Database Credentials are not set or something went wrong Exception below. "
+                  "Set up a mysql server and enter credentials with the command"
                   " [p]set api database host,HOST_IP user,USERNAME password,PASSWORD database,DATABASE "
                   "replacing HOST_IP, USERNAME, PASSWORD, DATABASE with your credentials")
+            print(e)
+            raise RuntimeError
         # Clash Royale API
         token = await self.bot.get_shared_api_tokens("clashroyale")
         if token.get('token') is None:
             print("CR Token is not SET. Use !set api clashroyale token,YOUR_TOKEN to set it")
-        self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True,
-                                                  url="https://proxy.royaleapi.dev/v1")
+            raise RuntimeError
+        self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True)
+
+
+    def cog_unload(self):
+        print('Unloaded CR-Tools... NOTE MANY DEPENDANCIES WILL BREAK INCLUDING TRADING, CLASHROYALESTATS AND CLASHROYALECLANS')
+        self.tags.db.close()
 
     @commands.group(name='crtools')
     async def _crtools(self, ctx):
@@ -326,7 +334,7 @@ class ClashRoyaleTools(commands.Cog):
 
         # Trying to save tag for someone else
         if user is not None and user != ctx.author:
-            if self.bot.is_mod(ctx.author) is False:
+            if await self.bot.is_mod(ctx.author) is False:
                 await ctx.send("Sorry you cannot save tags for others. You need a mod permission level")
                 return
 
@@ -396,7 +404,7 @@ class ClashRoyaleTools(commands.Cog):
 
         # Trying to do this for someone else
         if user is not None and user != ctx.author:
-            if self.bot.is_mod(ctx.author) is False:
+            if await self.bot.is_mod(ctx.author) is False:
                 return await ctx.send("Sorry you cannot swap accounts for others. You need a mod permission level")
         if user is None:
             user = ctx.author
@@ -415,7 +423,7 @@ class ClashRoyaleTools(commands.Cog):
 
         # Trying to do this for someone else
         if user is not None and user != ctx.author:
-            if self.bot.is_mod(ctx.author) is False:
+            if await self.bot.is_mod(ctx.author) is False:
                 return await ctx.send("Sorry you cannot unsave tags for others. You need a mod permission level")
 
         if user is None:
@@ -458,12 +466,5 @@ class ClashRoyaleTools(commands.Cog):
 
         except InvalidTag:
             return await ctx.send("Invalid Tag")
-
-
-
-
-
-
-
 
 
