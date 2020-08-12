@@ -4,7 +4,7 @@ import discord
 import random
 from redbot.core.utils.chat_formatting import humanize_number
 
-credit = "by Legend Gaming | king slayer"
+credit = "By: king slayer | Legend Gaming"
 
 class Raffle(commands.Cog):
 
@@ -176,7 +176,7 @@ class Raffle(commands.Cog):
         await ctx.send("You set the cost of one ticket as {} credits for the corresponding role".format(final_price))
 
     
-    @commands.command()
+    @commands.command(aliases=['buyticket'])
     @commands.guild_only()
     async def buytickets(self, ctx, tickets: int = 1):
         """Buy tickets for a raffle that is going on"""
