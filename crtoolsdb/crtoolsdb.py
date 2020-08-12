@@ -357,7 +357,7 @@ class ClashRoyaleTools(commands.Cog):
             avatar = user.avatar_url if user.avatar else user.default_avatar_url
             embed.set_author(name='{} (#{}) has been successfully saved.'.format(name, tag),
                              icon_url=avatar)
-            embed.set_footer(text="Bot by: Legend Gaming | Generaleoley")
+            embed.set_footer(text="Bot by: Generaleoley | Legend Gaming")
             await ctx.send(embed=embed)
         except InvalidTag:
             await ctx.send("Invalid Tag")
@@ -396,7 +396,7 @@ class ClashRoyaleTools(commands.Cog):
         embed.add_field(name="Accounts", value=accounts)
         # todo maybe embed limits for people with 9000 accounts like Labda
 
-        embed.set_footer(text="Bot by: Legend Gaming | Generaleoley")
+        embed.set_footer(text="Bot by: Generaleoley | Legend Gaming")
         await ctx.send(embed=embed)
 
     @_crtools.command(name="switch")
