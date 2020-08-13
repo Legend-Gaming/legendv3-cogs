@@ -425,8 +425,8 @@ class Trade(commands.Cog):
                 
         await ctx.send(embed=embed)        
         
-    @trade.command()  
-    @checks.admin_or_permissions(ban_members=True)  
+    @trade.command()
+    @checks.is_owner()
     async def deletedata(self, ctx):
         """ Delete all data of all members"""
         
