@@ -54,7 +54,6 @@ class Counting(commands.Cog):
         }
         self.config.register_guild(**default_guild)
         # self.config.register_channel(**default_channel)
-
     @commands.group()
     async def counting(self, ctx):
         """Base group for counting"""
@@ -90,7 +89,6 @@ class Counting(commands.Cog):
         embed.add_field(name='Credits', value=payment)
         embed.set_footer(text=bot_credits)
         await ctx.send(embed=embed)
-
 
     @commands.group(aliases=['setcounting'])
     async def setcount(self, ctx):
@@ -141,10 +139,6 @@ class Counting(commands.Cog):
 
         expected = await data.expected()
         user = await data.user()
-        players = await data.players()
-        # print(players)
-        winpay = await data.payout()
-        record = await data.record()
 
         num = str(message.content)
 
@@ -154,9 +148,13 @@ class Counting(commands.Cog):
         author = str(message.author.id)
 
         if num == expected and user != author:
-            await message.add_reaction(emoji='✅')
             new = int(expected) + 1
             await data.expected.set(str(new))
+            players = await data.players()
+            # print(players)
+            winpay = await data.payout()
+            record = await data.record()
+            await message.add_reaction(emoji='✅')
             await data.user.set(author)
             if players.get(author) is None:
                 players[author] = 1
@@ -179,7 +177,9 @@ class Counting(commands.Cog):
 
             # check win
             if winpay.get(expected) is not None:
-                await message.channel.send("Congrats! On reaching {}... the following rewards are to follow: (ps. don't celebrate here as it will reset scores)".format(expected))
+                await message.channel.send(
+                    "Congrats! On reaching {}... the following rewards are to follow: (ps. don't celebrate here as it will reset scores)".format(
+                        expected))
                 # print(players)
                 for player in players:
                     if player == 0 or player == '0':
@@ -189,7 +189,8 @@ class Counting(commands.Cog):
                     await bank.deposit_credits(memb, amount)
                     await message.channel.send("- {} has received {}".format(memb.mention, str(amount)))
 
-                await message.channel.send("You may continue counting without loss at {} (say that number)".format(str(new)))
+                await message.channel.send(
+                    "You may continue counting without loss at {} (say that number)".format(str(new)))
 
 
         else:
