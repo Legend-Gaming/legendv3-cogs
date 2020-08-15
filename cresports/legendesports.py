@@ -242,8 +242,8 @@ class LegendEsports(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
         guild = member.guild
-        guild = self.bot.get_guild(740567594381213727)
-        channel = guild.get_channel(744087559948337172)
+        guild_to_send = self.bot.get_guild(740567594381213727)
+        channel = guild_to_send.get_channel(744087559948337172)
         if guild.id == 740567594381213727:
             allowed_users = await self.config.allowed_users()
             if member.id in allowed_users:
@@ -257,5 +257,8 @@ class LegendEsports(commands.Cog):
                 await channel.send(embed=embed)
                 await member.send("Please join our eSports server first and then you will be allowed to give tryouts as per your stats, you will be kicked from this server for now, join us at https://discord.gg/E34AsPr")
                 await member.kick()
+
+        else:
+            pass
 
     
