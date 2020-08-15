@@ -61,7 +61,7 @@ class LegendEsports(commands.Cog):
                         ign = player_data.name
 
                         verify_id = await self.config.guild(ctx.guild).Verified()
-                        verified_role = await ctx.guild.get_role(verify_id)
+                        verified_role = ctx.guild.get_role(verify_id)
                         user.add_roles(verified_role)
 
                         for badge in player_data.badges: # Credit to Generaleoley 
