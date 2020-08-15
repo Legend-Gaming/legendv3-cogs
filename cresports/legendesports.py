@@ -63,7 +63,7 @@ class LegendEsports(commands.Cog):
 
                         verify_id = await self.config.guild(ctx.guild).Verified()
                         verified_role = ctx.guild.get_role(verify_id)
-                        user.add_roles(verified_role)
+                        await user.add_roles(verified_role)
 
                         for badge in player_data.badges: # Credit to Generaleoley 
                             if badge.name == 'Classic12Wins':
@@ -167,7 +167,7 @@ class LegendEsports(commands.Cog):
             name = ign + " | Verified"
             verify_id = await self.config.guild(ctx.guild).Verified()
             verified_role = ctx.guild.get_role(verify_id)
-            ctx.author.add_roles(verified_role)
+            await ctx.author.add_roles(verified_role)
             try:
                 await ctx.author.edit(nick=name)
             except discord.HTTPException:
