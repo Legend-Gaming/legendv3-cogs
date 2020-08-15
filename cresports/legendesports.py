@@ -160,7 +160,7 @@ class LegendEsports(commands.Cog):
             if player_tag is None:
                 return await ctx.send("Player tag not saved, use `!save <#your player tag here>")
             try:
-                player_data = self.cr.get_player(player_tag)
+                player_data = await self.cr.get_player(player_tag)
                 ign = player_data.name
             except clashroyale.RequestError:
                 return await ctx.send("Can't reach the supercell servers")
