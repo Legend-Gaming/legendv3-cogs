@@ -169,7 +169,7 @@ class LegendEsports(commands.Cog):
             verified_role = ctx.guild.get_role(verify_id)
             ctx.author.add_roles(verified_role)
             try:
-                ctx.author.edit(name=name)
+                await ctx.author.edit(nick=name)
             except discord.HTTPException:
                 return await ctx.send("Not enough permissions to change name.")
             await ctx.send("Roles have been added")
