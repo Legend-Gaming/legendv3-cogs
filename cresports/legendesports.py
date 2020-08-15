@@ -166,13 +166,13 @@ class LegendEsports(commands.Cog):
                 return await ctx.send("Can't reach the supercell servers")
             name = ign + " | Verified"
             verify_id = await self.config.guild(ctx.guild).Verified()
-            verified_role = await ctx.guild.get_role(verify_id)
+            verified_role = ctx.guild.get_role(verify_id)
             ctx.author.add_roles(verified_role)
             try:
                 ctx.author.edit(name=name)
             except discord.HTTPException:
                 return await ctx.send("Not enough permissions to change name.")
-            await ctx.send("Roles have been added and nickname has been changed")
+            await ctx.send("Roles have been added")
         
         else:
             pass
