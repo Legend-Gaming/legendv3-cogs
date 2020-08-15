@@ -35,185 +35,209 @@ class LegendEsports(commands.Cog):
     @commands.command()
     @commands.guild_only()
     async def tryouts(self, ctx, user: discord.Member = None):
-        for_self = False
-        if user is None:
-            user, for_self = ctx.author, True
-        command_used = await self.config.member(user).command_used()
-        if command_used is False or await self.bot.is_mod(ctx.author):
-            if await self.bot.is_mod(ctx.author) or for_self:
-                player_tag = self.tags.getTag(userID = user.id)
-                if player_tag is None:
-                    return await ctx.send("No tag saved, use the command `!save <your tage here>`")
+        if ctx.guild.id == 445092370006933505:
+            for_self = False
+            if user is None:
+                user, for_self = ctx.author, True
+            command_used = await self.config.member(user).command_used()
+            if command_used is False or await self.bot.is_mod(ctx.author):
+                if await self.bot.is_mod(ctx.author) or for_self:
+                    player_tag = self.tags.getTag(userID = user.id)
+                    if player_tag is None:
+                        return await ctx.send("No tag saved, use the command `!save <your tage here>`")
+
+                    else:
+                        try:
+                            player_data = await self.cr.get_player(player_tag)
+                        except clashroyale.RequestError:
+                            return await ctx.send("Can't reach the supercell servers at the moment")
+
+                        pb = player_data.bestTrophies
+                        max_wins = player_data.challengeMaxWins
+                        top_ladder_finisher = False
+                        top_global_finish = False
+                        ccwins = 0
+                        gcwins = 0
+                        ign = player_data.name
+
+                        verify_id = await self.config.guild(ctx.guild).Verified()
+                        verified_role = await ctx.guild.get_role(verify_id)
+                        user.add_roles(verified_role)
+
+                        for badge in player_data.badges: # Credit to Generaleoley 
+                            if badge.name == 'Classic12Wins':
+                                ccwins = badge.progress
+                            elif badge.name == 'Grand12Wins':
+                                gcwins = badge.progress
+                            elif badge.name == "LadderTournamentTop1000_1":
+                                top_global_finish = True
+                            elif badge.name == "LadderTop1000_1":
+                                top_ladder_finisher = True
+
+                        if (top_ladder_finisher) or ((gcwins >= 1 or ccwins >= 10) and pb >= 6600) or (top_global_finish and max_wins >= 17):
+                            maintserver = self.bot.get_guild(740567594381213727)
+                            channel = maintserver.get_channel(743498231517806654)
+                            invite = await channel.create_invite(max_uses=1)
+                            embed = discord.Embed(colour=0x00FFFF, url="https://royaleapi.com/team/legend-esports", title="LeGeND eSports Tryout")
+                            embed.add_field(name="Team Eligible for:", value="Main Team", inline=True)
+                            embed.add_field(name="Personal Best:", value=pb, inline=True)  
+                            embed.add_field(name="Grand Challenges Won", value=gcwins, inline=True)
+                            embed.add_field(name="Classic Challenges Won", value=ccwins, inline=True)
+                            embed.add_field(name="Max Wins", value=max_wins, inline=True)
+                            embed.add_field(name="Top Global Tournament Finish", value=top_global_finish, inline=True)
+                            embed.set_footer(text=credits, icon_url=creditIcon)
+                            await ctx.send(embed=embed)
+                            await user.send("Hey! {}, You are eligible to tryout for the LeGeND Main Team. Please join the server link given below, **DON'T SHARE IT WITH ANYONE** as its a one time link and will expire after one use.".format(user.mention))
+                            await user.send(invite)
+                            await user.send("Please fill out this google form https://docs.google.com/forms/d/1uptjI7VcBjoev9n45JZTFTqdjWD7PUd4H6uL-zSy-UE/edit")
+                            try:
+                                final_name = ign + " | Tryouts"
+                                await user.edit(nick=final_name)
+                            except discord.HTTPException:
+                                return await ctx.send("Not enough permissions")
+
+                            allowed_users = await self.config.allowed_users()
+                            allowed_users.append(user.id)
+                            await self.config.allowed_users.set(allowed_users)
+                            await self.config.member(user).command_used.set(True)
+
+                        elif pb >= 5600 and (ccwins >= 1 or gcwins >= 1):
+                            embed = discord.Embed(colour=0x00FFFF, url="https://royaleapi.com/team/legend-esports", title="LeGeND eSports Tryout")
+                            embed.add_field(name="Team Eligible for:", value="Challenger Team", inline=True)
+                            embed.add_field(name="Personal Best:", value=pb, inline=True)  
+                            embed.add_field(name="Grand Challenges Won", value=gcwins, inline=True)
+                            embed.add_field(name="Classic Challenges Won", value=ccwins, inline=True)
+                            embed.add_field(name="Max Wins", value=max_wins, inline=True)
+                            embed.add_field(name="Top Global Tournament Finish", value=top_global_finish, inline=True)
+                            embed.set_footer(text=credits, icon_url=creditIcon)
+                            await ctx.send(embed=embed)
+                            await user.send("Please fill out this google form https://docs.google.com/forms/d/1uptjI7VcBjoev9n45JZTFTqdjWD7PUd4H6uL-zSy-UE/edit")
+                            roleid = await self.config.guild(ctx.guild).Challengert()
+                            role = ctx.guild.get_role(roleid)
+                            await user.add_roles(role)
+                            try:
+                                final_name = ign + " | Tryouts"
+                                await user.edit(nick=final_name)
+                            except discord.HTTPException:
+                                return await ctx.send("Not enough permissions")
+                            await self.config.member(user).command_used.set(True)
+                        else:
+                            embed = discord.Embed(colour=0x00FFFF, url="https://royaleapi.com/team/legend-esports", title="LeGeND eSports Tryout")
+                            embed.add_field(name="Team Eligible for:", value="Academy Team", inline=True)
+                            embed.add_field(name="Personal Best:", value=pb, inline=True)  
+                            embed.add_field(name="Grand Challenges Won", value=gcwins, inline=True)
+                            embed.add_field(name="Classic Challenges Won", value=ccwins, inline=True)
+                            embed.add_field(name="Max Wins", value=max_wins, inline=True)
+                            embed.add_field(name="Top Global Tournament Finish", value=top_global_finish, inline=True)
+                            embed.set_footer(text=credits, icon_url=creditIcon)
+                            await ctx.send(embed=embed)
+                            await user.send("Please fill out this google form https://docs.google.com/forms/d/1uptjI7VcBjoev9n45JZTFTqdjWD7PUd4H6uL-zSy-UE/edit")
+                            roleid = await self.config.guild(ctx.guild).Academyt()
+                            arole = ctx.guild.get_role(roleid)
+                            await user.add_roles(arole)
+                            try:
+                                final_name = ign + " | Tryouts"
+                                await user.edit(nick=final_name)
+                            except discord.HTTPException:
+                                return await ctx.send("Not enough permissions")
+                            await self.config.member(user).command_used.set(True)
 
                 else:
-                    try:
-                        player_data = await self.cr.get_player(player_tag)
-                    except clashroyale.RequestError:
-                        return await ctx.send("Can't reach the supercell servers at the moment")
-
-                    pb = player_data.bestTrophies
-                    max_wins = player_data.challengeMaxWins
-                    top_ladder_finisher = False
-                    top_global_finish = False
-                    ccwins = 0
-                    gcwins = 0
-                    ign = player_data.name
-
-                    verify_id = await self.config.guild(ctx.guild).Verified()
-                    verified_role = await ctx.guild.get_role(verify_id)
-                    user.add_roles(verified_role)
-
-                    for badge in player_data.badges: # Credit to Generaleoley 
-                        if badge.name == 'Classic12Wins':
-                            ccwins = badge.progress
-                        elif badge.name == 'Grand12Wins':
-                            gcwins = badge.progress
-                        elif badge.name == "LadderTournamentTop1000_1":
-                            top_global_finish = True
-                        elif badge.name == "LadderTop1000_1":
-                            top_ladder_finisher = True
-
-                    if (top_ladder_finisher) or ((gcwins >= 1 or ccwins >= 10) and pb >= 6600) or (top_global_finish and max_wins >= 17):
-                        maintserver = self.bot.get_guild(740567594381213727)
-                        channel = maintserver.get_channel(743498231517806654)
-                        invite = await channel.create_invite(max_uses=1)
-                        embed = discord.Embed(colour=0x00FFFF, url="https://royaleapi.com/team/legend-esports", title="LeGeND eSports Tryout")
-                        embed.add_field(name="Team Eligible for:", value="Main Team", inline=True)
-                        embed.add_field(name="Personal Best:", value=pb, inline=True)  
-                        embed.add_field(name="Grand Challenges Won", value=gcwins, inline=True)
-                        embed.add_field(name="Classic Challenges Won", value=ccwins, inline=True)
-                        embed.add_field(name="Max Wins", value=max_wins, inline=True)
-                        embed.add_field(name="Top Global Tournament Finish", value=top_global_finish, inline=True)
-                        embed.set_footer(text=credits, icon_url=creditIcon)
-                        await ctx.send(embed=embed)
-                        await user.send("Hey! {}, You are eligible to tryout for the LeGeND Main Team. Please join the server link given below, **DON'T SHARE IT WITH ANYONE** as its a one time link and will expire after one use.".format(user.mention))
-                        await user.send(invite)
-                        await user.send("Please fill out this google form https://docs.google.com/forms/d/1uptjI7VcBjoev9n45JZTFTqdjWD7PUd4H6uL-zSy-UE/edit")
-                        try:
-                            final_name = ign + " | Tryouts"
-                            await user.edit(nick=final_name)
-                        except discord.HTTPException:
-                            return await ctx.send("Not enough permissions")
-
-                        allowed_users = await self.config.allowed_users()
-                        allowed_users.append(user.id)
-                        await self.config.allowed_users.set(allowed_users)
-                        await self.config.member(user).command_used.set(True)
-
-                    elif pb >= 5600 and (ccwins >= 1 or gcwins >= 1):
-                        embed = discord.Embed(colour=0x00FFFF, url="https://royaleapi.com/team/legend-esports", title="LeGeND eSports Tryout")
-                        embed.add_field(name="Team Eligible for:", value="Challenger Team", inline=True)
-                        embed.add_field(name="Personal Best:", value=pb, inline=True)  
-                        embed.add_field(name="Grand Challenges Won", value=gcwins, inline=True)
-                        embed.add_field(name="Classic Challenges Won", value=ccwins, inline=True)
-                        embed.add_field(name="Max Wins", value=max_wins, inline=True)
-                        embed.add_field(name="Top Global Tournament Finish", value=top_global_finish, inline=True)
-                        embed.set_footer(text=credits, icon_url=creditIcon)
-                        await ctx.send(embed=embed)
-                        await user.send("Please fill out this google form https://docs.google.com/forms/d/1uptjI7VcBjoev9n45JZTFTqdjWD7PUd4H6uL-zSy-UE/edit")
-                        roleid = await self.config.guild(ctx.guild).Challengert()
-                        role = ctx.guild.get_role(roleid)
-                        await user.add_roles(role)
-                        try:
-                            final_name = ign + " | Tryouts"
-                            await user.edit(nick=final_name)
-                        except discord.HTTPException:
-                            return await ctx.send("Not enough permissions")
-                        await self.config.member(user).command_used.set(True)
-                    else:
-                        embed = discord.Embed(colour=0x00FFFF, url="https://royaleapi.com/team/legend-esports", title="LeGeND eSports Tryout")
-                        embed.add_field(name="Team Eligible for:", value="Academy Team", inline=True)
-                        embed.add_field(name="Personal Best:", value=pb, inline=True)  
-                        embed.add_field(name="Grand Challenges Won", value=gcwins, inline=True)
-                        embed.add_field(name="Classic Challenges Won", value=ccwins, inline=True)
-                        embed.add_field(name="Max Wins", value=max_wins, inline=True)
-                        embed.add_field(name="Top Global Tournament Finish", value=top_global_finish, inline=True)
-                        embed.set_footer(text=credits, icon_url=creditIcon)
-                        await ctx.send(embed=embed)
-                        await user.send("Please fill out this google form https://docs.google.com/forms/d/1uptjI7VcBjoev9n45JZTFTqdjWD7PUd4H6uL-zSy-UE/edit")
-                        roleid = await self.config.guild(ctx.guild).Academyt()
-                        arole = ctx.guild.get_role(roleid)
-                        await user.add_roles(arole)
-                        try:
-                            final_name = ign + " | Tryouts"
-                            await user.edit(nick=final_name)
-                        except discord.HTTPException:
-                            return await ctx.send("Not enough permissions")
-                        await self.config.member(user).command_used.set(True)
+                    await ctx.send("You are not allowed to use this commmand for other users")
 
             else:
-                await ctx.send("You are not allowed to use this commmand for other users")
+                await ctx.send("You can't use the command more than once for a user")    
 
         else:
-            await ctx.send("You can't use the command more than once for a user")    
-
+            pass
     @commands.command()
     @commands.guild_only()
     async def verify(self, ctx):
-        player_tag = self.tags.getTag()
-        if player_tag is None:
-            return await ctx.send("Player tag not saved, use `!save <#your player tag here>")
-        try:
-            player_data = self.cr.get_player(player_tag)
-            ign = player_data.name
-        except clashroyale.RequestError:
-            return await ctx.send("Can't reach the supercell servers")
-        name = ign + " | Verified"
-        verify_id = await self.config.guild(ctx.guild).Verified()
-        verified_role = await ctx.guild.get_role(verify_id)
-        ctx.author.add_roles(verified_role)
-        try:
-            ctx.author.edit(name=name)
-        except discord.HTTPException:
-            return await ctx.send("Not enough permissions to change name.")
-        await ctx.send("Roles have been added and nickname has been changed")
-
+        if ctx.guild.id == 445092370006933505:
+            player_tag = self.tags.getTag()
+            if player_tag is None:
+                return await ctx.send("Player tag not saved, use `!save <#your player tag here>")
+            try:
+                player_data = self.cr.get_player(player_tag)
+                ign = player_data.name
+            except clashroyale.RequestError:
+                return await ctx.send("Can't reach the supercell servers")
+            name = ign + " | Verified"
+            verify_id = await self.config.guild(ctx.guild).Verified()
+            verified_role = await ctx.guild.get_role(verify_id)
+            ctx.author.add_roles(verified_role)
+            try:
+                ctx.author.edit(name=name)
+            except discord.HTTPException:
+                return await ctx.send("Not enough permissions to change name.")
+            await ctx.send("Roles have been added and nickname has been changed")
+        
+        else:
+            pass
     @commands.command()
     @checks.admin_or_permissions()
     @commands.guild_only()
     async def setacademytryoutrole(self, ctx, role: discord.Role):
-        await self.config.guild(ctx.guild).Academyt.set(role.id)
-        await ctx.send("The academy tryout role is now considered as {}".format(role.id))
+        if ctx.guild.id == 445092370006933505:
+            await self.config.guild(ctx.guild).Academyt.set(role.id)
+            await ctx.send("The academy tryout role is now considered as {}".format(role.id))
+        else:
+            pass        
 
     @commands.command()
     @checks.admin_or_permissions()
     @commands.guild_only()
     async def setchallengertryoutrole(self, ctx, role: discord.Role):
-        await self.config.guild(ctx.guild).Challengert.set(role.id)
-        await ctx.send("The Challenger tryout role is now considered as {}".format(role.id))
+        if ctx.guild.id == 445092370006933505:
+            await self.config.guild(ctx.guild).Challengert.set(role.id)
+            await ctx.send("The Challenger tryout role is now considered as {}".format(role.id))
+        else:
+            pass
 
     @commands.command()
     @checks.admin_or_permissions()
     @commands.guild_only()
     async def setverifiedrole(self, ctx, role: discord.Role):
-        await self.config.guild(ctx.guild).Verified.set(role.id)
-        await ctx.send("The Verified role is now considered as {}".format(role.id))
+        if ctx.guild.id == 445092370006933505:
+            await self.config.guild(ctx.guild).Verified.set(role.id)
+            await ctx.send("The Verified role is now considered as {}".format(role.id))
+        else: 
+            pass
 
     @commands.command()
     @checks.admin_or_permissions()
     @commands.guild_only()
     async def setacademytryoutrole(self, ctx, role: discord.Role):
-        await self.config.guild(ctx.guild).Academyt.set(role.id)
-        await ctx.send("The academy tryout role is now considered as {}".format(role.id))
+        if ctx.guild.id == 445092370006933505:
+            await self.config.guild(ctx.guild).Academyt.set(role.id)
+            await ctx.send("The academy tryout role is now considered as {}".format(role.id))
+        else:
+            pass
 
     @commands.command()
     @checks.mod_or_permissions()
     @commands.guild_only()
     async def resettryoutstatus(self, ctx, user: discord.Member):
-        await self.config.member(user).command_used.set(False)
-        user_lst = await self.config.allowed_users() 
-        new_lst = [value for value in user_lst if value != user.id]
-        await self.config.allowed_users.set(new_lst)   
-        await ctx.send("Users status has been reset")
+        if ctx.guild.id == 445092370006933505:
+            await self.config.member(user).command_used.set(False)
+            user_lst = await self.config.allowed_users() 
+            new_lst = [value for value in user_lst if value != user.id]
+            await self.config.allowed_users.set(new_lst)   
+            await ctx.send("Users status has been reset")
+        else:
+            pass
 
     @commands.command()
     @commands.guild_only()
     @checks.mod_or_permissions()
     async def forceallow(self, ctx, user:discord.Member):
-        async with self.config.allowed_users() as lst:
-            lst.append(user.id)
-        await self.config.member(user).command_used.set(True)
-        await ctx.send("User has been allowed")
+        if ctx.guild.id == 445092370006933505:
+            async with self.config.allowed_users() as lst:
+                lst.append(user.id)
+            await self.config.member(user).command_used.set(True)
+            await ctx.send("User has been allowed")
+        else:
+            pass
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
