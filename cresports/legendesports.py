@@ -35,6 +35,7 @@ class LegendEsports(commands.Cog):
     @commands.command()
     @commands.guild_only()
     async def tryouts(self, ctx, user: discord.Member = None):
+        """Selects which team you can tryout for based on your stats"""
         if ctx.guild.id == 445092370006933505:
             for_self = False
             if user is None:
@@ -153,8 +154,9 @@ class LegendEsports(commands.Cog):
     @commands.command()
     @commands.guild_only()
     async def verify(self, ctx):
+        """Verify yourself and get access to the server if here for a tryout use `!tryouts` instead"""
         if ctx.guild.id == 445092370006933505:
-            player_tag = self.tags.getTag()
+            player_tag = self.tags.getTag(userID=ctx.author.id)
             if player_tag is None:
                 return await ctx.send("Player tag not saved, use `!save <#your player tag here>")
             try:
@@ -204,20 +206,12 @@ class LegendEsports(commands.Cog):
         else: 
             pass
 
-    @commands.command()
-    @checks.admin_or_permissions()
-    @commands.guild_only()
-    async def setacademytryoutrole(self, ctx, role: discord.Role):
-        if ctx.guild.id == 445092370006933505:
-            await self.config.guild(ctx.guild).Academyt.set(role.id)
-            await ctx.send("The academy tryout role is now considered as {}".format(role.id))
-        else:
-            pass
 
     @commands.command()
     @checks.mod_or_permissions()
     @commands.guild_only()
     async def resettryoutstatus(self, ctx, user: discord.Member):
+        """ Resets the current tryout stastus use it if the player wants to tryout again"""
         if ctx.guild.id == 445092370006933505:
             await self.config.member(user).command_used.set(False)
             user_lst = await self.config.allowed_users() 
@@ -231,6 +225,7 @@ class LegendEsports(commands.Cog):
     @commands.guild_only()
     @checks.mod_or_permissions()
     async def forceallow(self, ctx, user:discord.Member):
+        """Forcefully allow someone for a main team tryout"""
         if ctx.guild.id == 445092370006933505:
             async with self.config.allowed_users() as lst:
                 lst.append(user.id)
@@ -260,5 +255,3 @@ class LegendEsports(commands.Cog):
 
         else:
             pass
-
-    
