@@ -158,7 +158,7 @@ class LegendEsports(commands.Cog):
         if ctx.guild.id == 445092370006933505:
             player_tag = self.tags.getTag(userID=ctx.author.id)
             if player_tag is None:
-                return await ctx.send("Player tag not saved, use `!save <#your player tag here>")
+                return await ctx.send("Player tag not saved, use `!save <#your player tag here>`")
             try:
                 player_data = await self.cr.get_player(player_tag)
                 ign = player_data.name
