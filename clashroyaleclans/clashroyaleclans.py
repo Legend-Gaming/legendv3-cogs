@@ -431,7 +431,7 @@ class ClashRoyaleClans(commands.Cog):
                 elif not role_to_ping:
                     await ctx.send(f"Connot find role {clan_role}")
             except discord.errors.Forbidden:
-                await ctx.send("Approval failed, {} please fix your privacy settings, "
+                return await ctx.send("Approval failed, {} please fix your privacy settings, "
                                "we are unable to send you Direct Messages.".format(member.mention)
                 )
         else:
@@ -555,30 +555,35 @@ class ClashRoyaleClans(commands.Cog):
             if global_channel:
                 greeting_to_send = (random.choice(self.greetings)).format(member)
                 await global_channel.send(greeting_to_send)
+            
+            try:
+                if len(discord_invites) == 0:
+                    await smart_embed(member, "Hi There! Congratulations on getting accepted into our family. "
+                                              "We have unlocked all the member channels for you in LeGeND Discord Server. "
+                                              "DM <@598662722821029888> if you have any problems.\n"
+                                              "Please do not leave our Discord server while you are in the clan. Thank you."
+                                      )
+                else:
+                    await member.send(("Hi There! Congratulations on getting accepted into our family. "
+                                      "We have unlocked all the member channels for you in LeGeND Discord Server. "
+                                      "Now you have to carefuly read this message and follow the steps mentioned below: \n\n"
+                                      "Please click on the link below to join your clan Discord server. \n\n"
+                                       "{invites}".format(invites="\n".join(discord_invites)) +
+                                       "\n\n"
+                                      "Please do not leave our main or clan servers while you are in the clan. Thank you."
+                                      )
+                                      )
 
-            if len(discord_invites) == 0:
-                await smart_embed(member, "Hi There! Congratulations on getting accepted into our family. "
-                                          "We have unlocked all the member channels for you in LeGeND Discord Server. "
-                                          "DM <@598662722821029888> if you have any problems.\n"
-                                          "Please do not leave our Discord server while you are in the clan. Thank you."
-                                  )
-            else:
-                await member.send(("Hi There! Congratulations on getting accepted into our family. "
-                                  "We have unlocked all the member channels for you in LeGeND Discord Server. "
-                                  "Now you have to carefuly read this message and follow the steps mentioned below: \n\n"
-                                  "Please click on the link below to join your clan Discord server. \n\n"
-                                   "{invites}".format(invites="\n".join(discord_invites)) +
-                                   "\n\n"
-                                  "Please do not leave our main or clan servers while you are in the clan. Thank you."
-                                  )
-                                  )
-
-            await asyncio.sleep(60)
-            for page in pagify(self.rules_text, delims=["\n\n\n"]):
-                await member.send(page)
-            await asyncio.sleep(60)
-            for page in pagify(esports_text, delims=["\n\n\n"]):
-                await member.send(page)
+                await asyncio.sleep(60)
+                for page in pagify(self.rules_text, delims=["\n\n\n"]):
+                    await member.send(page)
+                await asyncio.sleep(60)
+                for page in pagify(esports_text, delims=["\n\n\n"]):
+                    await member.send(page)
+            except discord.errors.Forbidden:
+                await ctx.send("Approval failed, {} please fix your privacy settings, "
+                               "we are unable to send you Direct Messages.".format(member.mention)
+                )
 
         else:
             await ctx.send("You must be accepted into a clan before I can give you clan roles. "
