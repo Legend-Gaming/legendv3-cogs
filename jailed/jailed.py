@@ -40,7 +40,7 @@ class Jail(commands.Cog):
 
     @commands.command()
     @checks.mod_or_permissions()
-    async def jail(self, ctx, user: discord.Member, *,reason):
+    async def jail(self, ctx, user: discord.Member, *,reason:str):
 
         if ctx.author != user:
 
@@ -93,7 +93,7 @@ class Jail(commands.Cog):
 
     @commands.command()
     @checks.mod_or_permissions()
-    async def bailout(self, ctx, user: discord.Member, *, reason:str = None):
+    async def bailout(self, ctx, user: discord.Member, *, reason:str):
 
         jail_id = await self.config.guild(ctx.guild).jailed_role()
         lst = await self.config.member(user).roles()
