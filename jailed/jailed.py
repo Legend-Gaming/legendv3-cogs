@@ -40,7 +40,7 @@ class Jail(commands.Cog):
 
     @commands.command()
     @checks.mod_or_permissions()
-    async def jail(self, ctx, user: discord.Member, *,reason:str = None):
+    async def jail(self, ctx, user: discord.Member, *,reason):
 
         if ctx.author != user:
 
