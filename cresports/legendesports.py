@@ -75,7 +75,7 @@ class LegendEsports(commands.Cog):
                             elif badge.name == "LadderTop1000_1":
                                 top_ladder_finisher = True
 
-                        if (top_ladder_finisher) or ((gcwins >= 1 or ccwins >= 10) and pb >= 6600) or (top_global_finish or (max_wins >= 17 and pb > 5800):
+                        if (top_ladder_finisher) or ((gcwins >= 1 or ccwins >= 10) and pb >= 6600) or (top_global_finish or (max_wins >= 17 and pb > 5800)):
                             maintserver = self.bot.get_guild(740567594381213727)
                             channel = maintserver.get_channel(743498231517806654)
                             invite = await channel.create_invite(max_uses=1)
