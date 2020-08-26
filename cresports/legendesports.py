@@ -242,7 +242,7 @@ class LegendEsports(commands.Cog):
         if guild.id == 740567594381213727:
             allowed_users = await self.config.allowed_users()
             if member.id in allowed_users:
-                await member.send("Welcome to the Legend Main Team tryout server {}, please go through the rules and ping one of the tryout managers in the respective chat and stay patient, please keep in mind, upon the completion of your tryouts you will be removed from the server.".format(member.mention))
+                await member.send("Welcome to the Legend Pro Team tryout server {}, please go through the rules and ping one of the tryout managers in the respective chat and stay patient, please keep in mind, upon the completion of your tryouts you will be removed from the server.".format(member.mention))
                 embed = discord.Embed(colour=0x00FFFF, title="New user joined", description="{} joined and had the requirements to join. Tryouts role added to the user.".format(member.mention))
                 await channel.send(embed=embed)
                 role = guild.get_role(744088646625263676)
