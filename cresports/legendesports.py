@@ -38,7 +38,7 @@ class LegendEsports(commands.Cog):
         """Selects which team you can tryout for based on your stats"""
         if ctx.guild.id == 445092370006933505:
             for_self = False
-            if user is None:
+            if user is None or user == ctx.author:
                 user, for_self = ctx.author, True
             command_used = await self.config.member(user).command_used()
             if command_used is False or await self.bot.is_mod(ctx.author):
@@ -75,12 +75,12 @@ class LegendEsports(commands.Cog):
                             elif badge.name == "LadderTop1000_1":
                                 top_ladder_finisher = True
 
-                        if (top_ladder_finisher) or ((gcwins >= 1 or ccwins >= 10) and pb >= 6600) or (top_global_finish and max_wins >= 17):
+                        if (top_ladder_finisher) or ((gcwins >= 1 or ccwins >= 10) and pb >= 6600) or (top_global_finish or (max_wins >= 17 and pb > 5600):
                             maintserver = self.bot.get_guild(740567594381213727)
                             channel = maintserver.get_channel(743498231517806654)
                             invite = await channel.create_invite(max_uses=1)
                             embed = discord.Embed(colour=0x00FFFF, url="https://royaleapi.com/team/legend-esports", title="LeGeND eSports Tryout")
-                            embed.add_field(name="Team Eligible for:", value="Main Team", inline=True)
+                            embed.add_field(name="Team Eligible for:", value="Pro Team", inline=True)
                             embed.add_field(name="Personal Best:", value=pb, inline=True)  
                             embed.add_field(name="Grand Challenges Won", value=gcwins, inline=True)
                             embed.add_field(name="Classic Challenges Won", value=ccwins, inline=True)
@@ -88,7 +88,7 @@ class LegendEsports(commands.Cog):
                             embed.add_field(name="Top Global Tournament Finish", value=top_global_finish, inline=True)
                             embed.set_footer(text=credits, icon_url=creditIcon)
                             await ctx.send(embed=embed)
-                            await user.send("Hey! {}, You are eligible to tryout for the LeGeND Main Team. Please join the server link given below, **DON'T SHARE IT WITH ANYONE** as its a one time link and will expire after one use.".format(user.mention))
+                            await user.send("Hey! {}, You are eligible to tryout for the LeGeND Pro Team. Please join the server link given below, **DON'T SHARE IT WITH ANYONE** as its a one time link and will expire after one use.".format(user.mention))
                             await user.send(invite)
                             await user.send("Please fill out this google form https://docs.google.com/forms/d/1uptjI7VcBjoev9n45JZTFTqdjWD7PUd4H6uL-zSy-UE/edit")
                             try:
@@ -104,7 +104,7 @@ class LegendEsports(commands.Cog):
 
                         elif pb >= 5600 and (ccwins >= 1 or gcwins >= 1):
                             embed = discord.Embed(colour=0x00FFFF, url="https://royaleapi.com/team/legend-esports", title="LeGeND eSports Tryout")
-                            embed.add_field(name="Team Eligible for:", value="Challenger Team", inline=True)
+                            embed.add_field(name="Team Eligible for:", value="Main Team", inline=True)
                             embed.add_field(name="Personal Best:", value=pb, inline=True)  
                             embed.add_field(name="Grand Challenges Won", value=gcwins, inline=True)
                             embed.add_field(name="Classic Challenges Won", value=ccwins, inline=True)
@@ -112,7 +112,7 @@ class LegendEsports(commands.Cog):
                             embed.add_field(name="Top Global Tournament Finish", value=top_global_finish, inline=True)
                             embed.set_footer(text=credits, icon_url=creditIcon)
                             await ctx.send(embed=embed)
-                            await user.send("Hey {}, you are eligible for giving tryouts for **CHALLENGER** team go to #challenger-tryout-chat on the esports server and ping a Tryout Manager there!! Also don't forget to fill up this google form https://docs.google.com/forms/d/1uptjI7VcBjoev9n45JZTFTqdjWD7PUd4H6uL-zSy-UE/edit".format(user.mention))
+                            await user.send("Hey {}, you are eligible for giving tryouts for the **MAIN** team go to #main-tryout-chat on the esports server and ping a Tryout Manager there!! Also don't forget to fill up this google form https://docs.google.com/forms/d/1uptjI7VcBjoev9n45JZTFTqdjWD7PUd4H6uL-zSy-UE/edit".format(user.mention))
                             roleid = await self.config.guild(ctx.guild).Challengert()
                             role = ctx.guild.get_role(roleid)
                             await user.add_roles(role)
