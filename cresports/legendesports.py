@@ -75,7 +75,7 @@ class LegendEsports(commands.Cog):
                             elif badge.name == "LadderTop1000_1":
                                 top_ladder_finisher = True
 
-                        if (top_ladder_finisher) or ((gcwins >= 1 or ccwins >= 10) and pb >= 6600) or (top_global_finish or (max_wins >= 17 and pb > 5600):
+                        if (top_ladder_finisher) or ((gcwins >= 1 or ccwins >= 10) and pb >= 6600) or (top_global_finish or (max_wins >= 17 and pb > 5800):
                             maintserver = self.bot.get_guild(740567594381213727)
                             channel = maintserver.get_channel(743498231517806654)
                             invite = await channel.create_invite(max_uses=1)
@@ -189,7 +189,7 @@ class LegendEsports(commands.Cog):
     @commands.command()
     @checks.admin_or_permissions()
     @commands.guild_only()
-    async def setchallengertryoutrole(self, ctx, role: discord.Role):
+    async def setmaintryoutrole(self, ctx, role: discord.Role):
         if ctx.guild.id == 445092370006933505:
             await self.config.guild(ctx.guild).Challengert.set(role.id)
             await ctx.send("The Challenger tryout role is now considered as {}".format(role.id))
@@ -225,7 +225,7 @@ class LegendEsports(commands.Cog):
     @commands.guild_only()
     @checks.mod_or_permissions()
     async def forceallow(self, ctx, user:discord.Member):
-        """Forcefully allow someone for a main team tryout"""
+        """Forcefully allow someone for a pro team tryout"""
         if ctx.guild.id == 445092370006933505:
             async with self.config.allowed_users() as lst:
                 lst.append(user.id)
