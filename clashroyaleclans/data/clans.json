@@ -4,12 +4,12 @@
     "tag": "29YPJYY",
     "nickname": "D8",
     "clanrole": "Dragons Eight",
-    "emoji": "",
+    "emoji": "d8",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 0,
+        "legendary": 0,
         "gold": 0,
         "silver": 0,
         "bronze": 0
@@ -24,12 +24,12 @@
     "tag": "VJQ0GJ0",
     "nickname": "Legion",
     "clanrole": "Legion",
-    "emoji": "",
+    "emoji": "legion",
     "requirements": {
       "personalbest": 6000,
       "wdwins": 150,
       "cwr": {
-        "legend": 0,
+        "legendary": 0,
         "gold": 0,
         "silver": 0,
         "bronze": 0
@@ -44,12 +44,12 @@
     "tag": "9PJYVVL2",
     "nickname": "Titan",
     "clanrole": "Titan",
-    "emoji": "",
+    "emoji": "titan",
     "requirements": {
       "personalbest": 5800,
       "wdwins": 100,
       "cwr": {
-        "legend": 15,
+        "legendary": 15,
         "gold": 40,
         "silver": 0,
         "bronze": 0
@@ -64,12 +64,12 @@
     "tag": "Y8G9C09",
     "nickname": "D82",
     "clanrole": "Dragons Eight II",
-    "emoji": "",
+    "emoji": "d8",
     "requirements": {
-      "personalbest": 0,
+      "personalbest": 5600,
       "wdwins": 50,
       "cwr": {
-        "legend": 0,
+        "legendary": 0,
         "gold": 0,
         "silver": 0,
         "bronze": 0
@@ -84,12 +84,12 @@
     "tag": "80CC8",
     "nickname": "Squad",
     "clanrole": "Squad",
-    "emoji": "",
+    "emoji": "squad",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 15,
+        "legendary": 15,
         "gold": 40,
         "silver": 0,
         "bronze": 0
@@ -97,24 +97,25 @@
       "bonus": "60% War  Winrate",
       "private": false
     },
-    "waiting": []
+    "waiting": [],
+	"invite": "https://discord.gg/RuBGPTu"
   },
   "LeGeND Prime!": {
     "name": "LeGeND Prime!",
     "tag": "2LL8LC2R",
     "nickname": "Prime",
     "clanrole": "Prime",
-    "emoji": "",
+    "emoji": "prime",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 4,
+        "legendary": 4,
         "gold": 25,
         "silver": 0,
         "bronze": 0
       },
-      "bonus": "",
+      "bonus": "Age: 21+",
       "private": false
     },
     "waiting": []
@@ -124,12 +125,12 @@
     "tag": "RY9QJU2",
     "nickname": "Rising",
     "clanrole": "Rising",
-    "emoji": "",
+    "emoji": "rising",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 2,
+        "legendary": 2,
         "gold": 15,
         "silver": 0,
         "bronze": 0
@@ -144,13 +145,13 @@
     "tag": "9P2PQULQ",
     "nickname": "Empire",
     "clanrole": "Empire",
-    "emoji": "",
+    "emoji": "empire",
     "requirements": {
       "personalbest": 5300,
       "wdwins": 0,
       "cwr": {
-        "legend": 2,
-        "gold": 8,
+        "legendary": 5,
+        "gold": 20,
         "silver": 0,
         "bronze": 0
       },
@@ -164,12 +165,12 @@
     "tag": "99R2PQVR",
     "nickname": "Dynasty",
     "clanrole": "Dynasty",
-    "emoji": "",
+    "emoji": "dynasty",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 0,
+        "legendary": 0,
         "gold": 0,
         "silver": 0,
         "bronze": 0
@@ -177,22 +178,23 @@
       "bonus": "",
       "private": false
     },
-    "waiting": []
+    "waiting": [],
+	"invite": "https://discord.gg/Rv5PJx"
   },
   "LeGeND eSports!": {
     "name": "LeGeND eSports!",
     "tag": "P9GG9QQY",
     "nickname": "eSports",
     "clanrole": "eSports",
-    "emoji": "",
+    "emoji": "esports",
     "requirements": {
-      "personalbest": 0,
+      "personalbest": 5600,
       "wdwins": 0,
       "cwr": {
-        "legend": 10,
-        "gold": 20,
+        "legendary": 0,
+        "gold": 0,
         "silver": 0,
-        "bronze": 0
+        "bronze": 75
       },
       "bonus": "",
       "private": false
@@ -204,12 +206,12 @@
     "tag": "J0CQ9R9",
     "nickname": "Plague",
     "clanrole": "White Plague",
-    "emoji": "",
+    "emoji": "plague",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 0,
+        "legendary": 0,
         "gold": 0,
         "silver": 0,
         "bronze": 0
@@ -224,13 +226,13 @@
     "tag": "PRCRJYCR",
     "nickname": "D83",
     "clanrole": "Dragons Eight III",
-    "emoji": "",
+    "emoji": "d8",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 0,
-        "gold": 1,
+        "legendary": 0,
+        "gold": 0,
         "silver": 0,
         "bronze": 0
       },
@@ -244,14 +246,14 @@
     "tag": "2CJ88808",
     "nickname": "Phantom",
     "clanrole": "Phantom",
-    "emoji": "",
+    "emoji": "phantom",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 0,
-        "gold": 15,
-        "silver": 30,
+        "legendary": 0,
+        "gold": 0,
+        "silver": 0,
         "bronze": 0
       },
       "bonus": "",
@@ -264,12 +266,12 @@
     "tag": "8QRQQ8RG",
     "nickname": "Academy",
     "clanrole": "Academy",
-    "emoji": "",
+    "emoji": "academy",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 0,
+        "legendary": 0,
         "gold": 0,
         "silver": 0,
         "bronze": 0
@@ -284,12 +286,12 @@
     "tag": "YLULCRQJ",
     "nickname": "Pride",
     "clanrole": "Pride",
-    "emoji": "",
+    "emoji": "pride",
     "requirements": {
       "personalbest": 0,
       "wdwins": 0,
       "cwr": {
-        "legend": 0,
+        "legendary": 0,
         "gold": 0,
         "silver": 0,
         "bronze": 0
