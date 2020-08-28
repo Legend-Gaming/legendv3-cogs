@@ -575,6 +575,7 @@ class ClashRoyaleClans(commands.Cog):
             )
 
     @commands.command(name="newmember")
+    @checks.mod()
     async def command_newmember(self, ctx, member: discord.Member):
         """
             Setup nickname, and roles for a new member
@@ -582,15 +583,15 @@ class ClashRoyaleClans(commands.Cog):
         guild = ctx.guild
         author = ctx.author
 
-        if not (await self.bot.is_mod(ctx.author)):
-            return await ctx.send(
-                "Sorry! You do not have enough permissions to run this command."
-            )
+        # if not (await self.bot.is_mod(ctx.author)):
+        #     return await ctx.send(
+        #         "Sorry! You do not have enough permissions to run this command."
+        #     )
 
         # Check if user already has any of member roles:
         # Use `!changeclan` to change already registered member's clan cause it needs role checking to remove existing roles
-        if await self.discord_helper._is_member(member):
-            return await ctx.send("Error, " + member.mention + " is not a new member.")
+        # if await self.discord_helper._is_member(member, guild=ctx.guild):
+        #     return await ctx.send("Error, " + member.mention + " is not a new member.")
 
         is_clan_member = False
         player_tags = self.tags.getAllTags(member.id)
@@ -693,20 +694,16 @@ class ClashRoyaleClans(commands.Cog):
                 await global_channel.send(greeting_to_send)
 
             try:
-                if len(discord_invites) == 0:
-                    await simple_embed(
-                        member,
-                        "Hi There! Congratulations on getting accepted into our family. "
-                        "We have unlocked all the member channels for you in LeGeND Discord Server. "
-                        "DM <@598662722821029888> if you have any problems.\n"
-                        "Please do not leave our Discord server while you are in the clan. Thank you.",
-                    )
-                else:
+                await simple_embed(
+                    member,
+                    "Hi There! Congratulations on getting accepted into our family. "
+                    "We have unlocked all the member channels for you in LeGeND Discord Server. "
+                    "DM <@598662722821029888> if you have any problems.\n"
+                    "Please do not leave our Discord server while you are in the clan. Thank you.",
+                )
+                if discord_invites:
                     await member.send(
                         (
-                            "Hi There! Congratulations on getting accepted into our family. "
-                            "We have unlocked all the member channels for you in LeGeND Discord Server. "
-                            "Now you have to carefuly read this message and follow the steps mentioned below: \n\n"
                             "Please click on the link below to join your clan Discord server. \n\n"
                             "{invites}".format(invites="\n".join(discord_invites))
                             + "\n\n"
@@ -716,13 +713,13 @@ class ClashRoyaleClans(commands.Cog):
 
                 await asyncio.sleep(60)
                 for page in pagify(self.rules_text, delims=["\n\n\n"]):
-                    await member.send(page)
+                    await simple_embed(member, page)
                 await asyncio.sleep(60)
                 for page in pagify(self.esports_text, delims=["\n\n\n"]):
                     await member.send(page)
             except discord.errors.Forbidden:
                 await ctx.send(
-                    "Approval failed, {} please fix your privacy settings, "
+                    "{} please fix your privacy settings, "
                     "we are unable to send you Direct Messages.".format(member.mention)
                 )
 
@@ -765,7 +762,7 @@ class ClashRoyaleClans(commands.Cog):
         try:
             await member.edit(nick=new_nickname)
         except discord.Forbidden:
-            return await simple_embed(
+            await simple_embed(
                 ctx, "I don't have permission to change nick for this user.", False
             )
         member_newroles = set(member.roles)
@@ -946,14 +943,13 @@ class Helper:
             pass
 
     @staticmethod
-    async def _is_member(member: discord.Member):
+    async def _is_member(member: discord.Member, guild: discord.Guild):
         """
             Check if member already has any of roles
         """
         """
             Credits: Gr8
         """
-        guild = member.guild
         _membership_roles = [
             discord.utils.get(guild.roles, name=r)
             for r in [
