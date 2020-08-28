@@ -534,9 +534,11 @@ class ClashRoyaleClans(commands.Cog):
                 try:
                     newname = ign + " (Approved)"
                     await member.edit(nick=newname)
-                except discord.HTTPException:
-                    await ctx.send(
-                        "I don’t have permission to change nick for this user."
+                except discord.Forbidden:
+                    await simple_embed(
+                        ctx,
+                        "I don't have permission to change nick for this user.",
+                        False,
                     )
 
                 role_to_ping = discord.utils.get(guild.roles, name=clan_role)
@@ -760,7 +762,12 @@ class ClashRoyaleClans(commands.Cog):
             new_nickname = (await self.clash.get_player(tag)).name
         except discord.HTTPException:
             new_nickname = (member.display_name.split("|")[0]).strip()
-        await member.edit(nick=new_nickname)
+        try:
+            await member.edit(nick=new_nickname)
+        except discord.Forbidden:
+            return await simple_embed(
+                ctx, "I don't have permission to change nick for this user.", False
+            )
         member_newroles = set(member.roles)
         removed_roles = [r.mention for r in member_roles.difference(member_newroles)]
         if len(removed_roles) == 0:
