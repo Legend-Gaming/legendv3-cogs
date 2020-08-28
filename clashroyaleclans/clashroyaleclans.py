@@ -44,7 +44,9 @@ async def simple_embed(
         colour = discord.Colour.blue()
     embed = discord.Embed(description=message, color=colour)
     embed.set_footer(text=credits, icon_url=creditIcon)
-    return await ctx.send(embed=embed)
+    return await ctx.send(
+        embed=embed, allowed_mentions=discord.AllowedMentions(users=True, roles=True)
+    )
 
 
 class ClashRoyaleClans(commands.Cog):
@@ -288,7 +290,8 @@ class ClashRoyaleClans(commands.Cog):
                             player_maxwins,
                             player_clanname,
                         )
-                    )
+                    ),
+                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
 
     @tasks.loop(seconds=120)
@@ -500,7 +503,8 @@ class ClashRoyaleClans(commands.Cog):
                         "Your recruit code will arrive in 3 minutes.{}".format(
                             member.mention, warning
                         )
-                    )
+                    ),
+                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
                 await asyncio.sleep(180)
 
@@ -525,10 +529,13 @@ class ClashRoyaleClans(commands.Cog):
                     + "They will then unlock all the member channels for you.",
                 )
                 await ctx.send(
-                    member.mention
-                    + " has been approved for **"
-                    + clan_name
-                    + "**. Please check your DM for instructions on how to join."
+                    (
+                        member.mention
+                        + " has been approved for **"
+                        + clan_name
+                        + "**. Please check your DM for instructions on how to join."
+                    ),
+                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
 
                 try:
@@ -554,7 +561,13 @@ class ClashRoyaleClans(commands.Cog):
 
                 channel = self.bot.get_channel(newrecruitsChannelId)
                 if channel and role_to_ping:
-                    await channel.send(role_to_ping.mention, embed=embed)
+                    await channel.send(
+                        role_to_ping.mention,
+                        embed=embed,
+                        allowed_mentions=discord.AllowedMentions(
+                            users=True, roles=True
+                        ),
+                    )
                 elif not channel:
                     await ctx.send(
                         "Cannot find channel. Please contact a admin or a dev."
@@ -564,7 +577,8 @@ class ClashRoyaleClans(commands.Cog):
             except discord.errors.Forbidden:
                 return await ctx.send(
                     "Approval failed, {} please fix your privacy settings, "
-                    "we are unable to send you Direct Messages.".format(member.mention)
+                    "we are unable to send you Direct Messages.".format(member.mention),
+                    allowed_mentions=discord.AllowedMentions(users=True),
                 )
         else:
             await simple_embed(
@@ -685,13 +699,17 @@ class ClashRoyaleClans(commands.Cog):
                 await recruitment_channel.send(
                     "**{}** recruited **{} (#{})** to {}".format(
                         ctx.author.display_name, ign, tag, roleName.mention
-                    )
+                    ),
+                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
 
             global_channel = self.bot.get_channel(globalChannelId)
             if global_channel:
                 greeting_to_send = (random.choice(self.greetings)).format(member)
-                await global_channel.send(greeting_to_send)
+                await global_channel.send(
+                    greeting_to_send,
+                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+                )
 
             try:
                 await simple_embed(
@@ -719,8 +737,13 @@ class ClashRoyaleClans(commands.Cog):
                     await member.send(page)
             except discord.errors.Forbidden:
                 await ctx.send(
-                    "{} please fix your privacy settings, "
-                    "we are unable to send you Direct Messages.".format(member.mention)
+                    (
+                        "{} please fix your privacy settings, "
+                        "we are unable to send you Direct Messages.".format(
+                            member.mention
+                        )
+                    ),
+                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
 
         else:
