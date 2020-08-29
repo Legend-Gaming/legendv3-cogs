@@ -851,8 +851,8 @@ class ClashRoyaleClans(commands.Cog):
                 ),
                 inline=True,
             )
-            for league in leagues.keys():
-                f_title = "{} {} League (Lvl {}) - {}%\n".format(
+            for index, league in enumerate(leagues.keys()):
+                f_title = "{} {} League (Lvl {}) - {}%\n\u200b".format(
                     emote_mapper[league],
                     leagues[league]["name"],
                     leagues[league]["levels"],
@@ -875,17 +875,19 @@ class ClashRoyaleClans(commands.Cog):
                             value.append(emoji)
                         else:
                             value.append(f" {card} ")
-                not_shown = len(leagues[league]["cards"]) - len(value)
-                value = " ".join(value)
-                value += f"+{not_shown} more\n\n\n" if not_shown else "\n\n\n"
-                embed.add_field(
-                    name=f_title, value=value, inline=False,
-                )
-                embed.add_field(name="\u200b", value="\u200b", inline=False)
+                if len(value):
+                    not_shown = len(leagues[league]["cards"]) - len(value)
+                    value = " ".join(value)
+                    value += f"+{not_shown} more\n\n\n" if not_shown else "\n\n\n"
+                    embed.add_field(
+                        name=f_title, value=value, inline=False,
+                    )
+                    if index < len(leagues.keys()) - 1:
+                        embed.add_field(name="\u200b", value="\u200b", inline=False)
             pages.append(embed)
 
             for league in leagues.keys():
-                f_title = "{} {} League (Lvl {}) - {}%\n".format(
+                f_title = "{} {} League (Lvl {}) - {}%\n\u200b".format(
                     emote_mapper[league],
                     leagues[league]["name"],
                     leagues[league]["levels"],
@@ -914,14 +916,17 @@ class ClashRoyaleClans(commands.Cog):
                                 value.append(emoji)
                             else:
                                 value.append(f" {card} ")
-                    value = " ".join(value)
 
-                    embed.add_field(
-                        name=f_title if index == 0 else "\u200b",
-                        value=value,
-                        inline=False,
-                    )
-                pages.append(embed)
+                    if len(value):
+                        value = " ".join(value)
+
+                        embed.add_field(
+                            name=f_title if index == 0 else "\u200b",
+                            value=value,
+                            inline=False,
+                        )
+                if groups:
+                    pages.append(embed)
         return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=60)
 
 
