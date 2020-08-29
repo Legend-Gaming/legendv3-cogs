@@ -853,7 +853,9 @@ class ClashRoyaleClans(commands.Cog):
             )
             highest_league = None
             for l in leagues.keys():
-                highest_league = l if leagues[l]["percent"] > 0 else highest_league
+                highest_league = l
+                if leagues[l]["percent"] == 100:
+                    break
             for league in leagues.keys():
                 f_title = "{} {} League (Lvl {}) - {}%\n\u200b".format(
                     emote_mapper[league],
