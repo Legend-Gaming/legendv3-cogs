@@ -76,8 +76,11 @@ class ClashRoyaleClans(commands.Cog):
         self.esports_path = str(bundled_data_path(self) / "esports.txt")
         with open(self.esports_path) as file:
             self.esports_text = file.read()
+
+        self.token_task = self.bot.loop.create_task(self.crtoken())
         self.refresh_task = self.refresh_data.start()
         self.last_updated = None
+
 
     async def crtoken(self):
         # Initialize clashroyale API
@@ -93,7 +96,12 @@ class ClashRoyaleClans(commands.Cog):
         )
 
     def cog_unload(self):
-        self.refresh_task.cancel()
+        if self.refresh_task:
+            self.refresh_task.cancel()
+        if self.token_task:
+            self.token_task.cancel()
+        self.bot.loop.create_task(self.clash.close())
+
 
     @commands.command(name="legend")
     async def commandLegend(

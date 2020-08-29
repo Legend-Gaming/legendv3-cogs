@@ -300,6 +300,8 @@ class ClashRoyaleTools(commands.Cog):
         }
         self.config.register_global(**default_global)
 
+        self.token_task = self.bot.loop.create_task(self.crtoken())
+
     async def crtoken(self):
         # SQL Server
         database = await self.bot.get_shared_api_tokens("database")
@@ -318,10 +320,13 @@ class ClashRoyaleTools(commands.Cog):
             print("CR Token is not SET. Use !set api clashroyale token,YOUR_TOKEN to set it")
             raise RuntimeError
         self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True,
-                                                  url="https://proxy.royaleapi.dev/v1")
+                                                 url="https://proxy.royaleapi.dev/v1")
 
 
     def cog_unload(self):
+        if self.token_task:
+            self.token_task.cancel()
+        self.bot.loop.create_task(self.cr.close())
         print('Unloaded CR-Tools... NOTE MANY DEPENDANCIES WILL BREAK INCLUDING TRADING, CLASHROYALESTATS AND CLASHROYALECLANS')
         self.tags.db.close()
 
