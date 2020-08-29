@@ -851,7 +851,10 @@ class ClashRoyaleClans(commands.Cog):
                 ),
                 inline=True,
             )
-            for index, league in enumerate(leagues.keys()):
+            highest_league = None
+            for l in leagues.keys():
+                highest_league = l if leagues[l]["percent"] > 0 else highest_league
+            for league in leagues.keys():
                 f_title = "{} {} League (Lvl {}) - {}%\n\u200b".format(
                     emote_mapper[league],
                     leagues[league]["name"],
@@ -882,7 +885,7 @@ class ClashRoyaleClans(commands.Cog):
                     embed.add_field(
                         name=f_title, value=value, inline=False,
                     )
-                    if index < len(leagues.keys()) - 1:
+                    if league != highest_league:
                         embed.add_field(name="\u200b", value="\u200b", inline=False)
             pages.append(embed)
 
