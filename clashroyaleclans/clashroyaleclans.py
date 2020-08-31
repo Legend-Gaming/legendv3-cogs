@@ -83,7 +83,6 @@ class ClashRoyaleClans(commands.Cog):
         self.refresh_task = self.refresh_data.start()
         self.last_updated = None
 
-
     async def crtoken(self):
         # Initialize clashroyale API
         token = await self.bot.get_shared_api_tokens("clashroyale")
@@ -460,7 +459,9 @@ class ClashRoyaleClans(commands.Cog):
                     ctx, "Approval failed, the clan is Full.", False
                 )
 
-            if (player_trophies < app_clan_data.required_trophies) or (player_pb < clan_pb):
+            if (player_trophies < app_clan_data.required_trophies) or (
+                player_pb < clan_pb
+            ):
                 return await simple_embed(
                     ctx,
                     "Approval failed, you don't meet the trophy requirements.",
@@ -931,7 +932,9 @@ class ClashRoyaleClans(commands.Cog):
 
     @commands.command(name="waiting")
     @checks.mod()
-    async def command_waiting(self, ctx, member: discord.Member, clan_name, account: int = 1):
+    async def command_waiting(
+        self, ctx, member: discord.Member, clan_name, account: int = 1
+    ):
         """Add people to the waiting list for a clan"""
         clan_name = clan_name.lower()
 
@@ -982,7 +985,6 @@ class ClashRoyaleClans(commands.Cog):
                 ctx, "Error: cannot reach Clash Royale Servers. Please try again later."
             )
 
-
         player_ign = player_data.name
         player_trophies = player_data.trophies
         player_cards = player_data.cards
@@ -991,7 +993,10 @@ class ClashRoyaleClans(commands.Cog):
         player_wd_wins = player_data.warDayWins
 
         if player_trophies < wait_clan_data.required_trophies or player_pb < clan_pb:
-            return await simple_embed(ctx, "Cannot add you to the waiting list, you don't meet the trophy requirements.")
+            return await simple_embed(
+                ctx,
+                "Cannot add you to the waiting list, you don't meet the trophy requirements.",
+            )
 
         player_cwr_good = True
         for league in clan_cwr:
@@ -999,15 +1004,18 @@ class ClashRoyaleClans(commands.Cog):
                 if player_cwr[league]["percent"] < clan_cwr[league]:
                     player_cwr_good = False
 
-        if (not player_cwr_good):
-            return await simple_embed(ctx, "Cannot add you to the waiting lists, you don't meet the CW Readiness requirements.")
+        if not player_cwr_good:
+            return await simple_embed(
+                ctx,
+                "Cannot add you to the waiting lists, you don't meet the CW Readiness requirements.",
+            )
 
         if player_wd_wins < clan_wd_wins:
-                return await simple_embed(
-                    ctx,
-                    "Approval failed, you don't meet requirements for war day wins.",
-                    False,
-                )
+            return await simple_embed(
+                ctx,
+                "Approval failed, you don't meet requirements for war day wins.",
+                False,
+            )
 
         if not await self.add_to_waiting(clan_name, member):
             return await ctx.send("You are already in a waiting list for this clan.")
@@ -1028,13 +1036,18 @@ class ClashRoyaleClans(commands.Cog):
                 f"{clan_name}"
                 "**. We will mention you when a spot is available."
             ),
-            allowed_mentions=discord.AllowedMentions(users=True)
+            allowed_mentions=discord.AllowedMentions(users=True),
         )
 
         role = discord.utils.get(ctx.guild.roles, name=clan_role)
         to_post = self.bot.get_channel(new_recruits_channel_id)
         if to_post:
-            await simple_embed(to_post, "**{} (#{})** added to the waiting list for {}".format(player_ign, player_tag, role.mention))
+            await simple_embed(
+                to_post,
+                "**{} (#{})** added to the waiting list for {}".format(
+                    player_ign, player_tag, role.mention
+                ),
+            )
 
     @commands.command(name="waitinglist", aliases=["waitlist", "wait"])
     async def command_waitinglist(self, ctx):
@@ -1054,7 +1067,7 @@ class ClashRoyaleClans(commands.Cog):
                     for index, user_ID in enumerate(clan_data.get("waiting", {})):
                         user = discord.utils.get(ctx.guild.members, id=user_ID)
                         try:
-                            message += str(index+1) + ". " + user.display_name + "\n"
+                            message += str(index + 1) + ". " + user.display_name + "\n"
                             num_players += 1
                         except AttributeError:
                             await self.remove_from_waiting(clan_name, user_ID)
@@ -1064,8 +1077,17 @@ class ClashRoyaleClans(commands.Cog):
             if not message:
                 await ctx.send("The waiting list is empty")
             else:
-                embed.description = "We have " + str(num_players) + " people waiting for " + str(num_clans) + " clans."
-                embed.set_author(name="Legend Family Waiting List", icon_url="https://i.imgur.com/dtSMITE.jpg")
+                embed.description = (
+                    "We have "
+                    + str(num_players)
+                    + " people waiting for "
+                    + str(num_clans)
+                    + " clans."
+                )
+                embed.set_author(
+                    name="Legend Family Waiting List",
+                    icon_url="https://i.imgur.com/dtSMITE.jpg",
+                )
                 embed.set_footer(text=credits, icon_url=credits_icon)
                 await ctx.send(embed=embed)
 
@@ -1096,7 +1118,7 @@ class ClashRoyaleClans(commands.Cog):
                 (
                     f"{member.mention} has been removed from the waiting list for **{clan_name}**."
                 ),
-                allowed_mentions=discord.AllowedMentions(users=True)
+                allowed_mentions=discord.AllowedMentions(users=True),
             )
         waiting_role = discord.utils.get(ctx.guild.roles, name="Waiting")
         if not waiting_role:
@@ -1120,7 +1142,7 @@ class ClashRoyaleClans(commands.Cog):
         if member.id in clan_data["waiting"]:
             return False
         clan_data["waiting"].append(member.id)
-        with open(self.claninfo_path, 'w') as file:
+        with open(self.claninfo_path, "w") as file:
             json.dump(self.family_clans, file)
         return True
 
@@ -1135,9 +1157,10 @@ class ClashRoyaleClans(commands.Cog):
         if member.id not in clan_data["waiting"]:
             return False
         self.family_clans[clan_name]["waiting"].remove(member.id)
-        with open(self.claninfo_path, 'w') as file:
+        with open(self.claninfo_path, "w") as file:
             json.dump(self.family_clans, file)
         return True
+
 
 class Helper:
     def __init__(self, bot):
