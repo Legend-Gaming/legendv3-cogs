@@ -1042,11 +1042,11 @@ class ClashRoyaleClans(commands.Cog):
         role = discord.utils.get(ctx.guild.roles, name=clan_role)
         to_post = self.bot.get_channel(new_recruits_channel_id)
         if to_post:
-            await simple_embed(
-                to_post,
+            await to_post.send(
                 "**{} (#{})** added to the waiting list for {}".format(
                     player_ign, player_tag, role.mention
                 ),
+                allowed_mentions=discord.AllowedMentions(roles=True)
             )
 
     @commands.command(name="waitinglist", aliases=["waitlist", "wait"])
