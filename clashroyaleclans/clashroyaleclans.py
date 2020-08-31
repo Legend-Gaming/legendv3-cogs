@@ -18,9 +18,9 @@ from redbot.core.utils.menus import DEFAULT_CONTROLS, menu, start_adding_reactio
 from redbot.core.utils.predicates import MessagePredicate
 
 credits = "Bot by Legend Gaming"
-creditIcon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
-newrecruitsChannelId = 375839851955748874
-globalChannelId = 374596069989810178
+credits_icon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
+new_recruits_channel_id = 375839851955748874
+global_channel_id = 374596069989810178
 log = logging.getLogger("red.cogs.clashroyaleclans")
 
 
@@ -43,7 +43,7 @@ async def simple_embed(
     else:
         colour = discord.Colour.blue()
     embed = discord.Embed(description=message, color=colour)
-    embed.set_footer(text=credits, icon_url=creditIcon)
+    embed.set_footer(text=credits, icon_url=credits_icon)
     return await ctx.send(
         embed=embed, allowed_mentions=discord.AllowedMentions(users=True, roles=True)
     )
@@ -54,8 +54,10 @@ class ClashRoyaleClans(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
         self.tags = self.bot.get_cog("ClashRoyaleTools").tags
         self.constants = self.bot.get_cog("ClashRoyaleTools").constants
+
         self.config = Config.get_conf(self, identifier=2286464642345664456)
         default_global = {"clans": list()}
         self.config.register_global(**default_global)
@@ -85,7 +87,7 @@ class ClashRoyaleClans(commands.Cog):
     async def crtoken(self):
         # Initialize clashroyale API
         token = await self.bot.get_shared_api_tokens("clashroyale")
-        if token["token"] is None:
+        if token.get("token") is None:
             log.error(
                 "CR Token is not SET. "
                 "Use [p]set api clashroyale token,YOUR_TOKEN to set it"
@@ -100,11 +102,11 @@ class ClashRoyaleClans(commands.Cog):
             self.refresh_task.cancel()
         if self.token_task:
             self.token_task.cancel()
-        self.bot.loop.create_task(self.clash.close())
-
+        if self.clash:
+            self.bot.loop.create_task(self.clash.close())
 
     @commands.command(name="legend")
-    async def commandLegend(
+    async def command_legend(
         self,
         ctx: commands.Context,
         member: Optional[discord.Member] = None,
@@ -117,7 +119,7 @@ class ClashRoyaleClans(commands.Cog):
         async with ctx.channel.typing():
             # Show all clans if member is None.
             player_trophies = 9999
-            player_maxtrophies = 9999
+            player_pb = 9999
             player_cwr = {
                 "legendary": {"percent": 0},
                 "gold": {"percent": 0},
@@ -136,9 +138,9 @@ class ClashRoyaleClans(commands.Cog):
                     player_data = await self.clash.get_player(player_tag)
                     player_trophies = player_data.trophies
                     player_cards = player_data.cards
-                    player_maxtrophies = player_data.best_trophies
+                    player_pb = player_data.best_trophies
                     player_maxwins = player_data.challenge_max_wins
-                    player_cwr = await self.discord_helper.clanwarReadiness(
+                    player_cwr = await self.discord_helper.clanwar_readiness(
                         player_cards
                     )
                     player_wd_wins = player_data.warDayWins
@@ -164,8 +166,7 @@ class ClashRoyaleClans(commands.Cog):
                 url="http://royaleapi.com/clan/family/legend",
                 icon_url="https://cdn.discordapp.com/attachments/423094817371848716/425389610223271956/legend_logo-trans.png",
             )
-
-            embed.set_footer(text=credits, icon_url=creditIcon)
+            embed.set_footer(text=credits, icon_url=credits_icon)
 
             found_clan = False
             total_members = 0
@@ -187,12 +188,12 @@ class ClashRoyaleClans(commands.Cog):
                 num_waiting = len(waiting)
                 total_waiting += num_waiting
 
-                pb = clan_requirements.get("personalbest", 0)
-                cwr = clan_requirements.get(
+                req_pb = clan_requirements.get("personalbest", 0)
+                req_cwr = clan_requirements.get(
                     "cwr", {"legendary": 0, "gold": 0, "silver": 0, "bronze": 0}
                 )
-                bonus = clan_requirements.get("bonus", "")
-                wd_wins = clan_requirements.get("wdwins", 0)
+                req_bonus_str = clan_requirements.get("bonus", "")
+                req_wd_wins = clan_requirements.get("wdwins", 0)
 
                 member_count = clan.get("members")
                 total_members += member_count
@@ -204,19 +205,19 @@ class ClashRoyaleClans(commands.Cog):
                 if str(clan.get("type")) != "inviteOnly":
                     title += f"[{str(clan.get('type')).title()}] "
                 title += f"{clan['name']}({clan['tag']}) "
-                if pb > 0:
-                    title += f"PB: {str(pb)}+  "
-                for league in cwr:
-                    if cwr[league] > 0:
+                if req_pb > 0:
+                    title += f"PB: {str(req_pb)}+  "
+                for league in req_cwr:
+                    if req_cwr[league] > 0:
                         title += "{}: {}%  ".format(
-                            league[:1].capitalize(), cwr[league]
+                            league[:1].capitalize(), req_cwr[league]
                         )
-                        if player_cwr[league]["percent"] < cwr[league]:
+                        if player_cwr[league]["percent"] < req_cwr[league]:
                             cwr_fulfilled = False
-                if wd_wins > 0:
-                    title += "{}+ War Day Wins ".format(wd_wins)
-                if bonus is not None:
-                    title += bonus
+                if req_wd_wins > 0:
+                    title += "{}+ War Day Wins ".format(req_wd_wins)
+                if req_bonus_str is not None:
+                    title += req_bonus_str
 
                 emoji = self.family_clans[clan_name].get("emoji", "")
                 if member_count < 50:
@@ -237,18 +238,18 @@ class ClashRoyaleClans(commands.Cog):
                     (member is None)
                     or (
                         (player_trophies >= clan["required_trophies"])
-                        and (player_maxtrophies >= pb)
+                        and (player_pb >= req_pb)
                         and (cwr_fulfilled)
                         and (player_trophies - clan["required_trophies"] < 1500)
                         and (clan["type"] != "closed")
-                        and (player_wd_wins >= wd_wins)
+                        and (player_wd_wins >= req_wd_wins)
                     )
                     or (
                         (clan["required_trophies"] <= 4000)
                         and (member_count != 50)
                         and (2000 < player_trophies < 5500)
                         and (clan["type"] != "closed")
-                        and (player_wd_wins >= wd_wins)
+                        and (player_wd_wins >= req_wd_wins)
                         and (cwr_fulfilled)
                     )
                 ):
@@ -293,8 +294,8 @@ class ClashRoyaleClans(commands.Cog):
                             ign,
                             player_tag,
                             player_trophies,
-                            player_maxtrophies,
-                            await self.discord_helper.getBestLeague(player_cards),
+                            player_pb,
+                            await self.discord_helper.get_best_league(player_cards),
                             player_maxwins,
                             player_clanname,
                         )
@@ -390,7 +391,7 @@ class ClashRoyaleClans(commands.Cog):
     ):
         guild = ctx.guild
         valid_keys = [k["nickname"].lower() for k in self.family_clans.values()]
-        if clankey not in valid_keys:
+        if clankey.lower() not in valid_keys:
             return await simple_embed(
                 ctx,
                 "Please use a valid clanname:\n{}".format(
@@ -410,7 +411,7 @@ class ClashRoyaleClans(commands.Cog):
         clan_cwr = clan_info["requirements"].get("cwr")
         clan_private = clan_info["requirements"].get("private")
         clan_waiting = clan_info["waiting"]
-        clan_wdwins = clan_info["requirements"].get("wdwins")
+        clan_wd_wins = clan_info["requirements"].get("wdwins")
 
         is_in_clan = True
         try:
@@ -425,7 +426,7 @@ class ClashRoyaleClans(commands.Cog):
                 )
             player_data = await self.clash.get_player(player_tag)
             # Clan data for clan to approve
-            clan_data = await self.clash.get_clan(clan_tag)
+            app_clan_data = await self.clash.get_clan(clan_tag)
 
             ign = player_data.name
             if player_data.clan is None:
@@ -448,17 +449,18 @@ class ClashRoyaleClans(commands.Cog):
                 membership = True
 
         if not membership:
-            trophies = player_data.trophies
-            cards = player_data.cards
-            maxtrophies = player_data.best_trophies
+            player_trophies = player_data.trophies
+            player_cards = player_data.cards
+            player_pb = player_data.best_trophies
             player_wd_wins = player_data.warDayWins
-            player_cwr = await self.discord_helper.clanwarReadiness(cards)
-            if clan_data.get("members") == 50:
+            player_cwr = await self.discord_helper.clanwar_readiness(player_cards)
+
+            if app_clan_data.get("members") == 50:
                 return await simple_embed(
                     ctx, "Approval failed, the clan is Full.", False
                 )
 
-            if (trophies < clan_data.required_trophies) or (maxtrophies < clan_pb):
+            if (player_trophies < app_clan_data.required_trophies) or (player_pb < clan_pb):
                 return await simple_embed(
                     ctx,
                     "Approval failed, you don't meet the trophy requirements.",
@@ -477,14 +479,14 @@ class ClashRoyaleClans(commands.Cog):
                     False,
                 )
 
-            if player_wd_wins < clan_wdwins:
+            if player_wd_wins < clan_wd_wins:
                 return await simple_embed(
                     ctx,
                     "Approval failed, you don't meet requirements for war day wins.",
                     False,
                 )
 
-            if clan_data.type == "closed":
+            if app_clan_data.type == "closed":
                 return await simple_embed(
                     ctx, "Approval failed, the clan is currently closed.", False
                 )
@@ -517,7 +519,7 @@ class ClashRoyaleClans(commands.Cog):
                 await asyncio.sleep(180)
 
             try:
-                recruitCode = "".join(
+                recruit_code = "".join(
                     random.choice(string.ascii_uppercase + string.digits)
                     for _ in range(6)
                 )
@@ -527,7 +529,7 @@ class ClashRoyaleClans(commands.Cog):
                     "Congratulations, You have been approved to join "
                     f"[{clan_name} (#{clan_tag})](https://link.clashroyale.com/?clanInfo?id={clan_tag})."
                     "\n\n"
-                    f"Your **RECRUIT CODE** is: ``{recruitCode}`` \n\n"
+                    f"Your **RECRUIT CODE** is: ``{recruit_code}`` \n\n"
                     f"Click [here](https://link.clashroyale.com/?clanInfo?id={clan_tag}) "
                     f"or search for #{clan_tag} in-game.\n"
                     "Send a request **using recruit code** above and wait for your clan leadership to accept you. "
@@ -547,8 +549,8 @@ class ClashRoyaleClans(commands.Cog):
                 )
 
                 try:
-                    newname = ign + " (Approved)"
-                    await member.edit(nick=newname)
+                    new_name = ign + " (Approved)"
+                    await member.edit(nick=new_name)
                 except discord.Forbidden:
                     await simple_embed(
                         ctx,
@@ -563,11 +565,11 @@ class ClashRoyaleClans(commands.Cog):
                     name="New Recruit", icon_url="https://i.imgur.com/dtSMITE.jpg"
                 )
                 embed.add_field(name="Name", value=ign, inline=True)
-                embed.add_field(name="Recruit Code", value=recruitCode, inline=True)
+                embed.add_field(name="Recruit Code", value=recruit_code, inline=True)
                 embed.add_field(name="Clan", value=clan_name, inline=True)
-                embed.set_footer(text=credits, icon_url=creditIcon)
+                embed.set_footer(text=credits, icon_url=credits_icon)
 
-                channel = self.bot.get_channel(newrecruitsChannelId)
+                channel = self.bot.get_channel(new_recruits_channel_id)
                 if channel and role_to_ping:
                     await channel.send(
                         role_to_ping.mention,
@@ -702,7 +704,7 @@ class ClashRoyaleClans(commands.Cog):
             await self.discord_helper._remove_roles(member, ["Guest"])
 
             roleName = discord.utils.get(guild.roles, name=clan_roles[0])
-            recruitment_channel = self.bot.get_channel(newrecruitsChannelId)
+            recruitment_channel = self.bot.get_channel(new_recruits_channel_id)
             if recruitment_channel:
                 await recruitment_channel.send(
                     "**{}** recruited **{} (#{})** to {}".format(
@@ -711,7 +713,7 @@ class ClashRoyaleClans(commands.Cog):
                     allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
 
-            global_channel = self.bot.get_channel(globalChannelId)
+            global_channel = self.bot.get_channel(global_channel_id)
             if global_channel:
                 greeting_to_send = (random.choice(self.greetings)).format(member)
                 await global_channel.send(
@@ -775,11 +777,6 @@ class ClashRoyaleClans(commands.Cog):
         member_roles = set(member.roles)
         all_clan_roles += [
             "Member",
-            "Clan Deputy",
-            "Co-Leader",
-            "Hub Supervisor",
-            "Hub Officer",
-            "Recruitment Officer",
         ]
         await self.discord_helper._remove_roles(member, all_clan_roles)
         # If tag is not saved or connecion to CR server is not available use current name to determine ign
@@ -822,7 +819,7 @@ class ClashRoyaleClans(commands.Cog):
                         )
                     )
                 player_data = await self.clash.get_player(player_tag)
-                leagues = await self.discord_helper.clanwarReadiness(player_data.cards)
+                leagues = await self.discord_helper.clanwar_readiness(player_data.cards)
             # REMINDER: Order is important. RequestError is base exception class.
             except clashroyale.NotFoundError:
                 return await ctx.send("Player tag is invalid.")
@@ -844,7 +841,7 @@ class ClashRoyaleClans(commands.Cog):
                 icon_url=await self.constants.get_clan_image(player_data),
                 url="https://royaleapi.com/player/" + player_data.tag.strip("#"),
             )
-            embed.set_footer(text=credits, icon_url=creditIcon)
+            embed.set_footer(text=credits, icon_url=credits_icon)
             embed.add_field(
                 name="War Day Wins",
                 value="{} {}".format(
@@ -878,12 +875,7 @@ class ClashRoyaleClans(commands.Cog):
                     group = leagues[league]["cards"]
                 for card in group:
                     if card is not None:
-                        card_key = await self.constants.card_to_key(card)
-                        emoji = ""
-                        if card_key:
-                            emoji = self.discord_helper.emoji(card_key)
-                        if emoji == "":
-                            emoji = self.discord_helper.emoji(card)
+                        emoji = await self.discord_helper.get_card_emoji(card)
                         if emoji:
                             value.append(emoji)
                         else:
@@ -912,19 +904,14 @@ class ClashRoyaleClans(commands.Cog):
                     icon_url=await self.constants.get_clan_image(player_data),
                     url="https://royaleapi.com/player/" + player_data.tag.strip("#"),
                 )
-                embed.set_footer(text=credits, icon_url=creditIcon)
+                embed.set_footer(text=credits, icon_url=credits_icon)
                 groups = list(self.discord_helper.grouper(leagues[league]["cards"], 15))
 
                 for index, group in enumerate(groups):
                     value = []
                     for card in group:
                         if card is not None:
-                            card_key = await self.constants.card_to_key(card)
-                            emoji = ""
-                            if card_key:
-                                emoji = self.discord_helper.emoji(card_key)
-                            if emoji == "":
-                                emoji = self.discord_helper.emoji(card)
+                            emoji = await self.discord_helper.get_card_emoji(card)
                             if emoji:
                                 value.append(emoji)
                             else:
@@ -942,6 +929,215 @@ class ClashRoyaleClans(commands.Cog):
                     pages.append(embed)
         return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=60)
 
+    @commands.command(name="waiting")
+    @checks.mod()
+    async def command_waiting(self, ctx, member: discord.Member, clan_name, account: int = 1):
+        """Add people to the waiting list for a clan"""
+        clan_name = clan_name.lower()
+
+        valid_keys = [k["nickname"].lower() for k in self.family_clans.values()]
+        if clan_name not in valid_keys:
+            return await simple_embed(
+                ctx,
+                "Please use a valid clanname:\n{}".format(
+                    humanize_list(list(valid_keys))
+                ),
+                False,
+            )
+        # Get requirements for clan to approve
+        clan_info = None
+        for name, data in self.family_clans.items():
+            if data.get("nickname").lower() == clan_name:
+                clan_info = data
+
+        clan_name = clan_info.get("name")
+        clan_tag = clan_info.get("tag")
+        clan_role = clan_info.get("clanrole")
+        clan_pb = clan_info["requirements"].get("personalbest")
+        clan_cwr = clan_info["requirements"].get("cwr")
+        clan_private = clan_info["requirements"].get("private")
+        clan_waiting = clan_info["waiting"]
+        clan_wd_wins = clan_info["requirements"].get("wdwins")
+
+        try:
+            player_tag = self.tags.getTag(member.id, account)
+            if player_tag is None:
+                return await simple_embed(
+                    ctx,
+                    "You must associate a tag with this member first using ``{}save #tag @member``".format(
+                        ctx.prefix
+                    ),
+                    False,
+                )
+            player_data = await self.clash.get_player(player_tag)
+            # Clan data for clan to approve
+            wait_clan_data = await self.clash.get_clan(clan_tag)
+
+            player_ign = player_data.name
+        # REMINDER: Order is important. RequestError is base exception class.
+        except clashroyale.NotFoundError:
+            return await ctx.send("Player tag is invalid.")
+        except clashroyale.RequestError:
+            return await simple_embed(
+                ctx, "Error: cannot reach Clash Royale Servers. Please try again later."
+            )
+
+
+        player_ign = player_data.name
+        player_trophies = player_data.trophies
+        player_cards = player_data.cards
+        player_pb = player_data.best_trophies
+        player_cwr = await self.discord_helper.clanwar_readiness(player_cards)
+        player_wd_wins = player_data.warDayWins
+
+        if player_trophies < wait_clan_data.required_trophies or player_pb < clan_pb:
+            return await simple_embed(ctx, "Cannot add you to the waiting list, you don't meet the trophy requirements.")
+
+        player_cwr_good = True
+        for league in clan_cwr:
+            if clan_cwr[league] > 0:
+                if player_cwr[league]["percent"] < clan_cwr[league]:
+                    player_cwr_good = False
+
+        if (not player_cwr_good):
+            return await simple_embed(ctx, "Cannot add you to the waiting lists, you don't meet the CW Readiness requirements.")
+
+        if player_wd_wins < clan_wd_wins:
+                return await simple_embed(
+                    ctx,
+                    "Approval failed, you don't meet requirements for war day wins.",
+                    False,
+                )
+
+        if not await self.add_to_waiting(clan_name, member):
+            return await ctx.send("You are already in a waiting list for this clan.")
+
+        waiting_role = discord.utils.get(ctx.guild.roles, name="Waiting")
+        if not waiting_role:
+            await simple_embed(ctx, "Cannot find a role named waiting.")
+        try:
+            if waiting_role:
+                await member.add_roles(waiting_role)
+        except discord.Forbidden:
+            raise
+        except discord.HTTPException:
+            raise
+        await ctx.send(
+            (
+                f"{member.mention} You have been added to the waiting list for **"
+                f"{clan_name}"
+                "**. We will mention you when a spot is available."
+            ),
+            allowed_mentions=discord.AllowedMentions(users=True)
+        )
+
+        role = discord.utils.get(ctx.guild.roles, name=clan_role)
+        to_post = self.bot.get_channel(new_recruits_channel_id)
+        if to_post:
+            await simple_embed(to_post, "**{} (#{})** added to the waiting list for {}".format(player_ign, player_tag, role.mention))
+
+    @commands.command(name="waitinglist", aliases=["waitlist", "wait"])
+    async def command_waitinglist(self, ctx):
+        """Show status of the waiting list."""
+        message = ""
+        num_clans = 0
+        num_players = 0
+
+        async with ctx.channel.typing():
+
+            embed = discord.Embed(color=discord.Colour.blue())
+
+            for clan_name, clan_data in self.family_clans.items():
+                if len(clan_data.get("waiting", {})) > 0:
+                    num_clans += 1
+                    message = ""
+                    for index, user_ID in enumerate(clan_data.get("waiting", {})):
+                        user = discord.utils.get(ctx.guild.members, id=user_ID)
+                        try:
+                            message += str(index+1) + ". " + user.display_name + "\n"
+                            num_players += 1
+                        except AttributeError:
+                            await self.remove_from_waiting(clan_name, user_ID)
+                            message += f"{str(index+1)}.*user {user_ID} not found*\n"
+                    embed.add_field(name=clan_name, value=message, inline=False)
+
+            if not message:
+                await ctx.send("The waiting list is empty")
+            else:
+                embed.description = "We have " + str(num_players) + " people waiting for " + str(num_clans) + " clans."
+                embed.set_author(name="Legend Family Waiting List", icon_url="https://i.imgur.com/dtSMITE.jpg")
+                embed.set_footer(text=credits, icon_url=credits_icon)
+                await ctx.send(embed=embed)
+
+    @commands.command()
+    @checks.mod()
+    async def remove(self, ctx, member: discord.Member, clan_key, account: int = 1):
+        """Delete people from the waiting list for a clan"""
+        clan_key = clan_key.lower()
+
+        valid_keys = [k["nickname"].lower() for k in self.family_clans.values()]
+        if clan_key not in valid_keys:
+            return await simple_embed(
+                ctx,
+                "Please use a valid clanname:\n{}".format(
+                    humanize_list(list(valid_keys))
+                ),
+                False,
+            )
+        clan_name = None
+        for name, data in self.family_clans.items():
+            if data.get("nickname").lower() == clan_key:
+                clan_name = name
+
+        if not await self.remove_from_waiting(clan_name, member):
+            return await simple_embed(ctx, "Recruit not found in the waiting list.")
+        else:
+            await ctx.send(
+                (
+                    f"{member.mention} has been removed from the waiting list for **{clan_name}**."
+                ),
+                allowed_mentions=discord.AllowedMentions(users=True)
+            )
+        waiting_role = discord.utils.get(ctx.guild.roles, name="Waiting")
+        if not waiting_role:
+            await simple_embed(ctx, "Cannot find a role named waiting.")
+        try:
+            if waiting_role:
+                await member.remove_roles(waiting_role)
+        except discord.Forbidden:
+            return simple_embed(ctx, "No permission to remove roles for this user.")
+        except discord.HTTPException:
+            raise
+
+    async def add_to_waiting(self, clan_name: str, member: discord.Member):
+        data = self.family_clans
+        try:
+            clan_data = data[clan_name]
+        except IndexError:
+            # This should never happen
+            log.error(f"Cannot find clan named {clan_name}")
+            raise
+        if member.id in clan_data["waiting"]:
+            return False
+        clan_data["waiting"].append(member.id)
+        with open(self.claninfo_path, 'w') as file:
+            json.dump(self.family_clans, file)
+        return True
+
+    async def remove_from_waiting(self, clan_name: str, member: discord.Member):
+        try:
+            clan_data = self.family_clans[clan_name]
+        except IndexError:
+            # This should never happen
+            log.error(f"Cannot find clan named {clan_name}")
+            raise
+        print(clan_data)
+        if member.id not in clan_data["waiting"]:
+            return False
+        self.family_clans[clan_name]["waiting"].remove(member.id)
+        with open(self.claninfo_path, 'w') as file:
+            json.dump(self.family_clans, file)
+        return True
 
 class Helper:
     def __init__(self, bot):
@@ -949,7 +1145,7 @@ class Helper:
         self.constants = self.bot.get_cog("ClashRoyaleTools").constants
 
     @staticmethod
-    async def getUserCount(guild: discord.Guild, name: str):
+    async def get_user_count(guild: discord.Guild, name: str):
         """Returns the numbers of people with the member role"""
         role = discord.utils.get(guild.roles, name=name)
         return len(role.members)
@@ -980,7 +1176,7 @@ class Helper:
         roles = [r for r in roles if r is not None]
         try:
             await member.remove_roles(*roles)
-        except e:
+        except Exception:
             pass
 
     @staticmethod
@@ -1005,20 +1201,20 @@ class Helper:
         author_roles = set(member.roles)
         return bool(len(author_roles.intersection(_membership_roles)) > 0)
 
-    async def clanwarReadiness(self, cards):
+    async def clanwar_readiness(self, cards):
         """Calculate clanwar readiness"""
         readiness = {}
-        leagueLevels = {"legendary": 12, "gold": 11, "silver": 10, "bronze": 9}
+        league_levels = {"legendary": 12, "gold": 11, "silver": 10, "bronze": 9}
 
-        for league in leagueLevels.keys():
+        for league in league_levels.keys():
             readiness[league] = {
                 "name": league.capitalize(),
                 "percent": 0,
                 "cards": [],
-                "levels": str(leagueLevels[league]),
+                "levels": str(league_levels[league]),
             }
             for card in cards:
-                if await self.constants.get_new_level(card) >= leagueLevels[league]:
+                if await self.constants.get_new_level(card) >= league_levels[league]:
                     readiness[league]["cards"].append(card.name)
 
             readiness[league]["percent"] = int(
@@ -1071,23 +1267,32 @@ class Helper:
         args = [iter(iterable)] * n
         return itertools.zip_longest(*args)
 
-    async def getBestLeague(self, cards):
+    async def get_best_league(self, cards):
         """Get best leagues using readiness"""
-        readiness = await self.clanwarReadiness(cards)
+        readiness = await self.clanwar_readiness(cards)
 
         legend = readiness["legendary"]["percent"]
         gold = readiness["gold"]["percent"] - legend
         silver = readiness["silver"]["percent"] - gold - legend
         bronze = readiness["bronze"]["percent"] - silver - gold - legend
 
-        readinessCount = {
+        readiness_count = {
             "legendary": legend,
             "gold": gold,
             "silver": silver,
             "bronze": bronze,
         }
-        max_key = max(readinessCount, key=lambda k: readinessCount[k])
+        max_key = max(readiness_count, key=lambda k: readiness_count[k])
 
         return "{} League ({}%)".format(
             max_key.capitalize(), readiness[max_key]["percent"]
         )
+
+    async def get_card_emoji(self, card_name: str):
+        card_key = await self.constants.card_to_key(card_name)
+        emoji = ""
+        if card_key:
+            emoji = self.emoji(card_key)
+        if emoji == "":
+            emoji = self.emoji(card_name)
+        return emoji
