@@ -930,9 +930,9 @@ class ClashRoyaleClans(commands.Cog):
                     pages.append(embed)
         return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=60)
 
-    @commands.command(name="waiting")
+    @commands.command(name="waitadd")
     @checks.mod()
-    async def command_waiting(
+    async def command_waitadd(
         self, ctx, member: discord.Member, clan_name, account: int = 1
     ):
         """Add people to the waiting list for a clan"""
@@ -1091,9 +1091,9 @@ class ClashRoyaleClans(commands.Cog):
                 embed.set_footer(text=credits, icon_url=credits_icon)
                 await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(name="waitremove")
     @checks.mod()
-    async def remove(self, ctx, member: discord.Member, clan_key, account: int = 1):
+    async def command_waitremove(self, ctx, member: discord.Member, clan_key, account: int = 1):
         """Delete people from the waiting list for a clan"""
         clan_key = clan_key.lower()
 
