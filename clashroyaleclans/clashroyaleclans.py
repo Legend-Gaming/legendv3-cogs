@@ -302,7 +302,7 @@ class ClashRoyaleClans(commands.Cog):
                     allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
 
-    @tasks.loop(seconds=120)
+    @tasks.loop(seconds=30)
     async def refresh_data(self):
         try:
             with open(self.claninfo_path) as file:
@@ -502,6 +502,7 @@ class ClashRoyaleClans(commands.Cog):
                         False,
                     )
 
+            self.remove_from_waiting(clan_name, member)
             if is_in_clan:
                 warning = (
                     "\n\n:warning: **YOU WILL BE REJECTED "
@@ -1166,7 +1167,6 @@ class ClashRoyaleClans(commands.Cog):
             # This should never happen
             log.error(f"Cannot find clan named {clan_name}")
             raise
-        print(clan_data)
         if member.id not in clan_data["waiting"]:
             return False
         self.family_clans[clan_name]["waiting"].remove(member.id)
