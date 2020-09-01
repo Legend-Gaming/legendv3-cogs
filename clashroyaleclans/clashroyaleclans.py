@@ -930,127 +930,139 @@ class ClashRoyaleClans(commands.Cog):
                     pages.append(embed)
         return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=60)
 
-    @commands.command(name="waitadd")
+    @commands.group(name="waiting", autohelp=False)
+    async def waiting(self, ctx: commands.Context):
+        if ctx.invoked_subcommand is None:
+            command = "waiting list"
+            cmd = self.bot.get_command(command)
+            if not cmd:
+                return await ctx.send(f"{command} is not currently availiable in the bot")
+
+            await ctx.invoke(cmd)
+
+    @waiting.command(name="add")
     @checks.mod()
-    async def command_waitadd(
-        self, ctx, member: discord.Member, clan_name, account: int = 1
+    async def waiting_add(
+        self, ctx:commands.Context, member: discord.Member, clan_name, account: int = 1
     ):
         """Add people to the waiting list for a clan"""
-        clan_name = clan_name.lower()
+        async with ctx.channel.typing():
+            clan_name = clan_name.lower()
 
-        valid_keys = [k["nickname"].lower() for k in self.family_clans.values()]
-        if clan_name not in valid_keys:
-            return await simple_embed(
-                ctx,
-                "Please use a valid clanname:\n{}".format(
-                    humanize_list(list(valid_keys))
-                ),
-                False,
-            )
-        # Get requirements for clan to approve
-        clan_info = None
-        for name, data in self.family_clans.items():
-            if data.get("nickname").lower() == clan_name:
-                clan_info = data
-
-        clan_name = clan_info.get("name")
-        clan_tag = clan_info.get("tag")
-        clan_role = clan_info.get("clanrole")
-        clan_pb = clan_info["requirements"].get("personalbest")
-        clan_cwr = clan_info["requirements"].get("cwr")
-        clan_private = clan_info["requirements"].get("private")
-        clan_waiting = clan_info["waiting"]
-        clan_wd_wins = clan_info["requirements"].get("wdwins")
-
-        try:
-            player_tag = self.tags.getTag(member.id, account)
-            if player_tag is None:
+            valid_keys = [k["nickname"].lower() for k in self.family_clans.values()]
+            if clan_name not in valid_keys:
                 return await simple_embed(
                     ctx,
-                    "You must associate a tag with this member first using ``{}save #tag @member``".format(
-                        ctx.prefix
+                    "Please use a valid clanname:\n{}".format(
+                        humanize_list(list(valid_keys))
                     ),
                     False,
                 )
-            player_data = await self.clash.get_player(player_tag)
-            # Clan data for clan to approve
-            wait_clan_data = await self.clash.get_clan(clan_tag)
+            # Get requirements for clan to approve
+            clan_info = None
+            for name, data in self.family_clans.items():
+                if data.get("nickname").lower() == clan_name:
+                    clan_info = data
+
+            clan_name = clan_info.get("name")
+            clan_tag = clan_info.get("tag")
+            clan_role = clan_info.get("clanrole")
+            clan_pb = clan_info["requirements"].get("personalbest")
+            clan_cwr = clan_info["requirements"].get("cwr")
+            clan_private = clan_info["requirements"].get("private")
+            clan_waiting = clan_info["waiting"]
+            clan_wd_wins = clan_info["requirements"].get("wdwins")
+
+            try:
+                player_tag = self.tags.getTag(member.id, account)
+                if player_tag is None:
+                    return await simple_embed(
+                        ctx,
+                        "You must associate a tag with this member first using ``{}save #tag @member``".format(
+                            ctx.prefix
+                        ),
+                        False,
+                    )
+                player_data = await self.clash.get_player(player_tag)
+                # Clan data for clan to approve
+                wait_clan_data = await self.clash.get_clan(clan_tag)
+
+                player_ign = player_data.name
+            # REMINDER: Order is important. RequestError is base exception class.
+            except clashroyale.NotFoundError:
+                return await ctx.send("Player tag is invalid.")
+            except clashroyale.RequestError:
+                return await simple_embed(
+                    ctx, "Error: cannot reach Clash Royale Servers. Please try again later."
+                )
 
             player_ign = player_data.name
-        # REMINDER: Order is important. RequestError is base exception class.
-        except clashroyale.NotFoundError:
-            return await ctx.send("Player tag is invalid.")
-        except clashroyale.RequestError:
-            return await simple_embed(
-                ctx, "Error: cannot reach Clash Royale Servers. Please try again later."
-            )
+            player_trophies = player_data.trophies
+            player_cards = player_data.cards
+            player_pb = player_data.best_trophies
+            player_cwr = await self.discord_helper.clanwar_readiness(player_cards)
+            player_wd_wins = player_data.warDayWins
 
-        player_ign = player_data.name
-        player_trophies = player_data.trophies
-        player_cards = player_data.cards
-        player_pb = player_data.best_trophies
-        player_cwr = await self.discord_helper.clanwar_readiness(player_cards)
-        player_wd_wins = player_data.warDayWins
+            if player_trophies < wait_clan_data.required_trophies or player_pb < clan_pb:
+                return await simple_embed(
+                    ctx,
+                    "Cannot add you to the waiting list, you don't meet the trophy requirements.",
+                )
 
-        if player_trophies < wait_clan_data.required_trophies or player_pb < clan_pb:
-            return await simple_embed(
-                ctx,
-                "Cannot add you to the waiting list, you don't meet the trophy requirements.",
-            )
+            player_cwr_good = True
+            for league in clan_cwr:
+                if clan_cwr[league] > 0:
+                    if player_cwr[league]["percent"] < clan_cwr[league]:
+                        player_cwr_good = False
 
-        player_cwr_good = True
-        for league in clan_cwr:
-            if clan_cwr[league] > 0:
-                if player_cwr[league]["percent"] < clan_cwr[league]:
-                    player_cwr_good = False
+            if not player_cwr_good:
+                return await simple_embed(
+                    ctx,
+                    "Cannot add you to the waiting lists, you don't meet the CW Readiness requirements.",
+                )
 
-        if not player_cwr_good:
-            return await simple_embed(
-                ctx,
-                "Cannot add you to the waiting lists, you don't meet the CW Readiness requirements.",
-            )
+            if player_wd_wins < clan_wd_wins:
+                return await simple_embed(
+                    ctx,
+                    "Approval failed, you don't meet requirements for war day wins.",
+                    False,
+                )
 
-        if player_wd_wins < clan_wd_wins:
-            return await simple_embed(
-                ctx,
-                "Approval failed, you don't meet requirements for war day wins.",
-                False,
-            )
+            if not await self.add_to_waiting(clan_name, member):
+                return await ctx.send("You are already in a waiting list for this clan.")
 
-        if not await self.add_to_waiting(clan_name, member):
-            return await ctx.send("You are already in a waiting list for this clan.")
-
-        waiting_role = discord.utils.get(ctx.guild.roles, name="Waiting")
-        if not waiting_role:
-            await simple_embed(ctx, "Cannot find a role named waiting.")
-        try:
-            if waiting_role:
-                await member.add_roles(waiting_role)
-        except discord.Forbidden:
-            raise
-        except discord.HTTPException:
-            raise
-        await ctx.send(
-            (
-                f"{member.mention} You have been added to the waiting list for **"
-                f"{clan_name}"
-                "**. We will mention you when a spot is available."
-            ),
-            allowed_mentions=discord.AllowedMentions(users=True),
-        )
-
-        role = discord.utils.get(ctx.guild.roles, name=clan_role)
-        to_post = self.bot.get_channel(new_recruits_channel_id)
-        if to_post:
-            await to_post.send(
-                "**{} (#{})** added to the waiting list for {}".format(
-                    player_ign, player_tag, role.mention
+            waiting_role = discord.utils.get(ctx.guild.roles, name="Waiting")
+            if not waiting_role:
+                await simple_embed(ctx, "Cannot find a role named waiting.")
+            try:
+                if waiting_role:
+                    await member.add_roles(waiting_role)
+            except discord.Forbidden:
+                raise
+            except discord.HTTPException:
+                raise
+            await ctx.send(
+                (
+                    f"{member.mention} You have been added to the waiting list for **"
+                    f"{clan_name}"
+                    "**. We will mention you when a spot is available."
                 ),
-                allowed_mentions=discord.AllowedMentions(roles=True)
+                allowed_mentions=discord.AllowedMentions(users=True),
             )
 
-    @commands.command(name="waitinglist", aliases=["waitlist", "wait"])
-    async def command_waitinglist(self, ctx):
+            role = discord.utils.get(ctx.guild.roles, name=clan_role)
+            to_post = self.bot.get_channel(new_recruits_channel_id)
+            if to_post:
+                await to_post.send(
+                    "**{} (#{})** added to the waiting list for {}".format(
+                        player_ign, player_tag, role.mention
+                    ),
+                    allowed_mentions=discord.AllowedMentions(roles=True)
+                )
+        await ctx.tick()
+
+    @waiting.command(name="list")
+    async def waiting_list(self, ctx:commands.Context):
         """Show status of the waiting list."""
         message = ""
         num_clans = 0
@@ -1074,62 +1086,63 @@ class ClashRoyaleClans(commands.Cog):
                             message += f"{str(index+1)}.*user {user_ID} not found*\n"
                     embed.add_field(name=clan_name, value=message, inline=False)
 
-            if not message:
-                await ctx.send("The waiting list is empty")
-            else:
-                embed.description = (
-                    "We have "
-                    + str(num_players)
-                    + " people waiting for "
-                    + str(num_clans)
-                    + " clans."
-                )
-                embed.set_author(
-                    name="Legend Family Waiting List",
-                    icon_url="https://i.imgur.com/dtSMITE.jpg",
-                )
-                embed.set_footer(text=credits, icon_url=credits_icon)
-                await ctx.send(embed=embed)
-
-    @commands.command(name="waitremove")
-    @checks.mod()
-    async def command_waitremove(self, ctx, member: discord.Member, clan_key, account: int = 1):
-        """Delete people from the waiting list for a clan"""
-        clan_key = clan_key.lower()
-
-        valid_keys = [k["nickname"].lower() for k in self.family_clans.values()]
-        if clan_key not in valid_keys:
-            return await simple_embed(
-                ctx,
-                "Please use a valid clanname:\n{}".format(
-                    humanize_list(list(valid_keys))
-                ),
-                False,
-            )
-        clan_name = None
-        for name, data in self.family_clans.items():
-            if data.get("nickname").lower() == clan_key:
-                clan_name = name
-
-        if not await self.remove_from_waiting(clan_name, member):
-            return await simple_embed(ctx, "Recruit not found in the waiting list.")
+        if not message:
+            return await ctx.send("The waiting list is empty.")
         else:
-            await ctx.send(
+            embed.description = (
+                "We have "
+                + str(num_players)
+                + " people waiting for "
+                + str(num_clans)
+                + " clans."
+            )
+            embed.set_author(
+                name="Legend Family Waiting List",
+                icon_url="https://cdn.discordapp.com/attachments/423094817371848716/425389610223271956/legend_logo-trans.png",
+            )
+            embed.set_footer(text=credits, icon_url=credits_icon)
+            return await ctx.send(embed=embed)
+
+    @waiting.command(name="remove")
+    @checks.mod()
+    async def waiting_remove(self, ctx, member: discord.Member, clan_key, account: int = 1):
+        """Delete people from the waiting list for a clan"""
+        async with ctx.channel.typing():
+            clan_key = clan_key.lower()
+            valid_keys = [k["nickname"].lower() for k in self.family_clans.values()]
+            if clan_key not in valid_keys:
+                return await simple_embed(
+                    ctx,
+                    "Please use a valid clanname:\n{}".format(
+                        humanize_list(list(valid_keys))
+                    ),
+                    False,
+                )
+            clan_name = None
+            for name, data in self.family_clans.items():
+                if data.get("nickname").lower() == clan_key:
+                    clan_name = name
+
+            if not await self.remove_from_waiting(clan_name, member):
+                return await simple_embed(ctx, "Recruit not found in the waiting list.")
+            else:
+                await ctx.send(
                 (
                     f"{member.mention} has been removed from the waiting list for **{clan_name}**."
                 ),
                 allowed_mentions=discord.AllowedMentions(users=True),
-            )
-        waiting_role = discord.utils.get(ctx.guild.roles, name="Waiting")
-        if not waiting_role:
-            await simple_embed(ctx, "Cannot find a role named waiting.")
-        try:
-            if waiting_role:
-                await member.remove_roles(waiting_role)
-        except discord.Forbidden:
-            return simple_embed(ctx, "No permission to remove roles for this user.")
-        except discord.HTTPException:
-            raise
+                )
+            waiting_role = discord.utils.get(ctx.guild.roles, name="Waiting")
+            if not waiting_role:
+                await simple_embed(ctx, "Cannot find a role named waiting.")
+            try:
+                if waiting_role:
+                    await member.remove_roles(waiting_role)
+            except discord.Forbidden:
+                return simple_embed(ctx, "No permission to remove roles for this user.")
+            except discord.HTTPException:
+                raise
+        await ctx.tick()
 
     async def add_to_waiting(self, clan_name: str, member: discord.Member):
         data = self.family_clans
