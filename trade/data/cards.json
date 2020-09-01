@@ -50,7 +50,7 @@
   "Golem": ["golem"],
   "Graveyard": ["gy", "skillyard", "graveyard"],
   "Guards": ["guards"],
-  "Heal Spirit": ["heal", "hs"],
+  "Heal Spirit": ["heal", "hs","heal spirit"],
   "Hog Rider": ["hog", "hog rider"],
   "Hunter": ["htr", "hu", "hunter"],
   "Ice Golem": ["ig", "ice golem"],

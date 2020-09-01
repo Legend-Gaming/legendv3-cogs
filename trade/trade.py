@@ -8,7 +8,10 @@ from redbot.core.utils import chat_formatting
 from json import load
 
 """This is a port of GR8's trade cog with minor modifications.
-   Original cog: https://github.com/Gr8z/Legend-Cogs/tree/master/trade """
+   Original cog: https://github.com/Gr8z/Legend-Cogs/tree/master/trade 
+   
+   Card stats need to be updated with every new card release.
+   It can be found in https://royaleapi.github.io/cr-api-data/json/cards.json"""
 
 # Possible TODO's: 
 # 1. Check if user has sufficient cards to give while searching 
@@ -19,7 +22,7 @@ from json import load
 
 
 cards_filename = "cards.json"
-consts_filename = "constants.json"
+card_stats_filename = "card_stats.json"
 
 token_type = ["legendary", "epic", "rare", "common"]
 
@@ -58,9 +61,9 @@ class Trade(commands.Cog):
         with open (file_path, 'r') as file:
             self.cards = load(file)
         
-        file_path = os.path.join(dir_path, consts_filename)
+        file_path = os.path.join(dir_path, card_stats_filename)
         with open (file_path, 'r') as file:
-            self.constants = load(file)
+            self.card_stats = load(file)
 
         self.database = Config.get_conf(self, identifier=7894561230, force_registration=True)
         self.database.register_member(**member_settings)
@@ -75,7 +78,7 @@ class Trade(commands.Cog):
             
     async def cardToRarity(self, name):
         """Card name to rarity."""
-        for card in self.constants["cards"]:
+        for card in self.card_stats:
             if name == card["name"]:
                 return card["rarity"]
         return None
