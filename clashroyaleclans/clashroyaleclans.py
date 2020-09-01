@@ -244,7 +244,7 @@ class ClashRoyaleClans(commands.Cog):
                         and (player_wd_wins >= req_wd_wins)
                     )
                     or (
-                        (clan["required_trophies"] <= 4000)
+                        (clan["required_trophies"] < 4000)
                         and (member_count != 50)
                         and (2000 < player_trophies < 5500)
                         and (clan["type"] != "closed")
