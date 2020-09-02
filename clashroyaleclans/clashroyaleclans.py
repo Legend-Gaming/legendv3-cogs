@@ -602,7 +602,7 @@ class ClashRoyaleClans(commands.Cog):
 
     @commands.command(name="newmember")
     @checks.mod()
-    async def command_newmember(self, ctx, member: discord.Members):
+    async def command_newmember(self, ctx, members: discord.Member):
         """
             Setup nickname, and roles for a new member
         """
