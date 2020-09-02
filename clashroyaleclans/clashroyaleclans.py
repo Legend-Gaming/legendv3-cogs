@@ -112,7 +112,7 @@ class ClashRoyaleClans(commands.Cog):
         account: int = 1,
     ):
         """
-        Show Legend clans.
+        Show Threat Level clans.
         Can also show clans based on a member's stats
         """
         async with ctx.channel.typing():
@@ -161,8 +161,8 @@ class ClashRoyaleClans(commands.Cog):
 
             embed = discord.Embed(color=0xFAA61A)
             embed.set_author(
-                name="Legend Family Clans",
-                url="http://royaleapi.com/clan/family/legend",
+                name="Threat Level Family Clans",
+                url="http://royaleapi.com/clan/family/threatlevel",
                 icon_url="https://cdn.discordapp.com/attachments/423094817371848716/425389610223271956/legend_logo-trans.png",
             )
             embed.set_footer(text=credits, icon_url=credits_icon)
@@ -1098,8 +1098,8 @@ class ClashRoyaleClans(commands.Cog):
                 + " clans."
             )
             embed.set_author(
-                name="Legend Family Waiting List",
-                icon_url="https://cdn.discordapp.com/attachments/423094817371848716/425389610223271956/legend_logo-trans.png",
+                name="Threat Level Family Waiting List",
+                icon_url="https://cdn.discordapp.com/attachments/718649031009501285/750779100783837194/TL-Skull-Trans.png",
             )
             embed.set_footer(text=credits, icon_url=credits_icon)
             return await ctx.send(embed=embed)
