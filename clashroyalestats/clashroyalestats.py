@@ -20,6 +20,10 @@ class ClashRoyale(commands.Cog):
         self.clash = clashroyale.official_api.Client(token=token['token'], is_async=True,
                                                      url="https://proxy.royaleapi.dev/v1")
 
+    def cog_unload(self):
+        if self.clash:
+            self.bot.loop.create_task(self.clash.close())
+
     def getCards(self, maxPlayers):
         """Converts maxPlayers to Cards
 
