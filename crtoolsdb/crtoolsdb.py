@@ -347,6 +347,9 @@ class ClashRoyaleTools(commands.Cog):
         if user is None:
             user = ctx.author
 
+        if not self.tags.verifyTag(tag):
+            return await ctx.send("Invalid Tag. Please try again.")
+
         try:
             player = await self.cr.get_player(tag)
             name = player.name
