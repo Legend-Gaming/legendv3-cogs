@@ -103,7 +103,7 @@ class ClashRoyaleClans(commands.Cog):
         self.bot.loop.create_task(self.clash.close())
 
 
-    @commands.command(name="tl")
+    @commands.command(name="clans")
     async def commandLegend(
         self,
         ctx: commands.Context,
