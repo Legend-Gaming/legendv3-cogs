@@ -19,8 +19,8 @@ from redbot.core.utils.predicates import MessagePredicate
 
 credits = "Bot by Legend Gaming"
 credits_icon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
-new_recruits_channel_id = 375839851955748874
-global_channel_id = 374596069989810178
+new_recruits_channel_id = 678115765219622922
+global_channel_id = 748995277037240330
 log = logging.getLogger("red.cogs.clashroyaleclans")
 
 
