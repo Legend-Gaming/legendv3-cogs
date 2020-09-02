@@ -326,9 +326,11 @@ class ClashRoyaleTools(commands.Cog):
     def cog_unload(self):
         if self.token_task:
             self.token_task.cancel()
-        self.bot.loop.create_task(self.cr.close())
+        if self.cr:
+            self.bot.loop.create_task(self.cr.close())
         print('Unloaded CR-Tools... NOTE MANY DEPENDANCIES WILL BREAK INCLUDING TRADING, CLASHROYALESTATS AND CLASHROYALECLANS')
-        self.tags.db.close()
+        if self.tags:
+            self.tags.db.close()
 
     @commands.group(name='crtools')
     async def _crtools(self, ctx):
