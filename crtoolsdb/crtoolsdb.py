@@ -322,7 +322,6 @@ class ClashRoyaleTools(commands.Cog):
         self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True,
                                                  url="https://proxy.royaleapi.dev/v1")
 
-
     def cog_unload(self):
         if self.token_task:
             self.token_task.cancel()
@@ -349,6 +348,7 @@ class ClashRoyaleTools(commands.Cog):
         if user is None:
             user = ctx.author
 
+        tag = self.tags.formatTag(tag)
         if not self.tags.verifyTag(tag):
             return await ctx.send("Invalid Tag. Please try again.")
 
