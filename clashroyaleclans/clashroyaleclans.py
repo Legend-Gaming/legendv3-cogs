@@ -678,7 +678,7 @@ class ClashRoyaleClans(commands.Cog):
             else:
                 output_msg += "Nickname changed to **{}**\n".format(newname)
 
-            clan_roles.append("Member")
+            clan_roles.append("TL Family")
             try:
                 await self.discord_helper._add_roles(member, clan_roles)
                 output_msg += f"**{humanize_list(clan_roles)}** roles added."
