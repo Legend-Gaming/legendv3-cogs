@@ -162,7 +162,7 @@ class ClashRoyaleClans(commands.Cog):
             embed.set_author(
                 name="Threat Level Family Clans",
                 url="http://royaleapi.com/clan/family/threatlevel",
-                icon_url="https://cdn.discordapp.com/attachments/423094817371848716/425389610223271956/legend_logo-trans.png",
+                icon_url="https://cdn.discordapp.com/attachments/718649031009501285/750779100783837194/TL-Skull-Trans.png",
             )
 
             embed.set_footer(text=credits, icon_url=creditIcon)
