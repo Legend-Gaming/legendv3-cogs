@@ -712,7 +712,7 @@ class ClashRoyaleClans(commands.Cog):
                     "**{}** recruited **{} (#{})** to {}".format(
                         ctx.author.display_name, ign, tag, roleName.mention
                     ),
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+                    allowed_mentions=discord.AllowedMentions(users=True, roles=false),
                 )
 
             global_channel = self.bot.get_channel(global_channel_id)
