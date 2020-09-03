@@ -679,7 +679,6 @@ class ClashRoyaleClans(commands.Cog):
                 output_msg += "Nickname changed to **{}**\n".format(newname)
 
             clan_roles.append("TL Family")
-            _remove_roles(member,  ["Get Roles"])
             try:
                 await self.discord_helper._add_roles(member, clan_roles)
                 output_msg += f"**{humanize_list(clan_roles)}** roles added."
@@ -704,7 +703,7 @@ class ClashRoyaleClans(commands.Cog):
                 await simple_embed(ctx, output_msg, True)
 
             # TODO: Add welcome message to global chat
-            await self.discord_helper._remove_roles(member, ["Guest"])
+            await self.discord_helper._remove_roles(member, ["Get Roles"])
 
             roleName = discord.utils.get(guild.roles, name=clan_roles[0])
             recruitment_channel = self.bot.get_channel(new_recruits_channel_id)
