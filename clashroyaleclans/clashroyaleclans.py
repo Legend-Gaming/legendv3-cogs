@@ -712,7 +712,7 @@ class ClashRoyaleClans(commands.Cog):
                     "**{}** recruited **{} (#{})** to {}".format(
                         ctx.author.display_name, ign, tag, roleName.mention
                     ),
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=false),
+                    allowed_mentions=discord.AllowedMentions(users=false, roles=false),
                 )
 
             global_channel = self.bot.get_channel(global_channel_id)
@@ -720,7 +720,7 @@ class ClashRoyaleClans(commands.Cog):
                 greeting_to_send = (random.choice(self.greetings)).format(member)
                 await global_channel.send(
                     greeting_to_send,
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+                    allowed_mentions=discord.AllowedMentions(users=false, roles=false),
                 )
 
             try:
