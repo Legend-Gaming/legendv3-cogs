@@ -1174,6 +1174,70 @@ class ClashRoyaleClans(commands.Cog):
             json.dump(self.family_clans, file)
         return True
 
+    @commands.group(name="clans")
+    @checks.admin()
+    async def clans(self, ctx):
+        """ Set requirements for clan """
+        pass
+
+    @clans.command(name="cwr")
+    async def clans_cwr(self, ctx, clankey, league, percent: int):
+        """ Set cwr as requirement for clan """
+        clan_name = None
+        for name, data in self.family_clans.items():
+            if data['nickname'].lower() == clankey.lower():
+                clan_name = name
+        if not clan_name:
+            return await ctx.send(f"No clan named {clankey}.")
+        try:
+            current = self.family_clans[clan_name]["requirements"]["cwr"]
+        except KeyError:
+            return await ctx.send("There is something wrong with clan database.")
+        if league.lower() in current.keys():
+            if percent < 0:
+                return await ctx.send("Invalid value for value. Cwr cannot be less than 0.")
+            current[league.lower()] = int(percent)
+        else:
+            return await ctx.send(f"{league} is not a valid league. Valid leagues are: {humanize_list(list(current.keys()))}")
+        with open(self.claninfo_path, 'w') as file:
+            json.dump(self.family_clans, file)
+        await ctx.tick()
+
+    @clans.command(name="pb")
+    async def clans_pb(self, ctx, clankey, value: int):
+        """ Set personal best as requirements"""
+        clan_name = None
+        for name, data in self.family_clans.items():
+            if data['nickname'].lower() == clankey.lower():
+                clan_name = name
+        if not clan_name:
+            return await ctx.send(f"No clan named {clankey}.")
+        try:
+            if value < 0:
+                return await ctx.send("Invalid value for value. Trophies cannot be less than 0.")
+            self.family_clans[clan_name]["requirements"]["personalbest"] = value
+        except KeyError:
+            return await ctx.send("There is something wrong with clan database.")
+        with open(self.claninfo_path, 'w') as file:
+            json.dump(self.family_clans, file)
+        await ctx.tick()
+
+    @clans.command(name="bonus")
+    async def clans_bonus(self, ctx, clankey, value: str):
+        """ Set bonus requirements for clan. Note that these values must be checked manually by hub officers. """
+        clan_name = None
+        for name, data in self.family_clans.items():
+            if data['nickname'].lower() == clankey.lower():
+                clan_name = name
+        if not clan_name:
+            return await ctx.send(f"No clan named {clankey}.")
+        try:
+            self.family_clans[clan_name]["requirements"]["bonus"] = value
+        except KeyError:
+            return await ctx.send("There is something wrong with clan database.")
+        with open(self.claninfo_path, 'w') as file:
+            json.dump(self.family_clans, file)
+        await ctx.tick()
 
 class Helper:
     def __init__(self, bot):
