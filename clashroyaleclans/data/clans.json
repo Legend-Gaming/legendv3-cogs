@@ -1,153 +1,68 @@
 {
-  "Dragons Eight": {
-    "name": "Dragons Eight",
-    "tag": "29YPJYY",
-    "nickname": "D8",
-    "clanrole": "Dragons Eight",
-    "emoji": "d8",
-    "requirements": {
-      "personalbest": 0,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
-      },
-      "bonus": "70% War Winrate",
-      "private": false
-    },
-    "waiting": []
-  },
-  "LeGeND Legion!": {
-    "name": "LeGeND Legion!",
-    "tag": "VJQ0GJ0",
-    "nickname": "Legion",
-    "clanrole": "Legion",
-    "emoji": "legion",
-    "requirements": {
-      "personalbest": 6000,
-      "wdwins": 150,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
-      },
-      "bonus": "65% War Winrate",
-      "private": false
-    },
-    "waiting": []
-  },
-  "LeGeND Titan!": {
-    "name": "LeGeND Titan!",
-    "tag": "9PJYVVL2",
-    "nickname": "Titan",
-    "clanrole": "Titan",
-    "emoji": "titan",
-    "requirements": {
-      "personalbest": 5800,
-      "wdwins": 100,
-      "cwr": {
-        "legendary": 15,
-        "gold": 40,
-        "silver": 0,
-        "bronze": 0
-      },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "Dragons Eight 2": {
-    "name": "Dragons Eight 2",
-    "tag": "Y8G9C09",
-    "nickname": "D82",
-    "clanrole": "Dragons Eight II",
-    "emoji": "d8",
+  "TL Inferno": {
+    "name": "TL Inferno",
+    "tag": "9CJ9YGPL",
+    "nickname": "Inferno",
+    "clanrole": "Inferno",
     "requirements": {
       "personalbest": 5600,
-      "wdwins": 50,
+      "wdwins": 0,
       "cwr": {
-        "legendary": 0,
+        "legendary": 25,
         "gold": 0,
         "silver": 0,
         "bronze": 0
       },
-      "bonus": "",
+      "bonus": "50% War Winrate",
       "private": false
     },
     "waiting": []
   },
-  "LeGeND Squad!": {
-    "name": "LeGeND Squad!",
-    "tag": "80CC8",
-    "nickname": "Squad",
-    "clanrole": "Squad",
-    "emoji": "squad",
-    "requirements": {
-      "personalbest": 0,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 15,
-        "gold": 40,
-        "silver": 0,
-        "bronze": 0
-      },
-      "bonus": "60% War  Winrate",
-      "private": false
-    },
-    "waiting": [],
-	"invite": "https://discord.gg/RuBGPTu"
-  },
-  "LeGeND Prime!": {
-    "name": "LeGeND Prime!",
-    "tag": "2LL8LC2R",
-    "nickname": "Prime",
-    "clanrole": "Prime",
-    "emoji": "prime",
-    "requirements": {
-      "personalbest": 0,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 4,
-        "gold": 25,
-        "silver": 0,
-        "bronze": 0
-      },
-      "bonus": "Age: 21+",
-      "private": false
-    },
-    "waiting": []
-  },
-  "LeGeND Rising!": {
-    "name": "LeGeND Rising!",
-    "tag": "RY9QJU2",
-    "nickname": "Rising",
-    "clanrole": "Rising",
-    "emoji": "rising",
-    "requirements": {
-      "personalbest": 0,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 2,
-        "gold": 15,
-        "silver": 0,
-        "bronze": 0
-      },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "LeGeND Empire!": {
-    "name": "LeGeND Empire!",
-    "tag": "9P2PQULQ",
-    "nickname": "Empire",
-    "clanrole": "Empire",
-    "emoji": "empire",
+  "TL Cyclone": {
+    "name": "TL Cyclone",
+    "tag": "9QVYYYV0",
+    "nickname": "Cyclone",
+    "clanrole": "Cyclone",
     "requirements": {
       "personalbest": 5300,
+      "wdwins": 0,
+      "cwr": {
+        "legendary": 20,
+        "gold": 0,
+        "silver": 0,
+        "bronze": 0
+      },
+      "bonus": "50% War Winrate",
+      "private": false
+    },
+    "waiting": []
+  },
+  "TL Titans": {
+    "name": "TL Titans",
+    "tag": "PGPQQ8UV",
+    "nickname": "Titans",
+    "clanrole": "Titans",
+    "requirements": {
+      "personalbest": 5300,
+      "wdwins": 50,
+      "cwr": {
+        "legendary": 15,
+        "gold": 50,
+        "silver": 0,
+        "bronze": 0
+      },
+      "bonus": "",
+      "private": false
+    },
+    "waiting": []
+  },
+  "TL Nitro": {
+    "name": "TL Nitro",
+    "tag": "9YYLQ99L",
+    "nickname": "Nitro",
+    "clanrole": "Nitro",
+    "requirements": {
+      "personalbest": 5000,
       "wdwins": 0,
       "cwr": {
         "legendary": 5,
@@ -160,18 +75,17 @@
     },
     "waiting": []
   },
-  "LeGeND Dynasty!": {
-    "name": "LeGeND Dynasty!",
-    "tag": "99R2PQVR",
-    "nickname": "Dynasty",
-    "clanrole": "Dynasty",
-    "emoji": "dynasty",
+  "TL Chill": {
+    "name": "TL Chill",
+    "tag": "PPCG80G0",
+    "nickname": "Chill",
+    "clanrole": "Chill",
     "requirements": {
-      "personalbest": 0,
+      "personalbest": 5000,
       "wdwins": 0,
       "cwr": {
         "legendary": 0,
-        "gold": 0,
+        "gold": 20,
         "silver": 0,
         "bronze": 0
       },
@@ -179,36 +93,90 @@
       "private": false
     },
     "waiting": [],
-	"invite": "https://discord.gg/Rv5PJx"
   },
-  "LeGeND eSports!": {
-    "name": "LeGeND eSports!",
-    "tag": "P9GG9QQY",
-    "nickname": "eSports",
-    "clanrole": "eSports",
-    "emoji": "esports",
+  "TL Plasma": {
+    "name": "TL Plasma",
+    "tag": "PGQY9Q9C",
+    "nickname": "Plasma",
+    "clanrole": "Plasma",
+    "requirements": {
+      "personalbest": 4600,
+      "wdwins": 0,
+      "cwr": {
+        "legendary": 0,
+        "gold": 0,
+        "silver": 0,
+        "bronze": 0
+      },
+      "bonus": "",
+      "private": false
+    },
+    "waiting": []
+  },
+  "TL Justice!": {
+    "name": "TL Justice",
+    "tag": "LR9CY9VQ",
+    "nickname": "Justice",
+    "clanrole": "Justice",
+    "requirements": {
+      "personalbest": 5000,
+      "wdwins": 0,
+      "cwr": {
+        "legendary": 0,
+        "gold": 35,
+        "silver": 0,
+        "bronze": 0
+      },
+      "bonus": "",
+      "private": false
+    },
+    "waiting": []
+  },
+  "TL Movement": {
+    "name": "TL Movement",
+    "tag": "YJV8RG22",
+    "nickname": "Movement",
+    "clanrole": "Movement",
+    "requirements": {
+      "personalbest": 5000,
+      "wdwins": 0,
+      "cwr": {
+        "legendary": 0,
+        "gold": 0,
+        "silver": 0,
+        "bronze": 0
+      },
+      "bonus": "",
+      "private": false
+    },
+    "waiting": []
+  },
+  "TL Blaze": {
+    "name": "TL Blaze",
+    "tag": "Y9G2LQ2Y",
+    "nickname": "Blaze",
+    "clanrole": "Blaze",
     "requirements": {
       "personalbest": 5600,
       "wdwins": 0,
       "cwr": {
-        "legendary": 0,
-        "gold": 0,
+        "legendary": 10,
+        "gold": 50,
         "silver": 0,
-        "bronze": 75
+        "bronze": 0
       },
       "bonus": "",
       "private": false
     },
-    "waiting": []
+    "waiting": [],
   },
-  "White Plague": {
-    "name": "White Plague",
-    "tag": "J0CQ9R9",
-    "nickname": "Plague",
-    "clanrole": "White Plague",
-    "emoji": "plague",
+  "TL Tombstone": {
+    "name": "TL Tombstone",
+    "tag": "YJ8GRVGY",
+    "nickname": "Tombstone",
+    "clanrole": "Tombstone",
     "requirements": {
-      "personalbest": 0,
+      "personalbest": 4600,
       "wdwins": 0,
       "cwr": {
         "legendary": 0,
@@ -221,14 +189,70 @@
     },
     "waiting": []
   },
-  "Dragons Eight 3": {
-    "name": "Dragons Eight 3",
-    "tag": "PRCRJYCR",
-    "nickname": "D83",
-    "clanrole": "Dragons Eight III",
-    "emoji": "d8",
+  "Lost Phoenix": {
+    "name": "Lost Phoenix",
+    "tag": "8UQ2",
+    "nickname": "lp",
+    "clanrole": "Lost Phoenix",
     "requirements": {
-      "personalbest": 0,
+      "personalbest": 5300,
+      "wdwins": 150,
+      "cwr": {
+        "legendary": 0,
+        "gold": 0,
+        "silver": 0,
+        "bronze": 0
+      },
+      "bonus": "",
+      "private": false
+    },
+    "waiting": []
+  },
+  "LP2 Chimera": {
+    "name": "LP2 Chimera",
+    "tag": "PO9GPU",
+    "nickname": "LP2C",
+    "clanrole": "LP2 Chimera",
+    "requirements": {
+      "personalbest": 5000,
+      "wdwins": 0,
+      "cwr": {
+        "legendary": 0,
+        "gold": 50,
+        "silver": 0,
+        "bronze": 0
+      },
+      "bonus": "",
+      "private": false
+    },
+    "waiting": []
+  },
+  "LP2 Eros": {
+    "name": "LP2 Eros",
+    "tag": "PP2L",
+    "nickname": "LP2E",
+    "clanrole": "LP2 Eros",
+    "requirements": {
+      "personalbest": 5300,
+      "wdwins": 0,
+      "cwr": {
+        "legendary": 0,
+        "gold": 50,
+        "silver": 0,
+        "bronze": 0
+      },
+      "bonus": "",
+      "private": false
+    },
+    "waiting": []
+  },
+  "LP3 Typhon": {
+    "name": "LP3 Typhon",
+    "tag": "9Q2OL",
+    "nickname": "LP3",
+    "clanrole": "LP3 Typhon",,
+    "requirements": {
+      "personalbest": 4000,
       "wdwins": 0,
       "cwr": {
         "legendary": 0,
@@ -241,54 +265,13 @@
     },
     "waiting": []
   },
-  "LeGeND Phantom!": {
-    "name": "LeGeND Phantom!",
-    "tag": "2CJ88808",
-    "nickname": "Phantom",
-    "clanrole": "Phantom",
-    "emoji": "phantom",
+  "TL Straya": {
+    "name": "TL Straya",
+    "tag": "YU20PCQU",
+    "nickname": "Straya",
+    "clanrole": "Straya",
     "requirements": {
-      "personalbest": 0,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
-      },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "LeGeND Academy!": {
-    "name": "LeGeND Academy!",
-    "tag": "8QRQQ8RG",
-    "nickname": "Academy",
-    "clanrole": "Academy",
-    "emoji": "academy",
-    "requirements": {
-      "personalbest": 0,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
-      },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "LeGeND Pride!": {
-    "name": "LeGeND Pride!",
-    "tag": "YLULCRQJ",
-    "nickname": "Pride",
-    "clanrole": "Pride",
-    "emoji": "pride",
-    "requirements": {
-      "personalbest": 0,
+      "personalbest": 4600,
       "wdwins": 0,
       "cwr": {
         "legendary": 0,
