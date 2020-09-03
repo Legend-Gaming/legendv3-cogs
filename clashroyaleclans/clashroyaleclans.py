@@ -727,8 +727,8 @@ class ClashRoyaleClans(commands.Cog):
                 await simple_embed(
                     member,
                     "Hi There! Congratulations on getting accepted into our family. "
-                    "We have unlocked all the member channels for you in LeGeND Discord Server. "
-                    "DM <@598662722821029888> if you have any problems.\n"
+                    "We have unlocked all the member channels for you in Threat Level Discord Server. "
+                    "DM <@506325350335119360> if you have any problems.\n"
                     "Please do not leave our Discord server while you are in the clan. Thank you.",
                 )
                 if discord_invites:
