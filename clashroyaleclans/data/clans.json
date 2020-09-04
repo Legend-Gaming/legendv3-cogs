@@ -1,287 +1,317 @@
 {
-  "TL Inferno": {
-    "name": "TL Inferno",
-    "tag": "9CJ9YGPL",
-    "nickname": "Inferno",
-    "clanrole": "Inferno",
-    "requirements": {
-      "personalbest": 5600,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 25,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
+   "TL Inferno":{
+      "name":"TL Inferno",
+      "tag":"9CJ9YGPL",
+      "nickname":"Inferno",
+      "clanrole":"Inferno",
+      "requirements":{
+         "personalbest":5600,
+         "wdwins":0,
+         "cwr":{
+            "legendary":25,
+            "gold":0,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"50% War Winrate",
+         "private":false
       },
-      "bonus": "50% War Winrate",
-      "private": false
-    },
-    "waiting": []
-  },
-  "TL Cyclone": {
-    "name": "TL Cyclone",
-    "tag": "9QVYYYV0",
-    "nickname": "Cyclone",
-    "clanrole": "Cyclone",
-    "requirements": {
-      "personalbest": 5300,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 20,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Cyclone":{
+      "name":"TL Cyclone",
+      "tag":"9QVYYYV0",
+      "nickname":"Cyclone",
+      "clanrole":"Cyclone",
+      "requirements":{
+         "personalbest":5300,
+         "wdwins":0,
+         "cwr":{
+            "legendary":20,
+            "gold":0,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"50% War Winrate",
+         "private":false
       },
-      "bonus": "50% War Winrate",
-      "private": false
-    },
-    "waiting": []
-  },
-  "TL Titans": {
-    "name": "TL Titans",
-    "tag": "PGPQQ8UV",
-    "nickname": "Titans",
-    "clanrole": "Titans",
-    "requirements": {
-      "personalbest": 5300,
-      "wdwins": 50,
-      "cwr": {
-        "legendary": 15,
-        "gold": 50,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Titans":{
+      "name":"TL Titans",
+      "tag":"PGPQQ8UV",
+      "nickname":"Titans",
+      "clanrole":"Titans",
+      "requirements":{
+         "personalbest":5300,
+         "wdwins":50,
+         "cwr":{
+            "legendary":15,
+            "gold":50,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "TL Nitro": {
-    "name": "TL Nitro",
-    "tag": "9YYLQ99L",
-    "nickname": "Nitro",
-    "clanrole": "Nitro",
-    "requirements": {
-      "personalbest": 5000,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 5,
-        "gold": 20,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Nitro":{
+      "name":"TL Nitro",
+      "tag":"9YYLQ99L",
+      "nickname":"Nitro",
+      "clanrole":"Nitro",
+      "requirements":{
+         "personalbest":5000,
+         "wdwins":0,
+         "cwr":{
+            "legendary":5,
+            "gold":20,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "TL Chill": {
-    "name": "TL Chill",
-    "tag": "PPCG80G0",
-    "nickname": "Chill",
-    "clanrole": "Chill",
-    "requirements": {
-      "personalbest": 5000,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 20,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Chill":{
+      "name":"TL Chill",
+      "tag":"PPCG80G0",
+      "nickname":"Chill",
+      "clanrole":"Chill",
+      "requirements":{
+         "personalbest":5000,
+         "wdwins":0,
+         "cwr":{
+            "legendary":0,
+            "gold":20,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": [],
-  },
-  "TL Plasma": {
-    "name": "TL Plasma",
-    "tag": "PGQY9Q9C",
-    "nickname": "Plasma",
-    "clanrole": "Plasma",
-    "requirements": {
-      "personalbest": 4600,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Plasma":{
+      "name":"TL Plasma",
+      "tag":"PGQY9Q9C",
+      "nickname":"Plasma",
+      "clanrole":"Plasma",
+      "requirements":{
+         "personalbest":4600,
+         "wdwins":0,
+         "cwr":{
+            "legendary":0,
+            "gold":0,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "TL Justice!": {
-    "name": "TL Justice",
-    "tag": "LR9CY9VQ",
-    "nickname": "Justice",
-    "clanrole": "Justice",
-    "requirements": {
-      "personalbest": 5000,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 35,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Justice!":{
+      "name":"TL Justice",
+      "tag":"LR9CY9VQ",
+      "nickname":"Justice",
+      "clanrole":"Justice",
+      "requirements":{
+         "personalbest":5000,
+         "wdwins":0,
+         "cwr":{
+            "legendary":0,
+            "gold":35,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "TL Movement": {
-    "name": "TL Movement",
-    "tag": "YJV8RG22",
-    "nickname": "Movement",
-    "clanrole": "Movement",
-    "requirements": {
-      "personalbest": 5000,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Movement":{
+      "name":"TL Movement",
+      "tag":"YJV8RG22",
+      "nickname":"Movement",
+      "clanrole":"Movement",
+      "requirements":{
+         "personalbest":5000,
+         "wdwins":0,
+         "cwr":{
+            "legendary":0,
+            "gold":0,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "TL Blaze": {
-    "name": "TL Blaze",
-    "tag": "Y9G2LQ2Y",
-    "nickname": "Blaze",
-    "clanrole": "Blaze",
-    "requirements": {
-      "personalbest": 5600,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 10,
-        "gold": 50,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Blaze":{
+      "name":"TL Blaze",
+      "tag":"Y9G2LQ2Y",
+      "nickname":"Blaze",
+      "clanrole":"Blaze",
+      "requirements":{
+         "personalbest":5600,
+         "wdwins":0,
+         "cwr":{
+            "legendary":10,
+            "gold":50,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": [],
-  },
-  "TL Tombstone": {
-    "name": "TL Tombstone",
-    "tag": "YJ8GRVGY",
-    "nickname": "Tombstone",
-    "clanrole": "Tombstone",
-    "requirements": {
-      "personalbest": 4600,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Tombstone":{
+      "name":"TL Tombstone",
+      "tag":"YJ8GRVGY",
+      "nickname":"Tombstone",
+      "clanrole":"Tombstone",
+      "requirements":{
+         "personalbest":4600,
+         "wdwins":0,
+         "cwr":{
+            "legendary":0,
+            "gold":0,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "Lost Phoenix": {
-    "name": "Lost Phoenix",
-    "tag": "8UQ2",
-    "nickname": "lp",
-    "clanrole": "Lost Phoenix",
-    "requirements": {
-      "personalbest": 5300,
-      "wdwins": 150,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "Lost Phoenix":{
+      "name":"Lost Phoenix",
+      "tag":"8UQ2",
+      "nickname":"lp",
+      "clanrole":"Lost Phoenix",
+      "requirements":{
+         "personalbest":5300,
+         "wdwins":150,
+         "cwr":{
+            "legendary":0,
+            "gold":0,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "LP2 Chimera": {
-    "name": "LP2 Chimera",
-    "tag": "PO9GPU",
-    "nickname": "LP2C",
-    "clanrole": "LP2 Chimera",
-    "requirements": {
-      "personalbest": 5000,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 50,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "LP2 Chimera":{
+      "name":"LP2 Chimera",
+      "tag":"PO9GPU",
+      "nickname":"LP2C",
+      "clanrole":"LP2 Chimera",
+      "requirements":{
+         "personalbest":5000,
+         "wdwins":0,
+         "cwr":{
+            "legendary":0,
+            "gold":50,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "LP2 Eros": {
-    "name": "LP2 Eros",
-    "tag": "PP2L",
-    "nickname": "LP2E",
-    "clanrole": "LP2 Eros",
-    "requirements": {
-      "personalbest": 5300,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 50,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "LP2 Eros":{
+      "name":"LP2 Eros",
+      "tag":"PP2L",
+      "nickname":"LP2E",
+      "clanrole":"LP2 Eros",
+      "requirements":{
+         "personalbest":5300,
+         "wdwins":0,
+         "cwr":{
+            "legendary":0,
+            "gold":50,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "LP3 Typhon": {
-    "name": "LP3 Typhon",
-    "tag": "9Q2OL",
-    "nickname": "LP3",
-    "clanrole": "LP3 Typhon",
-    "requirements": {
-      "personalbest": 4000,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "LP3 Typhon":{
+      "name":"LP3 Typhon",
+      "tag":"9Q2OL",
+      "nickname":"LP3",
+      "clanrole":"LP3 Typhon",
+      "requirements":{
+         "personalbest":4000,
+         "wdwins":0,
+         "cwr":{
+            "legendary":0,
+            "gold":0,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  },
-  "TL Straya": {
-    "name": "TL Straya",
-    "tag": "YU20PCQU",
-    "nickname": "Straya",
-    "clanrole": "Straya",
-    "requirements": {
-      "personalbest": 4600,
-      "wdwins": 0,
-      "cwr": {
-        "legendary": 0,
-        "gold": 0,
-        "silver": 0,
-        "bronze": 0
+      "waiting":[
+         
+      ]
+   },
+   "TL Straya":{
+      "name":"TL Straya",
+      "tag":"YU20PCQU",
+      "nickname":"Straya",
+      "clanrole":"Straya",
+      "requirements":{
+         "personalbest":4600,
+         "wdwins":0,
+         "cwr":{
+            "legendary":0,
+            "gold":0,
+            "silver":0,
+            "bronze":0
+         },
+         "bonus":"",
+         "private":false
       },
-      "bonus": "",
-      "private": false
-    },
-    "waiting": []
-  }
+      "waiting":[
+         
+      ]
+   }
 }
