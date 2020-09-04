@@ -19,8 +19,6 @@ from redbot.core.utils.predicates import MessagePredicate
 
 credits = "Bot by Legend Gaming"
 credits_icon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
-new_recruits_channel_id = 375839851955748874
-global_channel_id = 374596069989810178
 log = logging.getLogger("red.cogs.clashroyaleclans")
 
 
@@ -33,7 +31,10 @@ class NoToken(Exception):
 
 
 async def simple_embed(
-    ctx: commands.Context, message: str, success: Optional[bool] = None
+    ctx: commands.Context,
+    message: str,
+    success: Optional[bool] = None,
+    mentions: dict = dict({"users": True, "roles": True}),
 ) -> discord.Message:
     """Helper function for embed"""
     if success is True:
@@ -45,7 +46,7 @@ async def simple_embed(
     embed = discord.Embed(description=message, color=colour)
     embed.set_footer(text=credits, icon_url=credits_icon)
     return await ctx.send(
-        embed=embed, allowed_mentions=discord.AllowedMentions(users=True, roles=True)
+        embed=embed, allowed_mentions=discord.AllowedMentions(**mentions)
     )
 
 
@@ -60,7 +61,19 @@ class ClashRoyaleClans(commands.Cog):
 
         self.config = Config.get_conf(self, identifier=2286464642345664456)
         default_global = {"clans": list()}
+        default_guild = {
+            "mentions": {
+                "on_show_clan": {"users": True, "roles": True},
+                "on_approve": {"users": True, "roles": True},
+                "on_nm": True,
+                "on_newrecruit": True,
+                "on_waitlist_add": True,
+            },
+            "global_channel_id": 374596069989810178,
+            "new_recruits_channel_id": 375839851955748874,
+        }
         self.config.register_global(**default_global)
+        self.config.register_guild(**default_guild)
         self.discord_helper = Helper(bot)
 
         self.claninfo_path = str(cog_data_path(self) / "clans.json")
@@ -78,6 +91,8 @@ class ClashRoyaleClans(commands.Cog):
         self.esports_path = str(bundled_data_path(self) / "esports.txt")
         with open(self.esports_path) as file:
             self.esports_text = file.read()
+
+        self.claninfo_lock = asyncio.Lock()
 
         self.token_task = self.bot.loop.create_task(self.crtoken())
         self.refresh_task = self.refresh_data.start()
@@ -298,15 +313,15 @@ class ClashRoyaleClans(commands.Cog):
                             player_maxwins,
                             player_clanname,
                         )
-                    ),
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+                    )
                 )
 
     @tasks.loop(seconds=30)
     async def refresh_data(self):
         try:
-            with open(self.claninfo_path) as file:
-                self.family_clans = dict(json.load(file))
+            async with self.claninfo_lock:
+                with open(self.claninfo_path) as file:
+                    self.family_clans = dict(json.load(file))
             all_clan_data = list()
             for name, data in self.family_clans.items():
                 try:
@@ -336,8 +351,9 @@ class ClashRoyaleClans(commands.Cog):
     @commands.command(name="refresh")
     @checks.mod_or_permissions()
     async def command_refresh(self, ctx: commands.Context):
-        with open(self.claninfo_path) as file:
-            self.family_clans = dict(json.load(file))
+        async with self.claninfo_lock:
+            with open(self.claninfo_path) as file:
+                self.family_clans = dict(json.load(file))
         clan_data = list()
         for k, v in self.family_clans.items():
             try:
@@ -374,7 +390,7 @@ class ClashRoyaleClans(commands.Cog):
         )
         await simple_embed(
             ctx,
-            "Use this command only when automated refresh is not working. Inform <@683771700386857026> if that happens.",
+            "Use this command only when automated refresh is not working. Inform devs if that happens.",
         )
         self.last_updated = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         await ctx.tick()
@@ -516,7 +532,7 @@ class ClashRoyaleClans(commands.Cog):
                             member.mention, warning
                         )
                     ),
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+                    allowed_mentions=discord.AllowedMentions(users=True),
                 )
                 await asyncio.sleep(180)
 
@@ -547,7 +563,7 @@ class ClashRoyaleClans(commands.Cog):
                         + clan_name
                         + "**. Please check your DM for instructions on how to join."
                     ),
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+                    allowed_mentions=discord.AllowedMentions(users=True),
                 )
 
                 try:
@@ -571,13 +587,17 @@ class ClashRoyaleClans(commands.Cog):
                 embed.add_field(name="Clan", value=clan_name, inline=True)
                 embed.set_footer(text=credits, icon_url=credits_icon)
 
-                channel = self.bot.get_channel(new_recruits_channel_id)
+                channel = self.bot.get_channel(
+                    await self.config.guild(ctx.guild).new_recruits_channel_id()
+                )
                 if channel and role_to_ping:
                     await channel.send(
                         role_to_ping.mention,
                         embed=embed,
                         allowed_mentions=discord.AllowedMentions(
-                            users=True, roles=True
+                            roles=(await self.config.guild(ctx.guild).mentions())[
+                                "on_newrecruit"
+                            ]
                         ),
                     )
                 elif not channel:
@@ -706,21 +726,27 @@ class ClashRoyaleClans(commands.Cog):
             await self.discord_helper._remove_roles(member, ["Guest"])
 
             roleName = discord.utils.get(guild.roles, name=clan_roles[0])
-            recruitment_channel = self.bot.get_channel(new_recruits_channel_id)
+            recruitment_channel = self.bot.get_channel(
+                await self.config.guild(ctx.guild).new_recruits_channel_id()
+            )
             if recruitment_channel:
                 await recruitment_channel.send(
                     "**{}** recruited **{} (#{})** to {}".format(
                         ctx.author.display_name, ign, tag, roleName.mention
                     ),
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+                    allowed_mentions=discord.AllowedMentions(
+                        roles=(await self.config.guild(ctx.guild).mentions())["on_nm"]
+                    ),
                 )
 
-            global_channel = self.bot.get_channel(global_channel_id)
+            global_channel = self.bot.get_channel(
+                await self.config.guild(ctx.guild).global_channel_id()
+            )
             if global_channel:
                 greeting_to_send = (random.choice(self.greetings)).format(member)
                 await global_channel.send(
                     greeting_to_send,
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+                    allowed_mentions=discord.AllowedMentions(users=True),
                 )
 
             try:
@@ -755,7 +781,7 @@ class ClashRoyaleClans(commands.Cog):
                             member.mention
                         )
                     ),
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+                    allowed_mentions=discord.AllowedMentions(users=True),
                 )
 
         else:
@@ -937,14 +963,16 @@ class ClashRoyaleClans(commands.Cog):
             command = "waiting list"
             cmd = self.bot.get_command(command)
             if not cmd:
-                return await ctx.send(f"{command} is not currently availiable in the bot")
+                return await ctx.send(
+                    f"{command} is not currently availiable in the bot"
+                )
 
             await ctx.invoke(cmd)
 
     @waiting.command(name="add")
     @checks.mod()
     async def waiting_add(
-        self, ctx:commands.Context, member: discord.Member, clan_name, account: int = 1
+        self, ctx: commands.Context, member: discord.Member, clan_name, account: int = 1
     ):
         """Add people to the waiting list for a clan"""
         async with ctx.channel.typing():
@@ -994,7 +1022,8 @@ class ClashRoyaleClans(commands.Cog):
                 return await ctx.send("Player tag is invalid.")
             except clashroyale.RequestError:
                 return await simple_embed(
-                    ctx, "Error: cannot reach Clash Royale Servers. Please try again later."
+                    ctx,
+                    "Error: cannot reach Clash Royale Servers. Please try again later.",
                 )
 
             player_ign = player_data.name
@@ -1004,7 +1033,10 @@ class ClashRoyaleClans(commands.Cog):
             player_cwr = await self.discord_helper.clanwar_readiness(player_cards)
             player_wd_wins = player_data.warDayWins
 
-            if player_trophies < wait_clan_data.required_trophies or player_pb < clan_pb:
+            if (
+                player_trophies < wait_clan_data.required_trophies
+                or player_pb < clan_pb
+            ):
                 return await simple_embed(
                     ctx,
                     "Cannot add you to the waiting list, you don't meet the trophy requirements.",
@@ -1030,7 +1062,9 @@ class ClashRoyaleClans(commands.Cog):
                 )
 
             if not await self.add_to_waiting(clan_name, member):
-                return await ctx.send("You are already in a waiting list for this clan.")
+                return await ctx.send(
+                    "You are already in a waiting list for this clan."
+                )
 
             waiting_role = discord.utils.get(ctx.guild.roles, name="Waiting")
             if not waiting_role:
@@ -1052,18 +1086,24 @@ class ClashRoyaleClans(commands.Cog):
             )
 
             role = discord.utils.get(ctx.guild.roles, name=clan_role)
-            to_post = self.bot.get_channel(new_recruits_channel_id)
+            to_post = self.bot.get_channel(
+                await self.config.guild(ctx.guild).new_recruits_channel_id()
+            )
             if to_post:
                 await to_post.send(
                     "**{} (#{})** added to the waiting list for {}".format(
                         player_ign, player_tag, role.mention
                     ),
-                    allowed_mentions=discord.AllowedMentions(roles=True)
+                    allowed_mentions=discord.AllowedMentions(
+                        roles=(await self.config.guild(ctx.guild).mentions())[
+                            "on_waitlist_add"
+                        ]
+                    ),
                 )
         await ctx.tick()
 
     @waiting.command(name="list")
-    async def waiting_list(self, ctx:commands.Context):
+    async def waiting_list(self, ctx: commands.Context):
         """Show status of the waiting list."""
         message = ""
         num_clans = 0
@@ -1106,7 +1146,9 @@ class ClashRoyaleClans(commands.Cog):
 
     @waiting.command(name="remove")
     @checks.mod()
-    async def waiting_remove(self, ctx, member: discord.Member, clan_key, account: int = 1):
+    async def waiting_remove(
+        self, ctx, member: discord.Member, clan_key, account: int = 1
+    ):
         """Delete people from the waiting list for a clan"""
         async with ctx.channel.typing():
             clan_key = clan_key.lower()
@@ -1128,10 +1170,10 @@ class ClashRoyaleClans(commands.Cog):
                 return await simple_embed(ctx, "Recruit not found in the waiting list.")
             else:
                 await ctx.send(
-                (
-                    f"{member.mention} has been removed from the waiting list for **{clan_name}**."
-                ),
-                allowed_mentions=discord.AllowedMentions(users=True),
+                    (
+                        f"{member.mention} has been removed from the waiting list for **{clan_name}**."
+                    ),
+                    allowed_mentions=discord.AllowedMentions(users=True),
                 )
             waiting_role = discord.utils.get(ctx.guild.roles, name="Waiting")
             if not waiting_role:
@@ -1156,8 +1198,9 @@ class ClashRoyaleClans(commands.Cog):
         if member.id in clan_data["waiting"]:
             return False
         clan_data["waiting"].append(member.id)
-        with open(self.claninfo_path, "w") as file:
-            json.dump(self.family_clans, file)
+        async with self.claninfo_lock:
+            with open(self.claninfo_path, "w") as file:
+                json.dump(self.family_clans, file)
         return True
 
     async def remove_from_waiting(self, clan_name: str, member: discord.Member):
@@ -1170,8 +1213,9 @@ class ClashRoyaleClans(commands.Cog):
         if member.id not in clan_data["waiting"]:
             return False
         self.family_clans[clan_name]["waiting"].remove(member.id)
-        with open(self.claninfo_path, "w") as file:
-            json.dump(self.family_clans, file)
+        async with self.claninfo_lock:
+            with open(self.claninfo_path, "w") as file:
+                json.dump(self.family_clans, file)
         return True
 
     @commands.group(name="clans")
@@ -1185,7 +1229,7 @@ class ClashRoyaleClans(commands.Cog):
         """ Set cwr as requirement for clan """
         clan_name = None
         for name, data in self.family_clans.items():
-            if data['nickname'].lower() == clankey.lower():
+            if data["nickname"].lower() == clankey.lower():
                 clan_name = name
         if not clan_name:
             return await ctx.send(f"No clan named {clankey}.")
@@ -1195,12 +1239,17 @@ class ClashRoyaleClans(commands.Cog):
             return await ctx.send("There is something wrong with clan database.")
         if league.lower() in current.keys():
             if percent < 0:
-                return await ctx.send("Invalid value for value. Cwr cannot be less than 0.")
+                return await ctx.send(
+                    "Invalid value for value. Cwr cannot be less than 0."
+                )
             current[league.lower()] = int(percent)
         else:
-            return await ctx.send(f"{league} is not a valid league. Valid leagues are: {humanize_list(list(current.keys()))}")
-        with open(self.claninfo_path, 'w') as file:
-            json.dump(self.family_clans, file)
+            return await ctx.send(
+                f"{league} is not a valid league. Valid leagues are: {humanize_list(list(current.keys()))}"
+            )
+        async with self.claninfo_lock:
+            with open(self.claninfo_path, "w") as file:
+                json.dump(self.family_clans, file)
         await ctx.tick()
 
     @clans.command(name="pb")
@@ -1208,18 +1257,21 @@ class ClashRoyaleClans(commands.Cog):
         """ Set personal best as requirements"""
         clan_name = None
         for name, data in self.family_clans.items():
-            if data['nickname'].lower() == clankey.lower():
+            if data["nickname"].lower() == clankey.lower():
                 clan_name = name
         if not clan_name:
             return await ctx.send(f"No clan named {clankey}.")
         try:
             if value < 0:
-                return await ctx.send("Invalid value for value. Trophies cannot be less than 0.")
+                return await ctx.send(
+                    "Invalid value for value. Trophies cannot be less than 0."
+                )
             self.family_clans[clan_name]["requirements"]["personalbest"] = value
         except KeyError:
             return await ctx.send("There is something wrong with clan database.")
-        with open(self.claninfo_path, 'w') as file:
-            json.dump(self.family_clans, file)
+        async with self.claninfo_lock:
+            with open(self.claninfo_path, "w") as file:
+                json.dump(self.family_clans, file)
         await ctx.tick()
 
     @clans.command(name="bonus")
@@ -1227,7 +1279,7 @@ class ClashRoyaleClans(commands.Cog):
         """ Set bonus requirements for clan. Note that these values must be checked manually by hub officers. """
         clan_name = None
         for name, data in self.family_clans.items():
-            if data['nickname'].lower() == clankey.lower():
+            if data["nickname"].lower() == clankey.lower():
                 clan_name = name
         if not clan_name:
             return await ctx.send(f"No clan named {clankey}.")
@@ -1235,9 +1287,53 @@ class ClashRoyaleClans(commands.Cog):
             self.family_clans[clan_name]["requirements"]["bonus"] = value
         except KeyError:
             return await ctx.send("There is something wrong with clan database.")
-        with open(self.claninfo_path, 'w') as file:
-            json.dump(self.family_clans, file)
+        async with self.claninfo_lock:
+            with open(self.claninfo_path, "w") as file:
+                json.dump(self.family_clans, file)
         await ctx.tick()
+
+    @commands.group(name="crclansset")
+    @commands.guild_only()
+    @checks.admin()
+    async def crclansset(self, ctx):
+        """ Set variables used by ClashRoylaleClans cog """
+        pass
+
+    @crclansset.group(name="clanmention")
+    async def crclansset_clanmention(self, ctx, value: bool):
+        """ Set whether clan will be mentioned """
+        pass
+
+    @crclansset_clanmention.command(name="nm")
+    async def crclanset_clanmention_nm(self, ctx, value: bool):
+        """ Set whether clan will be mentioned on sucessful newmember """
+        await self.config.guild(ctx.guild).mentions.on_nm.set(value)
+        await ctx.tick()
+
+    @crclansset_clanmention.command(name="waiting")
+    async def crclanset_clanmention_waiting(self, ctx, value: bool):
+        """ Set whether clan will be mentioned on sucessful addition to waiting list """
+        await self.config.guild(ctx.guild).mentions.on_waitlist_add.set(value)
+        await ctx.tick()
+
+    @crclansset_clanmention.command(name="newrecruit")
+    async def crclanset_clanmention_newrecruit(self, ctx, value: bool):
+        """ Set whether clan will be mentioned when recruit is approved """
+        await self.config.guild(ctx.guild).mentions.on_newrecruit.set(value)
+        await ctx.tick()
+
+    @crclansset.command(name="global")
+    async def crclansset_global(self, ctx, channel: discord.TextChannel):
+        """ Set channel used to welcome newly recruited members """
+        await self.config.guild(ctx.guild).global_channel_id.set(channel.id)
+        await ctx.tick()
+
+    @crclansset.command(name="newrecruits")
+    async def crclansset_newrecruits(self, ctx, channel: discord.TextChannel):
+        """ Set channel used to inform staff about new recruits """
+        await self.config.guild(ctx.guild).new_recruits_channel_id.set(channel.id)
+        await ctx.tick()
+
 
 class Helper:
     def __init__(self, bot):
