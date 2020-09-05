@@ -1332,34 +1332,3 @@ class Helper:
         if emoji == "":
             emoji = self.emoji(card_name)
         return emoji
-
-    async def guess(ctx, member: discord.Member, forced: bool = False):
-    if not (await bot.is_mod(ctx.author)):
-        return await ctx.send("Sorry! You do not have enough permissions to assign roles.")
-    await self.discord_helper._remove_roles(member, ["Get Roles"])
-    role = discord.utils.get(ctx.guild.roles, name="Guest")
-    tags = bot.get_cog("ClashRoyaleTools").tags
-    player_tag = tags.getTag(member.id)
-    cr = bot.get_cog("ClashRoyaleClans").clash
-    if player_tag is None:
-        return await ctx.send("Player tag is not saved.")
-    new_name = ""
-    try:
-        player_data = await cr.get_player(player_tag)
-    except clashroyale.RequestError:
-        if not forced:
-            return await ctx.send("Error: cannot reach Clash Royale Servers. Please try again later.")
-        else:
-            new_name = member.display_name + " | Guest"
-    if not new_name:
-        new_name = player_data.name + " | Guest"
-    try:
-        await member.edit(nick=new_name)
-    except discord.Forbidden:
-        return await ctx.send("I do not have permissions to change nickname for this user.")
-    try:
-        await member.add_roles(role)
-    except discord.Forbidden:
-        return await ctx.send("I do not have permissions to add roles for this user.")
-    await ctx.send("Guest role added and nickname changed. Enjoy your visit.")
-return guest
