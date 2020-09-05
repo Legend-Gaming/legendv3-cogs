@@ -1333,7 +1333,7 @@ class Helper:
             emoji = self.emoji(card_name)
         return emoji
 
-    async def guest(ctx, member: discord.Member, forced: bool = False):
+    async def guess(ctx, member: discord.Member, forced: bool = False):
     if not (await bot.is_mod(ctx.author)):
         return await ctx.send("Sorry! You do not have enough permissions to assign roles.")
     await self.discord_helper._remove_roles(member, ["Get Roles"])
