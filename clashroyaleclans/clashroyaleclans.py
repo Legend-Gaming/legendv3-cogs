@@ -773,6 +773,78 @@ class ClashRoyaleClans(commands.Cog):
             message.content = ctx.prefix + "newmember {}".format(member.mention)
             await self.bot.process_commands(message)
 
+                @commands.command(name="guess")
+    @checks.mod()
+    async def command_guess(self, ctx, member: discord.Member):
+        """
+            Setup nickname, and roles for a new member
+        """
+        guild = ctx.guild
+        author = ctx.author
+
+        # if not (await self.bot.is_mod(ctx.author)):
+        #     return await ctx.send(
+        #         "Sorry! You do not have enough permissions to run this command."
+        #     )
+
+        is_clan_member = False
+        player_tags = self.tags.getAllTags(member.id)
+        clans_joined = []
+        clan_roles = []
+        discord_invites = []
+        clan_nicknames = []
+        ign = ""
+        if len(player_tags) == 0:
+            return await ctx.send(
+                "You must associate a tag with this member first using ``{}save #tag @member``".format(
+                    ctx.prefix
+                )
+            )
+
+        if ign:
+            newname = ign
+        else:
+            return await simple_embed(ctx, "Cannot find ign for user.", False)
+
+        output_msg = ""
+            newname += " | Guest"
+
+            try:
+                await member.edit(nick=newname)
+            except discord.HTTPException:
+                await simple_embed(
+                    ctx, "I don't have permission to change nick for this user.", False
+                )
+            else:
+                output_msg += "Nickname changed to **{}**\n".format(newname)
+
+            clan_roles.append("Guest")
+            try:
+                await self.discord_helper._add_roles(member, clan_roles)
+                output_msg += f"**{humanize_list(clan_roles)}** roles added."
+            except discord.Forbidden:
+                await ctx.send(
+                    "{} does not have permission to edit {}’s roles.".format(
+                        ctx.author.display_name, member.display_name
+                    )
+                )
+            except discord.HTTPException:
+                await ctx.send(
+                    "Failed to add roles {}.".format(humanize_list(clan_roles))
+                )
+            except InvalidRole:
+                await ctx.send(
+                    "Server roles are not setup properly. "
+                    "Please check if you have {} roles in server.".format(
+                        humanize_list(clan_roles)
+                    )
+                )
+            if output_msg:
+                await simple_embed(ctx, output_msg, True)
+
+            # TODO: Add welcome message to global chat
+            await self.discord_helper._remove_roles(member, ["Get Roles"])
+            
     @commands.command(name="inactive")
     async def command_inactive(self, ctx, member: discord.Member):
         all_clan_roles = [c["clanrole"] for c in self.family_clans.values()]
