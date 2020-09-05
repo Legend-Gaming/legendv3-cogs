@@ -773,7 +773,7 @@ class ClashRoyaleClans(commands.Cog):
             message.content = ctx.prefix + "newmember {}".format(member.mention)
             await self.bot.process_commands(message)
 
-                @commands.command(name="guess")
+    @commands.command(name="guess")
     @checks.mod()
     async def command_guess(self, ctx, member: discord.Member):
         """
