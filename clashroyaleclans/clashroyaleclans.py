@@ -809,7 +809,7 @@ class ClashRoyaleClans(commands.Cog):
         output_msg = ""
         newname += " | Guest"
 
-            try:
+        try:
                 await member.edit(nick=newname)
             except discord.HTTPException:
                 await simple_embed(
