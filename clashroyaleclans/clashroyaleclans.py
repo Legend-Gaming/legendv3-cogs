@@ -807,7 +807,7 @@ class ClashRoyaleClans(commands.Cog):
             return await simple_embed(ctx, "Cannot find ign for user.", False)
 
         output_msg = ""
-            newname += " | Guest"
+        newname += " | Guest"
 
             try:
                 await member.edit(nick=newname)
