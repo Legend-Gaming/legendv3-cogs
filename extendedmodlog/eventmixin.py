@@ -579,7 +579,7 @@ class EventMixin:
             embed.add_field(name=_("Account created on:"), value=created_on)
             embed.set_footer(text=_("User ID: ") + str(member.id))
             embed.set_author(
-                name=_("{member} ({m_id}) has joined the guild").format(
+                name=_("{member} ({m_id}) has joined the server").format(
                     member=member, m_id=member.id
                 ),
                 url=member.avatar_url,
@@ -593,7 +593,7 @@ class EventMixin:
             time = datetime.datetime.utcnow()
             msg = _(
                 "{emoji} `{time}` **{member}**(`{m_id}`) "
-                "joined the guild. Total members: {users}"
+                "joined the server. Total members: {users}"
             ).format(
                 emoji=self.settings[guild.id]["user_join"]["emoji"],
                 time=time.strftime("%H:%M:%S"),
@@ -645,7 +645,7 @@ class EventMixin:
                 embed.add_field(name=_("Reason"), value=str(reason))
             embed.set_footer(text=_("User ID: ") + str(member.id))
             embed.set_author(
-                name=_("{member} ({m_id}) has left the guild").format(
+                name=_("{member} ({m_id}) has left the server").format(
                     member=member, m_id=member.id
                 ),
                 url=member.avatar_url,
@@ -656,7 +656,7 @@ class EventMixin:
         else:
             time = datetime.datetime.utcnow()
             msg = _(
-                "{emoji} `{time}` **{member}**(`{m_id}`) left the guild. Total members: {users}"
+                "{emoji} `{time}` **{member}**(`{m_id}`) left the server. Total members: {users}"
             ).format(
                 emoji=self.settings[guild.id]["user_left"]["emoji"],
                 time=time.strftime("%H:%M:%S"),
@@ -1384,14 +1384,14 @@ class EventMixin:
         if removed_emoji is not None:
             worth_updating = True
             new_msg = f"`{removed_emoji}` (ID: {removed_emoji.id})" + _(
-                " Removed from the guild\n"
+                " Removed from the server\n"
             )
             msg += new_msg
             embed.description += new_msg
             action = discord.AuditLogAction.emoji_delete
         elif added_emoji is not None:
             worth_updating = True
-            new_msg = f"{added_emoji} `{added_emoji}`" + _(" Added to the guild\n")
+            new_msg = f"{added_emoji} `{added_emoji}`" + _(" Added to the server\n")
             msg += new_msg
             embed.description += new_msg
             action = discord.AuditLogAction.emoji_create
