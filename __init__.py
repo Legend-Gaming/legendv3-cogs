@@ -28,7 +28,7 @@
 
   <meta name="viewport" content="width=device-width">
   
-  <title>tltrusty/info.json at master · duanegtr/tltrusty</title>
+  <title>tltrusty/__init__.py at master · duanegtr/tltrusty</title>
     <meta name="description" content="A variety of utility cogs and fun cogs including Hockey information from the NHL, badge creation from discord user information, starboard for use on Redbot, twitch follow notifications and more. - duanegtr/tltrusty">
     <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub">
   <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub">
@@ -43,10 +43,10 @@
   
 
   <link rel="assets" href="https://github.githubassets.com/">
-    <link rel="shared-web-socket" href="wss://alive.github.com/_sockets/u/61340105/ws?session=eyJ2IjoiVjMiLCJ1Ijo2MTM0MDEwNSwicyI6NTc2MDQxOTI4LCJjIjozMjMyNDY3ODM2LCJ0IjoxNTk5Mzc1OTg1fQ==--9e744c5d575e6bcbde9ea515df08cee675bfff26fa28ec5301489c34217e9a05" data-refresh-url="/_alive">
+    <link rel="shared-web-socket" href="wss://alive.github.com/_sockets/u/61340105/ws?session=eyJ2IjoiVjMiLCJ1Ijo2MTM0MDEwNSwicyI6NTc2MDQxOTI4LCJjIjozMjM2NzUyNjMxLCJ0IjoxNTk5Mzc2MDA1fQ==--62e2f0d02c22ac1309f762d2959f4a078e2c6db54767b14ab2b51cb18bb66e09" data-refresh-url="/_alive">
   <link rel="sudo-modal" href="/sessions/sudo_modal">
 
-  <meta name="request-id" content="D139:6919:FA081F:16BEFD0:5F548A61" data-pjax-transient="true" /><meta name="html-safe-nonce" content="1c68799e0ebf9455a9f7d6afc37fb893c089e22b" data-pjax-transient="true" /><meta name="visitor-payload" content="eyJyZWZlcnJlciI6Imh0dHBzOi8vZ2l0aHViLmNvbS9kdWFuZWd0ci90bHRydXN0eS90cmVlL21hc3Rlci9leHRlbmRlZG1vZGxvZyIsInJlcXVlc3RfaWQiOiJEMTM5OjY5MTk6RkEwODFGOjE2QkVGRDA6NUY1NDhBNjEiLCJ2aXNpdG9yX2lkIjoiNzgxMjQzMzU4NjE3NTEyMjc0MSIsInJlZ2lvbl9lZGdlIjoiaWFkIiwicmVnaW9uX3JlbmRlciI6ImlhZCJ9" data-pjax-transient="true" /><meta name="visitor-hmac" content="344460356e6da4cb0f9e296d5db52bd693fb31e1986020ff11d11e83ce105b71" data-pjax-transient="true" /><meta name="cookie-consent-required" content="false" />
+  <meta name="request-id" content="D139:6919:FA0FE1:16C0286:5F548A81" data-pjax-transient="true" /><meta name="html-safe-nonce" content="1c68799e0ebf9455a9f7d6afc37fb893c089e22b" data-pjax-transient="true" /><meta name="visitor-payload" content="eyJyZWZlcnJlciI6Imh0dHBzOi8vZ2l0aHViLmNvbS9kdWFuZWd0ci90bHRydXN0eS90cmVlL21hc3Rlci9leHRlbmRlZG1vZGxvZyIsInJlcXVlc3RfaWQiOiJEMTM5OjY5MTk6RkEwRkUxOjE2QzAyODY6NUY1NDhBODEiLCJ2aXNpdG9yX2lkIjoiNzgxMjQzMzU4NjE3NTEyMjc0MSIsInJlZ2lvbl9lZGdlIjoiaWFkIiwicmVnaW9uX3JlbmRlciI6ImlhZCJ9" data-pjax-transient="true" /><meta name="visitor-hmac" content="c743d4e592147b7265bf39e11128d04a8e9ff5e93e610a0cd66deed261b0fcf7" data-pjax-transient="true" /><meta name="cookie-consent-required" content="false" />
 
     <meta name="hovercard-subject-tag" content="repository:293222138" data-pjax-transient>
 
@@ -90,7 +90,7 @@
 
       <meta name="expected-hostname" content="github.com">
 
-      <meta name="js-proxy-site-detection-payload" content="MDIzYTQ5MzI4NWFiN2RlNjc2MWMwYzY5NGE4NDc0NmIwMGE2MDA1NTU0ZDc4ODYwOGZlNzEyZGMwYzU1NWRjMHx7InJlbW90ZV9hZGRyZXNzIjoiOTkuMTg2LjI1Mi4xMjciLCJyZXF1ZXN0X2lkIjoiRDEzOTo2OTE5OkZBMDgxRjoxNkJFRkQwOjVGNTQ4QTYxIiwidGltZXN0YW1wIjoxNTk5Mzc1OTg1LCJob3N0IjoiZ2l0aHViLmNvbSJ9">
+      <meta name="js-proxy-site-detection-payload" content="ZjJkOWVmZDg1YzUwZjU5YzEzMjNlOWVjZjAwYWZjYmFmZmRmYzc4NTMwMTExNTFkMDAwOWI0NTI2MmM5MmI4OHx7InJlbW90ZV9hZGRyZXNzIjoiOTkuMTg2LjI1Mi4xMjciLCJyZXF1ZXN0X2lkIjoiRDEzOTo2OTE5OkZBMEZFMToxNkMwMjg2OjVGNTQ4QTgxIiwidGltZXN0YW1wIjoxNTk5Mzc2MDA1LCJob3N0IjoiZ2l0aHViLmNvbSJ9">
 
     <meta name="enabled-features" content="MARKETPLACE_PENDING_INSTALLATIONS,JS_HTTP_CACHE_HEADERS">
 
@@ -104,7 +104,7 @@
   <meta name="octolytics-dimension-user_id" content="61340105" /><meta name="octolytics-dimension-user_login" content="duanegtr" /><meta name="octolytics-dimension-repository_id" content="293222138" /><meta name="octolytics-dimension-repository_nwo" content="duanegtr/tltrusty" /><meta name="octolytics-dimension-repository_public" content="true" /><meta name="octolytics-dimension-repository_is_fork" content="true" /><meta name="octolytics-dimension-repository_parent_id" content="160604179" /><meta name="octolytics-dimension-repository_parent_nwo" content="TrustyJAID/Trusty-cogs" /><meta name="octolytics-dimension-repository_network_root_id" content="160604179" /><meta name="octolytics-dimension-repository_network_root_nwo" content="TrustyJAID/Trusty-cogs" /><meta name="octolytics-dimension-repository_explore_github_marketplace_ci_cta_shown" content="true" />
 
 
-    <link rel="canonical" href="https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json" data-pjax-transient>
+    <link rel="canonical" href="https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py" data-pjax-transient>
 
 
   <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
@@ -176,7 +176,7 @@
           spellcheck="false"
           autocomplete="off"
           >
-          <input type="hidden" value="aH9xGpp0ci26jXQAD45rlyD+2+3oKhG9zHKIP30sZb9p5S433nO31mRy6MY7TX/JsxZd4qFVyVnJ4oH2xiuqJw==" data-csrf="true" class="js-data-jump-to-suggestions-path-csrf" />
+          <input type="hidden" value="6Eaij6Jzg0frVnJpfL0Z0tz0jokwBmKJRqlC8m2tbF7p3P2i5nRGvDWp7q9Ifg2MTxwIhnl5um1DOUs71qqjxg==" data-csrf="true" class="js-data-jump-to-suggestions-path-csrf" />
           <input type="hidden" class="js-site-search-type-field" name="type" >
             <img src="https://github.githubassets.com/images/search-key-slash.svg" alt="" class="mr-2 header-search-key-slash">
 
@@ -327,7 +327,7 @@
       <img class="avatar avatar-user" src="https://avatars1.githubusercontent.com/u/61340105?s=40&amp;v=4" width="20" height="20" alt="@duanegtr" />
       duanegtr
 </a>
-    <!-- '"` --><!-- </textarea></xmp> --></option></form><form action="/logout" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="RgLj9DxJ4v497B+Z1yDB6rT+DQ7v/3VD9mkJk+ZQ+RTT9IQIrrDC2nFonRPUwKES7MPchf808gtkNX7wYogjHA==" />
+    <!-- '"` --><!-- </textarea></xmp> --></option></form><form action="/logout" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="Ja+P7WtGQSj6Ee9Xj437uxrA0/1C5R8vFUuqz6faabCwWegR+b9hDLaVbd2MbZtDQv0CdlIumGeHF92sIwKzuA==" />
       <button type="submit" class="Header-link mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade-15 d-md-none btn-link d-block width-full text-left" data-ga-click="Header, sign out, icon:logout" style="padding-left: 2px;">
         <svg class="octicon octicon-sign-out v-align-middle" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 010 1.5h-2.5a.25.25 0 00-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 010 1.5h-2.5A1.75 1.75 0 012 13.25V2.75zm10.44 4.5H6.75a.75.75 0 000 1.5h5.69l-1.97 1.97a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06l-3.25-3.25a.75.75 0 10-1.06 1.06l1.97 1.97z"></path></svg>
         Sign out
@@ -347,7 +347,7 @@
   <div class="Header-item mr-0 mr-md-3 flex-order-1 flex-md-order-none">
     
 
-    <notification-indicator class="js-socket-channel" data-channel="eyJjIjoibm90aWZpY2F0aW9uLWNoYW5nZWQ6NjEzNDAxMDUiLCJ0IjoxNTk5Mzc1OTg1fQ==--ba35f681a49bee57559ba53780002df542c415fa2d031f3f81ef6acd8c26ee18">
+    <notification-indicator class="js-socket-channel" data-channel="eyJjIjoibm90aWZpY2F0aW9uLWNoYW5nZWQ6NjEzNDAxMDUiLCJ0IjoxNTk5Mzc2MDA1fQ==--ec430559170086549cb6cda49779f44fa8112265f1586427de346792adfd9bb6">
       <a href="/notifications"
          class="Header-link notification-indicator position-relative tooltipped tooltipped-sw"
          aria-label="You have no unread notifications"
@@ -425,7 +425,7 @@
   data-team-hovercards-enabled>
   <details class="js-user-status-details details-reset details-overlay details-overlay-dark">
     <summary class="btn-link btn-block link-gray no-underline js-toggle-user-status-edit toggle-user-status-edit "
-      role="menuitem" data-hydro-click="{&quot;event_type&quot;:&quot;user_profile.click&quot;,&quot;payload&quot;:{&quot;profile_user_id&quot;:61340105,&quot;target&quot;:&quot;EDIT_USER_STATUS&quot;,&quot;user_id&quot;:61340105,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;}}" data-hydro-click-hmac="882b5ae8ce0755f3e7ff81d102a4a0f2e3366548cd89fe8abdb19dad33e0449a">
+      role="menuitem" data-hydro-click="{&quot;event_type&quot;:&quot;user_profile.click&quot;,&quot;payload&quot;:{&quot;profile_user_id&quot;:61340105,&quot;target&quot;:&quot;EDIT_USER_STATUS&quot;,&quot;user_id&quot;:61340105,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;}}" data-hydro-click-hmac="b7aaf2ff0e8860face42d766836b0acef89f340b432295df3801f69442f0873e">
       <div class="d-flex flex-items-center flex-items-stretch">
         <div class="f6 lh-condensed user-status-header d-flex user-status-emoji-only-header circle">
           <div class="user-status-emoji-container flex-shrink-0 mr-2 d-flex flex-items-center flex-justify-center lh-condensed-ultra v-align-bottom">
@@ -443,7 +443,7 @@
       </div>
     </summary>
     <details-dialog class="details-dialog rounded-1 anim-fade-in fast Box Box--overlay" role="dialog" tabindex="-1">
-      <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="position-relative flex-auto js-user-status-form" action="/users/status?circle=0&amp;compact=1&amp;link_mentions=0&amp;truncate=1" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="put" /><input type="hidden" name="authenticity_token" value="WE83aZ+FnqmGt1g4rAYDoTFC/ysRuhqqj7YUqyNnBp2MpJ5IpykTF+HlfxbxWpzxU1F6Gv+Axn4fnqRkvEIFqw==" />
+      <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="position-relative flex-auto js-user-status-form" action="/users/status?circle=0&amp;compact=1&amp;link_mentions=0&amp;truncate=1" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="put" /><input type="hidden" name="authenticity_token" value="XmeJrNVqF9Mcb7apG9ZE0+AFbhq9FoRjgUF8SQi6GE2KjCCN7caabXs9kYdGituDghbrK1MsWLcRacyGl58bew==" />
         <div class="Box-header bg-gray border-bottom p-3">
           <button class="Box-btn-octicon js-toggle-user-status-edit btn-octicon float-right" type="reset" aria-label="Close dialog" data-close-dialog>
             <svg class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
@@ -561,17 +561,17 @@
       </li>
       <li class="dropdown-divider" role="none"></li>
         <li>
-          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 30 minutes" value="2020-09-06T02:36:25-05:00">
+          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 30 minutes" value="2020-09-06T02:36:45-05:00">
             in 30 minutes
           </button>
         </li>
         <li>
-          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 1 hour" value="2020-09-06T03:06:25-05:00">
+          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 1 hour" value="2020-09-06T03:06:45-05:00">
             in 1 hour
           </button>
         </li>
         <li>
-          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 4 hours" value="2020-09-06T06:06:25-05:00">
+          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 4 hours" value="2020-09-06T06:06:45-05:00">
             in 4 hours
           </button>
         </li>
@@ -607,24 +607,24 @@
       </div>
       <div role="none" class="dropdown-divider"></div>
 
-    <a role="menuitem" class="dropdown-item" href="/duanegtr" data-ga-click="Header, go to profile, text:your profile" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_PROFILE&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="f77257005631214bb477600b4656a989f3a1014d2c3b4f3f4e7ae29d943bd900" >Your profile</a>
+    <a role="menuitem" class="dropdown-item" href="/duanegtr" data-ga-click="Header, go to profile, text:your profile" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;target&quot;:&quot;YOUR_PROFILE&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="171593a527972a0e57be03ad4674c49814cb957d6cc6383f99dcab29de415b9d" >Your profile</a>
 
-    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=repositories" data-ga-click="Header, go to repositories, text:your repositories" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_REPOSITORIES&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="07cef4ff560fbde754a3355d0e1de99de30387a572197d1701424a0a7dff895f" >Your repositories</a>
-
-
-
-    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=projects" data-ga-click="Header, go to projects, text:your projects" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_PROJECTS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="19148503e7a9c51da751ea3dd9e74706e3ccf695a10c2b60745b04f3004b6187" >Your projects</a>
+    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=repositories" data-ga-click="Header, go to repositories, text:your repositories" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;target&quot;:&quot;YOUR_REPOSITORIES&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="001f7693c15cdfd70cad88832c5a119c924b42ccf641c534ced38be4a4953e1e" >Your repositories</a>
 
 
-    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=stars" data-ga-click="Header, go to starred repos, text:your stars" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_STARS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="10230547a75876152a7fba455123417311138a9c97a0662b356ece683f08549f" >Your stars</a>
-      <a role="menuitem" class="dropdown-item" href="https://gist.github.com/mine" data-ga-click="Header, your gists, text:your gists" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_GISTS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="a24bcdfa900a970a894ed8b767f17c59c62b67ef7e63364f1f8d3d895f74dc72" >Your gists</a>
+
+    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=projects" data-ga-click="Header, go to projects, text:your projects" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;target&quot;:&quot;YOUR_PROJECTS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="b5db9b3b86a3ed1c1eae127ceb98106920557b418dc4f713f5aa8e8a722a3563" >Your projects</a>
+
+
+    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=stars" data-ga-click="Header, go to starred repos, text:your stars" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;target&quot;:&quot;YOUR_STARS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="2502534220187d6676eb7f6030c98de528524ee435ebb3bdc618e469e4c19519" >Your stars</a>
+      <a role="menuitem" class="dropdown-item" href="https://gist.github.com/mine" data-ga-click="Header, your gists, text:your gists" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;target&quot;:&quot;YOUR_GISTS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="5bf5d83056efe3cc5b6f37c678b007157644b8a842f65a772ffd80b39dbec4a7" >Your gists</a>
 
 
 
 
 
     <div role="none" class="dropdown-divider"></div>
-      <a role="menuitem" class="dropdown-item" href="/settings/billing" data-ga-click="Header, go to billing, text:upgrade" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;UPGRADE&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="8794cc0097b45f05d9cdceb8b2378d1654322b432a3e3b34f9e0827d6a6f0d26" >Upgrade</a>
+      <a role="menuitem" class="dropdown-item" href="/settings/billing" data-ga-click="Header, go to billing, text:upgrade" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;target&quot;:&quot;UPGRADE&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="32d4a840a04e3e50ae9e2a453fd92d41829612ebdcacecc2424e12d18ece7095" >Upgrade</a>
       
 <div id="feature-enrollment-toggle" class="hide-sm hide-md feature-preview-details position-relative">
   <button
@@ -632,24 +632,24 @@
     class="dropdown-item btn-link"
     role="menuitem"
     data-feature-preview-trigger-url="/users/duanegtr/feature_previews"
-    data-feature-preview-close-details="{&quot;event_type&quot;:&quot;feature_preview.clicks.close_modal&quot;,&quot;payload&quot;:{&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}"
-    data-feature-preview-close-hmac="69554469ce9a0037cd73b8179e2419cb5db3c515857a8a2abf6ea17197a888eb"
-    data-hydro-click="{&quot;event_type&quot;:&quot;feature_preview.clicks.open_modal&quot;,&quot;payload&quot;:{&quot;link_location&quot;:&quot;user_dropdown&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}"
-    data-hydro-click-hmac="15de73be6d288ea4694921b0149b859cc9eee71a0c84e163d698dab9a8b28e7d"
+    data-feature-preview-close-details="{&quot;event_type&quot;:&quot;feature_preview.clicks.close_modal&quot;,&quot;payload&quot;:{&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}"
+    data-feature-preview-close-hmac="1fc48d4ba7a0a9b110875d20f09b8ce882ef69cf83f2434609bed80c44dd0b22"
+    data-hydro-click="{&quot;event_type&quot;:&quot;feature_preview.clicks.open_modal&quot;,&quot;payload&quot;:{&quot;link_location&quot;:&quot;user_dropdown&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}"
+    data-hydro-click-hmac="613ca9c0dcc014ef9df1884d96cd7d8a20ff13d932067324e85008038cbccbfc"
   >
     Feature preview
   </button>
     <span class="feature-preview-indicator js-feature-preview-indicator" hidden></span>
 </div>
 
-    <a role="menuitem" class="dropdown-item" href="https://docs.github.com" data-ga-click="Header, go to help, text:help" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;HELP&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="3b634d8b2a8a4a594e4d407a47a1c0012bd6f1d79c03dc58510b14026172b0b2" >Help</a>
-    <a role="menuitem" class="dropdown-item" href="/settings/profile" data-ga-click="Header, go to settings, icon:settings" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;SETTINGS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="a87600c06f5d31909dacaf191cb5fb7b6a7507fb8d8ebec62c5f0dd38014a37b" >Settings</a>
-    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="logout-form" action="/logout" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="aKFhumInH88KB+GyjYRrNvrIEQvpLzSjqRwERcG79Tb9VwZG8N4/60aDYziOZAvOovXAgPnks+s7QHMmRWMvPg==" />
+    <a role="menuitem" class="dropdown-item" href="https://docs.github.com" data-ga-click="Header, go to help, text:help" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;target&quot;:&quot;HELP&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="186c893ed25506cb794962f50c0d01df4fd7d04aa86708c482a0f38776b02128" >Help</a>
+    <a role="menuitem" class="dropdown-item" href="/settings/profile" data-ga-click="Header, go to settings, icon:settings" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;target&quot;:&quot;SETTINGS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="d37facb07c4f51db1277b4d2cd1d8a6f05163a863cce7cb9deb8995ce419a34e" >Settings</a>
+    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="logout-form" action="/logout" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="nrkxspO9/MzhL7TB1bSMFddYW4PUTs0h8lnODpKGmEkLT1ZOAUTc6K2rNkvWVOztj2WKCMSFSmlgBbltFl5CQQ==" />
       
-      <button type="submit" class="dropdown-item dropdown-signout" data-ga-click="Header, sign out, icon:logout" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;SIGN_OUT&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="7823c67472ebf5213898e8a04f68dcbdcc47f954b5c066ec2ca50865af105c7e"  role="menuitem">
+      <button type="submit" class="dropdown-item dropdown-signout" data-ga-click="Header, sign out, icon:logout" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;target&quot;:&quot;SIGN_OUT&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="7cdbeee036dddc3c1ba2d1f6f458d91077eb666ca87d7b8980b91cb53c52ee43"  role="menuitem">
         Sign out
       </button>
-      <input type="text" name="required_field_d7c5" hidden="hidden" class="form-control" /><input type="hidden" name="timestamp" value="1599375985668" class="form-control" /><input type="hidden" name="timestamp_secret" value="3d9b1ac290f21fdbdf5841b6be71df44854d0a6ecd322e53beb8edc4c48dbf9c" class="form-control" />
+      <input type="text" name="required_field_1815" hidden="hidden" class="form-control" /><input type="hidden" name="timestamp" value="1599376005078" class="form-control" /><input type="hidden" name="timestamp_secret" value="37b94c0cbba188e70694ce2deb816b9b3271552b1c7f205cb91226b8989b3412" class="form-control" />
 </form>  </details-menu>
 </details>
 
@@ -709,10 +709,10 @@
       <p class="shelf-lead">
           Using the Hello World guide, you’ll start a branch, write comments, and open a pull request.
       </p>
-      <a class="btn btn-primary shelf-cta" target="_blank" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;READ_GUIDE&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="0b38974280e94c26fd0eb9231e898141766de8c3f0ea283ab01cca1b1690d8b0" href="https://guides.github.com/activities/hello-world/">Read the guide</a>
+      <a class="btn btn-primary shelf-cta" target="_blank" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;READ_GUIDE&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="6fb4cbb10a006d1a8827f46d3938b6ca93da367b77eaa48a6dceb454c1849be9" href="https://guides.github.com/activities/hello-world/">Read the guide</a>
     </div>
-    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="shelf-dismiss js-notice-dismiss" action="/dashboard/dismiss_bootcamp" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="delete" /><input type="hidden" name="authenticity_token" value="BrFMeZ2ybsu1GSS1ymdgh5gaZXsc9OkRpCPGG337KwyT0oz+ji824F6q6yoY03sqkV7WoTyS8X2kX7zFXECpjw==" />
-      <button name="button" type="submit" class="mr-1 close-button tooltipped tooltipped-w" aria-label="Hide this notice forever" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;DISMISS_BANNER&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="666b1fed7a3ee75c63d5925dd418fae4280fa4a9e3319aa3eb1eff1b5c1f05c0">
+    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="shelf-dismiss js-notice-dismiss" action="/dashboard/dismiss_bootcamp" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="delete" /><input type="hidden" name="authenticity_token" value="AUV9R1T2sNqTROmp4ENfdvM2IPTbN6XEgjpg7+Yw1BeUJr3AR2vo8Xj3JjYy90Tb+nKTLvtRvaiCRhoxx4tWlA==" />
+      <button name="button" type="submit" class="mr-1 close-button tooltipped tooltipped-w" aria-label="Hide this notice forever" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;DISMISS_BANNER&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="55bae9366223c81e6c574c56e19f712d858ff301533eff3ab518af9326ba74cf">
         <svg aria-label="Hide this notice forever" class="octicon octicon-x v-align-text-top" viewBox="0 0 16 16" version="1.1" width="16" height="16" role="img"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
 </button></form>  </div>
 </div>
@@ -752,10 +752,10 @@
       <ul class="pagehead-actions flex-shrink-0 d-none d-md-inline" style="padding: 2px 0;">
 
   <li>
-        <form data-remote="true" class="d-flex js-social-form js-social-container" action="/notifications/subscribe" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="W3F0yeMZ9ttGpz81j95SUMWtbZJqnIox3BuEcnd4F+OeMWxBv8fHL/msNP0TgfMPLf/aw/F0j5mCj9cK17iqOQ==" />      <input type="hidden" name="repository_id" value="293222138">
+        <form data-remote="true" class="d-flex js-social-form js-social-container" action="/notifications/subscribe" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="9hcjz4mwt4a5PYIs6mzxLOofw3x1GzYKWMF1lOAH/D8zVztH1W6GcgY2ieR2M1BzAk10Le7zM6IGVSbsQMdB5Q==" />      <input type="hidden" name="repository_id" value="293222138">
 
       <details class="details-reset details-overlay select-menu hx_rsm">
-        <summary class="btn btn-sm btn-with-count" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;WATCH_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="6bbb707f73e54a4222f86053ce8d256bc8ad59330d072d77c1bcbd704f347335" data-ga-click="Repository, click Watch settings, action:blob#show">          <span data-menu-button>
+        <summary class="btn btn-sm btn-with-count" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;WATCH_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="073985025f381fac051f8c246a2725bac279973f6984eb7ca0e6711a99508f5d" data-ga-click="Repository, click Watch settings, action:blob#show">          <span data-menu-button>
               <svg height="16" class="octicon octicon-eye" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.679 7.932c.412-.621 1.242-1.75 2.366-2.717C5.175 4.242 6.527 3.5 8 3.5c1.473 0 2.824.742 3.955 1.715 1.124.967 1.954 2.096 2.366 2.717a.119.119 0 010 .136c-.412.621-1.242 1.75-2.366 2.717C10.825 11.758 9.473 12.5 8 12.5c-1.473 0-2.824-.742-3.955-1.715C2.92 9.818 2.09 8.69 1.679 8.068a.119.119 0 010-.136zM8 2c-1.981 0-3.67.992-4.933 2.078C1.797 5.169.88 6.423.43 7.1a1.619 1.619 0 000 1.798c.45.678 1.367 1.932 2.637 3.024C4.329 13.008 6.019 14 8 14c1.981 0 3.67-.992 4.933-2.078 1.27-1.091 2.187-2.345 2.637-3.023a1.619 1.619 0 000-1.798c-.45-.678-1.367-1.932-2.637-3.023C11.671 2.992 9.981 2 8 2zm0 8a2 2 0 100-4 2 2 0 000 4z"></path></svg>
               Watch
           </span>
@@ -827,18 +827,18 @@
 
   <li>
       <div class="js-toggler-container js-social-container starring-container ">
-    <form class="starred js-social-form" action="/duanegtr/tltrusty/unstar" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="E4+6XgjBqoDeNWhAwS3TlvQU5SRY5y1WWYHZRzIRB+ZQWRtedzzYqBaIuGXeue85x/+mpkUaWolLE86OZNcP+w==" />
+    <form class="starred js-social-form" action="/duanegtr/tltrusty/unstar" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="nhh58XL5qFVjDbflKgz7fe7UM46QVApwHGiWJsPZpsndztjxDQTafauwZ8A1mMfS3T9wDI2pfa8O+oHvlR+u1A==" />
       <input type="hidden" name="context" value="repository"></input>
-      <button type="submit" class="btn btn-sm btn-with-count  js-toggler-target" aria-label="Unstar this repository" title="Unstar duanegtr/tltrusty" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;UNSTAR_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="c385e8713bfbdcb1133576bfcdb660f5b45d4b9a3eb6856ab796b4fa9e7e1c91" data-ga-click="Repository, click unstar button, action:blob#show; text:Unstar">        <svg height="16" class="octicon octicon-star-fill" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path></svg>
+      <button type="submit" class="btn btn-sm btn-with-count  js-toggler-target" aria-label="Unstar this repository" title="Unstar duanegtr/tltrusty" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;UNSTAR_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="c7af3eb78be6b8d97d49b6fd2e1261f5a3acaf0743318f30a3d1ddce4ca2998a" data-ga-click="Repository, click unstar button, action:blob#show; text:Unstar">        <svg height="16" class="octicon octicon-star-fill" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path></svg>
         Unstar
 </button>        <a class="social-count js-social-count" href="/duanegtr/tltrusty/stargazers"
            aria-label="0 users starred this repository">
            0
         </a>
 </form>
-    <form class="unstarred js-social-form" action="/duanegtr/tltrusty/star" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="MjJnU7rd0RMjWVGA+iyAOsJeP43i9Uqp6g8+X65abLrIIaIoxoA5niCbqWmsxPM6dBB/48bygeiVET5sn/6AsA==" />
+    <form class="unstarred js-social-form" action="/duanegtr/tltrusty/star" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="rb0xarSAs4IugR2XFZYW0CfQYfX8/PzoXnk3ZK4zJi1XrvQRyN1bDy1D5X5DfmXQkZ4hm9j7N6khZzdXn5fKJw==" />
       <input type="hidden" name="context" value="repository"></input>
-      <button type="submit" class="btn btn-sm btn-with-count  js-toggler-target" aria-label="Unstar this repository" title="Star duanegtr/tltrusty" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;STAR_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="26396d2a7c7df07842e4496162d109d7ca016e0d8190e930ae93ca1d3ea7736a" data-ga-click="Repository, click star button, action:blob#show; text:Star">        <svg height="16" class="octicon octicon-star" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"></path></svg>
+      <button type="submit" class="btn btn-sm btn-with-count  js-toggler-target" aria-label="Unstar this repository" title="Star duanegtr/tltrusty" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;STAR_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="e314101d96d7b970d675f7a091ef224e5c2291c19364bc9ea3cb8165bf415800" data-ga-click="Repository, click star button, action:blob#show; text:Star">        <svg height="16" class="octicon octicon-star" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"></path></svg>
         Star
 </button>        <a class="social-count js-social-count" href="/duanegtr/tltrusty/stargazers"
            aria-label="0 users starred this repository">
@@ -972,9 +972,9 @@
   
 
 
-    <a class="d-none js-permalink-shortcut" data-hotkey="y" href="/duanegtr/tltrusty/blob/9465fe0a7820abd293a87871a433b7415cac7bdf/extendedmodlog/info.json">Permalink</a>
+    <a class="d-none js-permalink-shortcut" data-hotkey="y" href="/duanegtr/tltrusty/blob/9465fe0a7820abd293a87871a433b7415cac7bdf/extendedmodlog/__init__.py">Permalink</a>
 
-    <!-- blob contrib key: blob_contributors:v22:3f56fdc5aa0741984df6203274fb626f -->
+    <!-- blob contrib key: blob_contributors:v22:41aa6bf91a1c279bead11d7cc0396ad4 -->
     
 
     <div class="d-flex flex-items-start flex-shrink-0 pb-3 flex-wrap flex-md-nowrap flex-justify-between flex-md-justify-start">
@@ -989,7 +989,7 @@
       <span class="dropdown-caret"></span>
     </summary>
 
-    <details-menu class="SelectMenu SelectMenu--hasFilter" src="/duanegtr/tltrusty/refs/master/extendedmodlog/info.json?source_action=show&amp;source_controller=blob" preload>
+    <details-menu class="SelectMenu SelectMenu--hasFilter" src="/duanegtr/tltrusty/refs/master/extendedmodlog/__init__.py?source_action=show&amp;source_controller=blob" preload>
       <div class="SelectMenu-modal">
         <include-fragment class="SelectMenu-loading" aria-label="Menu is loading">
           <svg class="octicon octicon-octoface anim-pulse" height="32" viewBox="0 0 24 24" version="1.1" width="32" aria-hidden="true"><path d="M7.75 11c-.69 0-1.25.56-1.25 1.25v1.5a1.25 1.25 0 102.5 0v-1.5C9 11.56 8.44 11 7.75 11zm1.27 4.5a.469.469 0 01.48-.5h5a.47.47 0 01.48.5c-.116 1.316-.759 2.5-2.98 2.5s-2.864-1.184-2.98-2.5zm7.23-4.5c-.69 0-1.25.56-1.25 1.25v1.5a1.25 1.25 0 102.5 0v-1.5c0-.69-.56-1.25-1.25-1.25z"></path><path fill-rule="evenodd" d="M21.255 3.82a1.725 1.725 0 00-2.141-1.195c-.557.16-1.406.44-2.264.866-.78.386-1.647.93-2.293 1.677A18.442 18.442 0 0012 5c-.93 0-1.784.059-2.569.17-.645-.74-1.505-1.28-2.28-1.664a13.876 13.876 0 00-2.265-.866 1.725 1.725 0 00-2.141 1.196 23.645 23.645 0 00-.69 3.292c-.125.97-.191 2.07-.066 3.112C1.254 11.882 1 13.734 1 15.527 1 19.915 3.13 23 12 23c8.87 0 11-3.053 11-7.473 0-1.794-.255-3.647-.99-5.29.127-1.046.06-2.15-.066-3.125a23.652 23.652 0 00-.689-3.292zM20.5 14c.5 3.5-1.5 6.5-8.5 6.5s-9-3-8.5-6.5c.583-4 3-6 8.5-6s7.928 2 8.5 6z"></path></svg>
@@ -1001,7 +1001,40 @@
 </div>
 
       <h2 id="blob-path" class="breadcrumb flex-auto min-width-0 text-normal mx-0 mx-md-3 width-full width-md-auto flex-order-1 flex-md-order-none mt-3 mt-md-0">
-        <span class="js-repo-root text-bold"><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/duanegtr/tltrusty"><span>tltrusty</span></a></span></span><span class="separator">/</span><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/duanegtr/tltrusty/tree/master/extendedmodlog"><span>extendedmodlog</span></a></span><span class="separator">/</span><strong class="final-path">info.json</strong>
+        <span class="js-repo-root text-bold"><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/duanegtr/tltrusty"><span>tltrusty</span></a></span></span><span class="separator">/</span><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/duanegtr/tltrusty/tree/master/extendedmodlog"><span>extendedmodlog</span></a></span><span class="separator">/</span><strong class="final-path">__init__.py</strong>
+          <span class="separator">/</span><details class="details-reset details-overlay d-inline" id="jumpto-symbol-select-menu">
+  <summary class="btn-link link-gray css-truncate" aria-haspopup="true" data-hotkey="r" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.click_on_blob_definitions&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;click_on_blob_definitions&quot;,&quot;repository_id&quot;:293222138,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;Python&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="a4a51547d473428fb7350b3dcb9a3b50c836bd5bcfa767b35abb15c0d256ccda">
+      <svg class="octicon octicon-code" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4.72 3.22a.75.75 0 011.06 1.06L2.06 8l3.72 3.72a.75.75 0 11-1.06 1.06L.47 8.53a.75.75 0 010-1.06l4.25-4.25zm6.56 0a.75.75 0 10-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 101.06 1.06l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25z"></path></svg>
+    <span data-menu-button>Jump to</span>
+    <span class="dropdown-caret"></span>
+  </summary>
+  <details-menu class="SelectMenu SelectMenu--hasFilter" role="menu">
+    <div class="SelectMenu-modal">
+      <header class="SelectMenu-header">
+        <span class="SelectMenu-title">Code definitions</span>
+        <button class="SelectMenu-closeButton" type="button" data-toggle-for="jumpto-symbol-select-menu">
+          <svg aria-label="Close menu" class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" role="img"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
+        </button>
+      </header>
+      <div class="SelectMenu-list">
+          <div class="SelectMenu-blankslate">
+            <p class="mb-0 text-gray">
+              No definitions found in this file.
+            </p>
+          </div>
+        <div data-filterable-for="jumpto-symbols-filter-field" data-filterable-type="substring">
+        </div>
+      </div>
+      <footer class="SelectMenu-footer">
+        <div class="d-flex flex-justify-between">
+          Code navigation not available for this commit
+          <svg class="octicon octicon-dot-fill text-light-gray" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+        </div>
+      </footer>
+    </div>
+  </details-menu>
+</details>
+
       </h2>
       <a href="/duanegtr/tltrusty/find/master"
             class="js-pjax-capture-input btn mr-2 d-none d-md-block"
@@ -1018,7 +1051,7 @@
 
 </summary>            <ul class="dropdown-menu dropdown-menu-sw">
             <li class="d-block d-md-none">
-              <a class="dropdown-item d-flex flex-items-baseline" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;FIND_FILE_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="df47f70c417d12edb3796b285c8c5600d5a1aa50e5bb4147cadfb0b7df5a9dbb" data-ga-click="Repository, find file, location:repo overview" data-hotkey="t" data-pjax="true" href="/duanegtr/tltrusty/find/master">
+              <a class="dropdown-item d-flex flex-items-baseline" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;FIND_FILE_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="9925a8a32228e75d58ec3d69bb827e1480f5483e1840d366627659018a11116c" data-ga-click="Repository, find file, location:repo overview" data-hotkey="t" data-pjax="true" href="/duanegtr/tltrusty/find/master">
                 <span class="flex-auto">Go to file</span>
                 <span class="text-small text-gray" aria-hidden="true">T</span>
 </a>            </li>
@@ -1030,9 +1063,17 @@
                 </span>
               </button>
             </li>
+            <li data-toggle-for="blob-more-options-details">
+              <button type="button" data-toggle-for="jumpto-symbol-select-menu" class="btn-link dropdown-item">
+                <span class="d-flex flex-items-baseline">
+                  <span class="flex-auto">Go to definition</span>
+                  <span class="text-small text-gray" aria-hidden="true">R</span>
+                </span>
+              </button>
+            </li>
             <li class="dropdown-divider" role="none"></li>
             <li>
-              <clipboard-copy value="extendedmodlog/info.json" class="dropdown-item cursor-pointer" data-toggle-for="blob-more-options-details">
+              <clipboard-copy value="extendedmodlog/__init__.py" class="dropdown-item cursor-pointer" data-toggle-for="blob-more-options-details">
                 Copy path
               </clipboard-copy>
             </li>
@@ -1043,7 +1084,7 @@
 
 
     <div class="Box d-flex flex-column flex-shrink-0 mb-3">
-      <include-fragment src="/duanegtr/tltrusty/contributors/master/extendedmodlog/info.json" class="commit-loader">
+      <include-fragment src="/duanegtr/tltrusty/contributors/master/extendedmodlog/__init__.py" class="commit-loader">
         <div class="Box-header Box-header--blue d-flex flex-items-center">
           <div class="Skeleton avatar avatar-user flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1" style="width:24px;height:24px;"></div>
           <div class="Skeleton Skeleton--text col-5 ml-2">&nbsp;</div>
@@ -1066,16 +1107,16 @@
 <div class="Box-header py-2 d-flex flex-column flex-shrink-0 flex-md-row flex-md-items-center">
   <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
 
-      31 lines (31 sloc)
+      12 lines (8 sloc)
       <span class="file-info-divider"></span>
-    846 Bytes
+    258 Bytes
   </div>
 
   <div class="d-flex py-1 py-md-0 flex-auto flex-order-1 flex-md-order-2 flex-sm-grow-0 flex-justify-between">
 
     <div class="BtnGroup">
-      <a href="/duanegtr/tltrusty/raw/master/extendedmodlog/info.json" id="raw-url" role="button" class="btn btn-sm BtnGroup-item ">Raw</a>
-        <a href="/duanegtr/tltrusty/blame/master/extendedmodlog/info.json" data-hotkey="b" role="button" class="btn js-update-url-with-hash btn-sm BtnGroup-item ">Blame</a>
+      <a href="/duanegtr/tltrusty/raw/master/extendedmodlog/__init__.py" id="raw-url" role="button" class="btn btn-sm BtnGroup-item ">Raw</a>
+        <a href="/duanegtr/tltrusty/blame/master/extendedmodlog/__init__.py" data-hotkey="b" role="button" class="btn js-update-url-with-hash btn-sm BtnGroup-item ">Blame</a>
     </div>
 
     <div>
@@ -1087,13 +1128,13 @@
               <svg class="octicon octicon-device-desktop" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.75 2.5h12.5a.25.25 0 01.25.25v7.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25v-7.5a.25.25 0 01.25-.25zM14.25 1H1.75A1.75 1.75 0 000 2.75v7.5C0 11.216.784 12 1.75 12h3.727c-.1 1.041-.52 1.872-1.292 2.757A.75.75 0 004.75 16h6.5a.75.75 0 00.565-1.243c-.772-.885-1.193-1.716-1.292-2.757h3.727A1.75 1.75 0 0016 10.25v-7.5A1.75 1.75 0 0014.25 1zM9.018 12H6.982a5.72 5.72 0 01-.765 2.5h3.566a5.72 5.72 0 01-.765-2.5z"></path></svg>
           </a>
 
-          <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="inline-form js-update-url-with-hash" action="/duanegtr/tltrusty/edit/master/extendedmodlog/info.json" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="LZX2I6FRxxxQA94tbK3xNliQsTMZp1V6GHTYbo6EZjSREtXZgwFe3lxR2nPkPuBYitDRSH+sVnScdhsrSqh5ug==" />
+          <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="inline-form js-update-url-with-hash" action="/duanegtr/tltrusty/edit/master/extendedmodlog/__init__.py" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="8XccVHKDDDy4Kry9wEZ+T9+8+f0Q1Vmouc2E6cciY9hmX2pLlW7n3qI9eljAJ2moNfoXGnf69KYeqmMyEXrKlQ==" />
             <button class="btn-octicon tooltipped tooltipped-nw" type="submit"
               aria-label="Edit this file" data-hotkey="e" data-disable-with>
               <svg class="octicon octicon-pencil" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M11.013 1.427a1.75 1.75 0 012.474 0l1.086 1.086a1.75 1.75 0 010 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 01-.927-.928l.929-3.25a1.75 1.75 0 01.445-.758l8.61-8.61zm1.414 1.06a.25.25 0 00-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 000-.354l-1.086-1.086zM11.189 6.25L9.75 4.81l-6.286 6.287a.25.25 0 00-.064.108l-.558 1.953 1.953-.558a.249.249 0 00.108-.064l6.286-6.286z"></path></svg>
             </button>
 </form>
-          <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="inline-form" action="/duanegtr/tltrusty/delete/master/extendedmodlog/info.json" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="sk52HG/VzW91PPig5sqKzk1cP3i2SQAFuHSSLtFHnZMFGD1rmuV44AVYjBDH2zjBox26og9qIRcAmwo1pvAagA==" />
+          <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="inline-form" action="/duanegtr/tltrusty/delete/master/extendedmodlog/__init__.py" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="2w1pdBwUoXOxIvUl+R6x3tDQBobJjMHIukFlGE3J57dIGuay34vO94OAXAAw/uJr2pazb9T1RaBEEz5wvGUrfg==" />
             <button class="btn-octicon btn-octicon-danger tooltipped tooltipped-nw" type="submit"
               aria-label="Delete this file" data-disable-with>
               <svg class="octicon octicon-trashcan" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.5 1.75a.25.25 0 01.25-.25h2.5a.25.25 0 01.25.25V3h-3V1.75zm4.5 0V3h2.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75zM4.496 6.675a.75.75 0 10-1.492.15l.66 6.6A1.75 1.75 0 005.405 15h5.19c.9 0 1.652-.681 1.741-1.576l.66-6.6a.75.75 0 00-1.492-.149l-.66 6.6a.25.25 0 01-.249.225h-5.19a.25.25 0 01-.249-.225l-.66-6.6z"></path></svg>
@@ -1106,132 +1147,60 @@
 
       
 
-  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-json  gist-border-0">
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-python  gist-border-0">
       
 <table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip>
       <tr>
         <td id="L1" class="blob-num js-line-number" data-line-number="1"></td>
-        <td id="LC1" class="blob-code blob-code-inner js-file-line">{</td>
+        <td id="LC1" class="blob-code blob-code-inner js-file-line"><span class=pl-k>from</span> .<span class=pl-s1>extendedmodlog</span> <span class=pl-k>import</span> <span class=pl-v>ExtendedModLog</span></td>
       </tr>
       <tr>
         <td id="L2" class="blob-num js-line-number" data-line-number="2"></td>
-        <td id="LC2" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>author<span class="pl-pds">&quot;</span></span> : [</td>
+        <td id="LC2" class="blob-code blob-code-inner js-file-line">
+</td>
       </tr>
       <tr>
         <td id="L3" class="blob-num js-line-number" data-line-number="3"></td>
-        <td id="LC3" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>RePulsR<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC3" class="blob-code blob-code-inner js-file-line">
+</td>
       </tr>
       <tr>
         <td id="L4" class="blob-num js-line-number" data-line-number="4"></td>
-        <td id="LC4" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>TrustyJAID<span class="pl-pds">&quot;</span></span></td>
+        <td id="LC4" class="blob-code blob-code-inner js-file-line"><span class=pl-s1>__red_end_user_data_statement__</span> <span class=pl-c1>=</span> (</td>
       </tr>
       <tr>
         <td id="L5" class="blob-num js-line-number" data-line-number="5"></td>
-        <td id="LC5" class="blob-code blob-code-inner js-file-line">    ],</td>
+        <td id="LC5" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;This cog does not persistently store data or metadata about users.&quot;</span></td>
       </tr>
       <tr>
         <td id="L6" class="blob-num js-line-number" data-line-number="6"></td>
-        <td id="LC6" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>description<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>Log changes within the server using extended modlogs, an extension of RedBot cores modlog.<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC6" class="blob-code blob-code-inner js-file-line">)</td>
       </tr>
       <tr>
         <td id="L7" class="blob-num js-line-number" data-line-number="7"></td>
-        <td id="LC7" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>disabled<span class="pl-pds">&quot;</span></span> : <span class="pl-c1">false</span>,</td>
+        <td id="LC7" class="blob-code blob-code-inner js-file-line">
+</td>
       </tr>
       <tr>
         <td id="L8" class="blob-num js-line-number" data-line-number="8"></td>
-        <td id="LC8" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>end_user_data_statement<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>This cog does not persistently store data or metadata about users.<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC8" class="blob-code blob-code-inner js-file-line">
+</td>
       </tr>
       <tr>
         <td id="L9" class="blob-num js-line-number" data-line-number="9"></td>
-        <td id="LC9" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>hidden<span class="pl-pds">&quot;</span></span> : <span class="pl-c1">false</span>,</td>
+        <td id="LC9" class="blob-code blob-code-inner js-file-line"><span class=pl-k>async</span> <span class=pl-k>def</span> <span class=pl-en>setup</span>(<span class=pl-s1>bot</span>):</td>
       </tr>
       <tr>
         <td id="L10" class="blob-num js-line-number" data-line-number="10"></td>
-        <td id="LC10" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>install_msg<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>Thanks for installing. Use `[p]modlog` to see the available commands.<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC10" class="blob-code blob-code-inner js-file-line">    <span class=pl-s1>cog</span> <span class=pl-c1>=</span> <span class=pl-v>ExtendedModLog</span>(<span class=pl-s1>bot</span>)</td>
       </tr>
       <tr>
         <td id="L11" class="blob-num js-line-number" data-line-number="11"></td>
-        <td id="LC11" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>max_bot_version<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>0.0.0<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC11" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>await</span> <span class=pl-s1>cog</span>.<span class=pl-en>initialize</span>()</td>
       </tr>
       <tr>
         <td id="L12" class="blob-num js-line-number" data-line-number="12"></td>
-        <td id="LC12" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>min_bot_version<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>3.1.8<span class="pl-pds">&quot;</span></span>,</td>
-      </tr>
-      <tr>
-        <td id="L13" class="blob-num js-line-number" data-line-number="13"></td>
-        <td id="LC13" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>min_python_version<span class="pl-pds">&quot;</span></span> : [</td>
-      </tr>
-      <tr>
-        <td id="L14" class="blob-num js-line-number" data-line-number="14"></td>
-        <td id="LC14" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">3</span>,</td>
-      </tr>
-      <tr>
-        <td id="L15" class="blob-num js-line-number" data-line-number="15"></td>
-        <td id="LC15" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">7</span>,</td>
-      </tr>
-      <tr>
-        <td id="L16" class="blob-num js-line-number" data-line-number="16"></td>
-        <td id="LC16" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">2</span></td>
-      </tr>
-      <tr>
-        <td id="L17" class="blob-num js-line-number" data-line-number="17"></td>
-        <td id="LC17" class="blob-code blob-code-inner js-file-line">    ],</td>
-      </tr>
-      <tr>
-        <td id="L18" class="blob-num js-line-number" data-line-number="18"></td>
-        <td id="LC18" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>name<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>ExtendedModLog<span class="pl-pds">&quot;</span></span>,</td>
-      </tr>
-      <tr>
-        <td id="L19" class="blob-num js-line-number" data-line-number="19"></td>
-        <td id="LC19" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>permissions<span class="pl-pds">&quot;</span></span> : [</td>
-      </tr>
-      <tr>
-        <td id="L20" class="blob-num js-line-number" data-line-number="20"></td>
-        <td id="LC20" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>embed_links<span class="pl-pds">&quot;</span></span></td>
-      </tr>
-      <tr>
-        <td id="L21" class="blob-num js-line-number" data-line-number="21"></td>
-        <td id="LC21" class="blob-code blob-code-inner js-file-line">    ],</td>
-      </tr>
-      <tr>
-        <td id="L22" class="blob-num js-line-number" data-line-number="22"></td>
-        <td id="LC22" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>required_cogs<span class="pl-pds">&quot;</span></span> : {},</td>
-      </tr>
-      <tr>
-        <td id="L23" class="blob-num js-line-number" data-line-number="23"></td>
-        <td id="LC23" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>requirements<span class="pl-pds">&quot;</span></span> : [],</td>
-      </tr>
-      <tr>
-        <td id="L24" class="blob-num js-line-number" data-line-number="24"></td>
-        <td id="LC24" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>short<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>ExtendedModLog, track changes made in the server.<span class="pl-pds">&quot;</span></span>,</td>
-      </tr>
-      <tr>
-        <td id="L25" class="blob-num js-line-number" data-line-number="25"></td>
-        <td id="LC25" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>tags<span class="pl-pds">&quot;</span></span> : [</td>
-      </tr>
-      <tr>
-        <td id="L26" class="blob-num js-line-number" data-line-number="26"></td>
-        <td id="LC26" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>mod<span class="pl-pds">&quot;</span></span>,</td>
-      </tr>
-      <tr>
-        <td id="L27" class="blob-num js-line-number" data-line-number="27"></td>
-        <td id="LC27" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>logs<span class="pl-pds">&quot;</span></span>,</td>
-      </tr>
-      <tr>
-        <td id="L28" class="blob-num js-line-number" data-line-number="28"></td>
-        <td id="LC28" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>modlogs<span class="pl-pds">&quot;</span></span></td>
-      </tr>
-      <tr>
-        <td id="L29" class="blob-num js-line-number" data-line-number="29"></td>
-        <td id="LC29" class="blob-code blob-code-inner js-file-line">    ],</td>
-      </tr>
-      <tr>
-        <td id="L30" class="blob-num js-line-number" data-line-number="30"></td>
-        <td id="LC30" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>type<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>COG<span class="pl-pds">&quot;</span></span></td>
-      </tr>
-      <tr>
-        <td id="L31" class="blob-num js-line-number" data-line-number="31"></td>
-        <td id="LC31" class="blob-code blob-code-inner js-file-line">}</td>
+        <td id="LC12" class="blob-code blob-code-inner js-file-line">    <span class=pl-s1>bot</span>.<span class=pl-en>add_cog</span>(<span class=pl-s1>cog</span>)</td>
       </tr>
 </table>
 
@@ -1251,7 +1220,7 @@
             Copy permalink
           </clipboard-copy>
         </li>
-        <li><a class="dropdown-item js-update-url-with-hash" id="js-view-git-blame" role="menuitem" href="/duanegtr/tltrusty/blame/9465fe0a7820abd293a87871a433b7415cac7bdf/extendedmodlog/info.json">View git blame</a></li>
+        <li><a class="dropdown-item js-update-url-with-hash" id="js-view-git-blame" role="menuitem" href="/duanegtr/tltrusty/blame/9465fe0a7820abd293a87871a433b7415cac7bdf/extendedmodlog/__init__.py">View git blame</a></li>
       </ul>
     </details-menu>
   </details>
@@ -1271,6 +1240,20 @@
         <button type="submit" class="btn" data-close-dialog>Go</button>
 </form>    </details-dialog>
   </details>
+
+    <div class="Popover anim-scale-in js-tagsearch-popover"
+     hidden
+     data-tagsearch-url="/duanegtr/tltrusty/find-definition"
+     data-tagsearch-ref="master"
+     data-tagsearch-path="extendedmodlog/__init__.py"
+     data-tagsearch-lang="Python"
+     data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.click_on_symbol&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;click_on_symbol&quot;,&quot;repository_id&quot;:293222138,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;Python&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/__init__.py&quot;,&quot;user_id&quot;:61340105}}"
+     data-hydro-click-hmac="2e8145eb788275d7a5a21b6d9f8c6d3230cd6569e7603832be4e22e8c0c1e8f9">
+  <div class="Popover-message Popover-message--large Popover-message--top-left TagsearchPopover mt-1 mb-4 mx-auto Box box-shadow-large">
+    <div class="TagsearchPopover-content js-tagsearch-popover-content overflow-auto" style="will-change:transform;">
+    </div>
+  </div>
+</div>
 
 
 

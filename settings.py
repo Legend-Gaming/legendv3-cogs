@@ -28,7 +28,7 @@
 
   <meta name="viewport" content="width=device-width">
   
-  <title>tltrusty/info.json at master · duanegtr/tltrusty</title>
+  <title>tltrusty/settings.py at master · duanegtr/tltrusty</title>
     <meta name="description" content="A variety of utility cogs and fun cogs including Hockey information from the NHL, badge creation from discord user information, starboard for use on Redbot, twitch follow notifications and more. - duanegtr/tltrusty">
     <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub">
   <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub">
@@ -43,10 +43,10 @@
   
 
   <link rel="assets" href="https://github.githubassets.com/">
-    <link rel="shared-web-socket" href="wss://alive.github.com/_sockets/u/61340105/ws?session=eyJ2IjoiVjMiLCJ1Ijo2MTM0MDEwNSwicyI6NTc2MDQxOTI4LCJjIjozMjMyNDY3ODM2LCJ0IjoxNTk5Mzc1OTg1fQ==--9e744c5d575e6bcbde9ea515df08cee675bfff26fa28ec5301489c34217e9a05" data-refresh-url="/_alive">
+    <link rel="shared-web-socket" href="wss://alive.github.com/_sockets/u/61340105/ws?session=eyJ2IjoiVjMiLCJ1Ijo2MTM0MDEwNSwicyI6NTc2MDQxOTI4LCJjIjo5MzM4MDIyMywidCI6MTU5OTM3NTk2OH0=--e7eeb8f52afe78a8bb52f78961ab1f6cb2265c02e2117f16fe02707d22e68e12" data-refresh-url="/_alive">
   <link rel="sudo-modal" href="/sessions/sudo_modal">
 
-  <meta name="request-id" content="D139:6919:FA081F:16BEFD0:5F548A61" data-pjax-transient="true" /><meta name="html-safe-nonce" content="1c68799e0ebf9455a9f7d6afc37fb893c089e22b" data-pjax-transient="true" /><meta name="visitor-payload" content="eyJyZWZlcnJlciI6Imh0dHBzOi8vZ2l0aHViLmNvbS9kdWFuZWd0ci90bHRydXN0eS90cmVlL21hc3Rlci9leHRlbmRlZG1vZGxvZyIsInJlcXVlc3RfaWQiOiJEMTM5OjY5MTk6RkEwODFGOjE2QkVGRDA6NUY1NDhBNjEiLCJ2aXNpdG9yX2lkIjoiNzgxMjQzMzU4NjE3NTEyMjc0MSIsInJlZ2lvbl9lZGdlIjoiaWFkIiwicmVnaW9uX3JlbmRlciI6ImlhZCJ9" data-pjax-transient="true" /><meta name="visitor-hmac" content="344460356e6da4cb0f9e296d5db52bd693fb31e1986020ff11d11e83ce105b71" data-pjax-transient="true" /><meta name="cookie-consent-required" content="false" />
+  <meta name="request-id" content="D139:6919:FA01B8:16BED51:5F548A5C" data-pjax-transient="true" /><meta name="html-safe-nonce" content="1c68799e0ebf9455a9f7d6afc37fb893c089e22b" data-pjax-transient="true" /><meta name="visitor-payload" content="eyJyZWZlcnJlciI6Imh0dHBzOi8vZ2l0aHViLmNvbS9kdWFuZWd0ci90bHRydXN0eS90cmVlL21hc3Rlci9leHRlbmRlZG1vZGxvZyIsInJlcXVlc3RfaWQiOiJEMTM5OjY5MTk6RkEwMUI4OjE2QkVENTE6NUY1NDhBNUMiLCJ2aXNpdG9yX2lkIjoiNzgxMjQzMzU4NjE3NTEyMjc0MSIsInJlZ2lvbl9lZGdlIjoiaWFkIiwicmVnaW9uX3JlbmRlciI6ImlhZCJ9" data-pjax-transient="true" /><meta name="visitor-hmac" content="35c7cf0b000ce7d6f9315537bd9fdb6d73f7a2db365dcf27bc2ed372ede8d92a" data-pjax-transient="true" /><meta name="cookie-consent-required" content="false" />
 
     <meta name="hovercard-subject-tag" content="repository:293222138" data-pjax-transient>
 
@@ -90,7 +90,7 @@
 
       <meta name="expected-hostname" content="github.com">
 
-      <meta name="js-proxy-site-detection-payload" content="MDIzYTQ5MzI4NWFiN2RlNjc2MWMwYzY5NGE4NDc0NmIwMGE2MDA1NTU0ZDc4ODYwOGZlNzEyZGMwYzU1NWRjMHx7InJlbW90ZV9hZGRyZXNzIjoiOTkuMTg2LjI1Mi4xMjciLCJyZXF1ZXN0X2lkIjoiRDEzOTo2OTE5OkZBMDgxRjoxNkJFRkQwOjVGNTQ4QTYxIiwidGltZXN0YW1wIjoxNTk5Mzc1OTg1LCJob3N0IjoiZ2l0aHViLmNvbSJ9">
+      <meta name="js-proxy-site-detection-payload" content="ZTU4OWQyMDA4Mzc3ZjBlYWE0NmY3MmY3ZWE0NzEyYzA3N2RkOGU4NzliZDhhYzNjMmRiNTMxNzk0MTgzNWQzZHx7InJlbW90ZV9hZGRyZXNzIjoiOTkuMTg2LjI1Mi4xMjciLCJyZXF1ZXN0X2lkIjoiRDEzOTo2OTE5OkZBMDFCODoxNkJFRDUxOjVGNTQ4QTVDIiwidGltZXN0YW1wIjoxNTk5Mzc1OTY4LCJob3N0IjoiZ2l0aHViLmNvbSJ9">
 
     <meta name="enabled-features" content="MARKETPLACE_PENDING_INSTALLATIONS,JS_HTTP_CACHE_HEADERS">
 
@@ -104,7 +104,7 @@
   <meta name="octolytics-dimension-user_id" content="61340105" /><meta name="octolytics-dimension-user_login" content="duanegtr" /><meta name="octolytics-dimension-repository_id" content="293222138" /><meta name="octolytics-dimension-repository_nwo" content="duanegtr/tltrusty" /><meta name="octolytics-dimension-repository_public" content="true" /><meta name="octolytics-dimension-repository_is_fork" content="true" /><meta name="octolytics-dimension-repository_parent_id" content="160604179" /><meta name="octolytics-dimension-repository_parent_nwo" content="TrustyJAID/Trusty-cogs" /><meta name="octolytics-dimension-repository_network_root_id" content="160604179" /><meta name="octolytics-dimension-repository_network_root_nwo" content="TrustyJAID/Trusty-cogs" /><meta name="octolytics-dimension-repository_explore_github_marketplace_ci_cta_shown" content="true" />
 
 
-    <link rel="canonical" href="https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json" data-pjax-transient>
+    <link rel="canonical" href="https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py" data-pjax-transient>
 
 
   <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
@@ -176,7 +176,7 @@
           spellcheck="false"
           autocomplete="off"
           >
-          <input type="hidden" value="aH9xGpp0ci26jXQAD45rlyD+2+3oKhG9zHKIP30sZb9p5S433nO31mRy6MY7TX/JsxZd4qFVyVnJ4oH2xiuqJw==" data-csrf="true" class="js-data-jump-to-suggestions-path-csrf" />
+          <input type="hidden" value="tZ42fQE78h1PPzHKQsPMnQxJevNLmGaKURCROiK4Rxy0BGlQRTw35pHArQx2ANjDn6H8/ALnvm5UgJjzmb+IhA==" data-csrf="true" class="js-data-jump-to-suggestions-path-csrf" />
           <input type="hidden" class="js-site-search-type-field" name="type" >
             <img src="https://github.githubassets.com/images/search-key-slash.svg" alt="" class="mr-2 header-search-key-slash">
 
@@ -327,7 +327,7 @@
       <img class="avatar avatar-user" src="https://avatars1.githubusercontent.com/u/61340105?s=40&amp;v=4" width="20" height="20" alt="@duanegtr" />
       duanegtr
 </a>
-    <!-- '"` --><!-- </textarea></xmp> --></option></form><form action="/logout" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="RgLj9DxJ4v497B+Z1yDB6rT+DQ7v/3VD9mkJk+ZQ+RTT9IQIrrDC2nFonRPUwKES7MPchf808gtkNX7wYogjHA==" />
+    <!-- '"` --><!-- </textarea></xmp> --></option></form><form action="/logout" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="lAZM7KH7Y+FqvdlYqMBF4x4wdJsTcZ4fZPB3CH2luH8B8CsQMwJDxSY5W9KrICUbRg2lEAO6GVf2rABr+X1idw==" />
       <button type="submit" class="Header-link mr-0 mr-md-3 py-2 py-md-3 border-top border-md-top-0 border-white-fade-15 d-md-none btn-link d-block width-full text-left" data-ga-click="Header, sign out, icon:logout" style="padding-left: 2px;">
         <svg class="octicon octicon-sign-out v-align-middle" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 010 1.5h-2.5a.25.25 0 00-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 010 1.5h-2.5A1.75 1.75 0 012 13.25V2.75zm10.44 4.5H6.75a.75.75 0 000 1.5h5.69l-1.97 1.97a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06l-3.25-3.25a.75.75 0 10-1.06 1.06l1.97 1.97z"></path></svg>
         Sign out
@@ -347,7 +347,7 @@
   <div class="Header-item mr-0 mr-md-3 flex-order-1 flex-md-order-none">
     
 
-    <notification-indicator class="js-socket-channel" data-channel="eyJjIjoibm90aWZpY2F0aW9uLWNoYW5nZWQ6NjEzNDAxMDUiLCJ0IjoxNTk5Mzc1OTg1fQ==--ba35f681a49bee57559ba53780002df542c415fa2d031f3f81ef6acd8c26ee18">
+    <notification-indicator class="js-socket-channel" data-channel="eyJjIjoibm90aWZpY2F0aW9uLWNoYW5nZWQ6NjEzNDAxMDUiLCJ0IjoxNTk5Mzc1OTY4fQ==--acde473362ef856c28479ffab359a43ae2e7353e600cccba6091ea541a18c6b7">
       <a href="/notifications"
          class="Header-link notification-indicator position-relative tooltipped tooltipped-sw"
          aria-label="You have no unread notifications"
@@ -425,7 +425,7 @@
   data-team-hovercards-enabled>
   <details class="js-user-status-details details-reset details-overlay details-overlay-dark">
     <summary class="btn-link btn-block link-gray no-underline js-toggle-user-status-edit toggle-user-status-edit "
-      role="menuitem" data-hydro-click="{&quot;event_type&quot;:&quot;user_profile.click&quot;,&quot;payload&quot;:{&quot;profile_user_id&quot;:61340105,&quot;target&quot;:&quot;EDIT_USER_STATUS&quot;,&quot;user_id&quot;:61340105,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;}}" data-hydro-click-hmac="882b5ae8ce0755f3e7ff81d102a4a0f2e3366548cd89fe8abdb19dad33e0449a">
+      role="menuitem" data-hydro-click="{&quot;event_type&quot;:&quot;user_profile.click&quot;,&quot;payload&quot;:{&quot;profile_user_id&quot;:61340105,&quot;target&quot;:&quot;EDIT_USER_STATUS&quot;,&quot;user_id&quot;:61340105,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;}}" data-hydro-click-hmac="1eefebefd07d11b0bebcc2f90dc52c1771e79b1c7890bc4b105114eadfbceade">
       <div class="d-flex flex-items-center flex-items-stretch">
         <div class="f6 lh-condensed user-status-header d-flex user-status-emoji-only-header circle">
           <div class="user-status-emoji-container flex-shrink-0 mr-2 d-flex flex-items-center flex-justify-center lh-condensed-ultra v-align-bottom">
@@ -443,7 +443,7 @@
       </div>
     </summary>
     <details-dialog class="details-dialog rounded-1 anim-fade-in fast Box Box--overlay" role="dialog" tabindex="-1">
-      <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="position-relative flex-auto js-user-status-form" action="/users/status?circle=0&amp;compact=1&amp;link_mentions=0&amp;truncate=1" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="put" /><input type="hidden" name="authenticity_token" value="WE83aZ+FnqmGt1g4rAYDoTFC/ysRuhqqj7YUqyNnBp2MpJ5IpykTF+HlfxbxWpzxU1F6Gv+Axn4fnqRkvEIFqw==" />
+      <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="position-relative flex-auto js-user-status-form" action="/users/status?circle=0&amp;compact=1&amp;link_mentions=0&amp;truncate=1" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="put" /><input type="hidden" name="authenticity_token" value="P7UjNlxGa0fMTgsQZGrW5JRwmnp3xcb5ykuEiTdcWu3rXooXZOrm+ascLD45Nkm09mMfS5n/Gi1aYzRGqHlZ2w==" />
         <div class="Box-header bg-gray border-bottom p-3">
           <button class="Box-btn-octicon js-toggle-user-status-edit btn-octicon float-right" type="reset" aria-label="Close dialog" data-close-dialog>
             <svg class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
@@ -561,17 +561,17 @@
       </li>
       <li class="dropdown-divider" role="none"></li>
         <li>
-          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 30 minutes" value="2020-09-06T02:36:25-05:00">
+          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 30 minutes" value="2020-09-06T02:36:08-05:00">
             in 30 minutes
           </button>
         </li>
         <li>
-          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 1 hour" value="2020-09-06T03:06:25-05:00">
+          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 1 hour" value="2020-09-06T03:06:08-05:00">
             in 1 hour
           </button>
         </li>
         <li>
-          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 4 hours" value="2020-09-06T06:06:25-05:00">
+          <button type="button" class="btn-link dropdown-item ws-normal js-user-status-expire-button" title="in 4 hours" value="2020-09-06T06:06:08-05:00">
             in 4 hours
           </button>
         </li>
@@ -607,24 +607,24 @@
       </div>
       <div role="none" class="dropdown-divider"></div>
 
-    <a role="menuitem" class="dropdown-item" href="/duanegtr" data-ga-click="Header, go to profile, text:your profile" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_PROFILE&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="f77257005631214bb477600b4656a989f3a1014d2c3b4f3f4e7ae29d943bd900" >Your profile</a>
+    <a role="menuitem" class="dropdown-item" href="/duanegtr" data-ga-click="Header, go to profile, text:your profile" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;target&quot;:&quot;YOUR_PROFILE&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="01df5b1620651be6446758061955a4b0b8e209020aca1268b875bc9973e7c14e" >Your profile</a>
 
-    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=repositories" data-ga-click="Header, go to repositories, text:your repositories" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_REPOSITORIES&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="07cef4ff560fbde754a3355d0e1de99de30387a572197d1701424a0a7dff895f" >Your repositories</a>
-
-
-
-    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=projects" data-ga-click="Header, go to projects, text:your projects" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_PROJECTS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="19148503e7a9c51da751ea3dd9e74706e3ccf695a10c2b60745b04f3004b6187" >Your projects</a>
+    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=repositories" data-ga-click="Header, go to repositories, text:your repositories" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;target&quot;:&quot;YOUR_REPOSITORIES&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="5bc911e96070694dfb4d6b69267e305d2b169a9e719df06a43e8f01427802cc4" >Your repositories</a>
 
 
-    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=stars" data-ga-click="Header, go to starred repos, text:your stars" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_STARS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="10230547a75876152a7fba455123417311138a9c97a0662b356ece683f08549f" >Your stars</a>
-      <a role="menuitem" class="dropdown-item" href="https://gist.github.com/mine" data-ga-click="Header, your gists, text:your gists" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;YOUR_GISTS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="a24bcdfa900a970a894ed8b767f17c59c62b67ef7e63364f1f8d3d895f74dc72" >Your gists</a>
+
+    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=projects" data-ga-click="Header, go to projects, text:your projects" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;target&quot;:&quot;YOUR_PROJECTS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="3ebbe0cb361a28f24740d395c2e53b2472e17db8ede640152000e041493b9fdd" >Your projects</a>
+
+
+    <a role="menuitem" class="dropdown-item" href="/duanegtr?tab=stars" data-ga-click="Header, go to starred repos, text:your stars" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;target&quot;:&quot;YOUR_STARS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="37deb585b8f6d183f24d0bca21d5b1ad3aa1f8ca62d8f21d35f7c8102b051d8b" >Your stars</a>
+      <a role="menuitem" class="dropdown-item" href="https://gist.github.com/mine" data-ga-click="Header, your gists, text:your gists" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;target&quot;:&quot;YOUR_GISTS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="39ee1bf0e693fe9c298533648b077489d637b82cbae160c0716a9867661d5766" >Your gists</a>
 
 
 
 
 
     <div role="none" class="dropdown-divider"></div>
-      <a role="menuitem" class="dropdown-item" href="/settings/billing" data-ga-click="Header, go to billing, text:upgrade" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;UPGRADE&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="8794cc0097b45f05d9cdceb8b2378d1654322b432a3e3b34f9e0827d6a6f0d26" >Upgrade</a>
+      <a role="menuitem" class="dropdown-item" href="/settings/billing" data-ga-click="Header, go to billing, text:upgrade" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;target&quot;:&quot;UPGRADE&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="e714c46c086de597dd6bc7431b49bb9eec3997bda13a89e9c97fe89821741ae7" >Upgrade</a>
       
 <div id="feature-enrollment-toggle" class="hide-sm hide-md feature-preview-details position-relative">
   <button
@@ -632,24 +632,24 @@
     class="dropdown-item btn-link"
     role="menuitem"
     data-feature-preview-trigger-url="/users/duanegtr/feature_previews"
-    data-feature-preview-close-details="{&quot;event_type&quot;:&quot;feature_preview.clicks.close_modal&quot;,&quot;payload&quot;:{&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}"
-    data-feature-preview-close-hmac="69554469ce9a0037cd73b8179e2419cb5db3c515857a8a2abf6ea17197a888eb"
-    data-hydro-click="{&quot;event_type&quot;:&quot;feature_preview.clicks.open_modal&quot;,&quot;payload&quot;:{&quot;link_location&quot;:&quot;user_dropdown&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}"
-    data-hydro-click-hmac="15de73be6d288ea4694921b0149b859cc9eee71a0c84e163d698dab9a8b28e7d"
+    data-feature-preview-close-details="{&quot;event_type&quot;:&quot;feature_preview.clicks.close_modal&quot;,&quot;payload&quot;:{&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}"
+    data-feature-preview-close-hmac="b9fc039d9374015b996b376ee0ed19d9a2fff78b10574276212b979e55047233"
+    data-hydro-click="{&quot;event_type&quot;:&quot;feature_preview.clicks.open_modal&quot;,&quot;payload&quot;:{&quot;link_location&quot;:&quot;user_dropdown&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}"
+    data-hydro-click-hmac="94f55626a1b279baf60ab2e6bb95164eb4e9c4478e38a9beb6700951c4d0f562"
   >
     Feature preview
   </button>
     <span class="feature-preview-indicator js-feature-preview-indicator" hidden></span>
 </div>
 
-    <a role="menuitem" class="dropdown-item" href="https://docs.github.com" data-ga-click="Header, go to help, text:help" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;HELP&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="3b634d8b2a8a4a594e4d407a47a1c0012bd6f1d79c03dc58510b14026172b0b2" >Help</a>
-    <a role="menuitem" class="dropdown-item" href="/settings/profile" data-ga-click="Header, go to settings, icon:settings" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;SETTINGS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="a87600c06f5d31909dacaf191cb5fb7b6a7507fb8d8ebec62c5f0dd38014a37b" >Settings</a>
-    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="logout-form" action="/logout" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="aKFhumInH88KB+GyjYRrNvrIEQvpLzSjqRwERcG79Tb9VwZG8N4/60aDYziOZAvOovXAgPnks+s7QHMmRWMvPg==" />
+    <a role="menuitem" class="dropdown-item" href="https://docs.github.com" data-ga-click="Header, go to help, text:help" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;target&quot;:&quot;HELP&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="f1f0c1c21768e69350612488822da6587a26583a4ea864c3e61e40c4fcc4b9ea" >Help</a>
+    <a role="menuitem" class="dropdown-item" href="/settings/profile" data-ga-click="Header, go to settings, icon:settings" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;target&quot;:&quot;SETTINGS&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="38b290c82329bef790a222802ba3eaf70eb43638a6b6fd9c4a4306f7938a94fa" >Settings</a>
+    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="logout-form" action="/logout" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="sqFFgY1Q9q5f6pngVZsCXlt76MhyWfYRhPvI6Dn1BVAnVyJ9H6nWihNuG2pWe2KmA0Y5Q2KScVkWp7+LvS3fWA==" />
       
-      <button type="submit" class="dropdown-item dropdown-signout" data-ga-click="Header, sign out, icon:logout" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;target&quot;:&quot;SIGN_OUT&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="7823c67472ebf5213898e8a04f68dcbdcc47f954b5c066ec2ca50865af105c7e"  role="menuitem">
+      <button type="submit" class="dropdown-item dropdown-signout" data-ga-click="Header, sign out, icon:logout" data-hydro-click="{&quot;event_type&quot;:&quot;global_header.user_menu_dropdown.click&quot;,&quot;payload&quot;:{&quot;request_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;target&quot;:&quot;SIGN_OUT&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="6560bb18ac3502ee70f7681f1b2365afd68405f614d0804bc448435824776977"  role="menuitem">
         Sign out
       </button>
-      <input type="text" name="required_field_d7c5" hidden="hidden" class="form-control" /><input type="hidden" name="timestamp" value="1599375985668" class="form-control" /><input type="hidden" name="timestamp_secret" value="3d9b1ac290f21fdbdf5841b6be71df44854d0a6ecd322e53beb8edc4c48dbf9c" class="form-control" />
+      <input type="text" name="required_field_860c" hidden="hidden" class="form-control" /><input type="hidden" name="timestamp" value="1599375968985" class="form-control" /><input type="hidden" name="timestamp_secret" value="7aa7216b13323623ef5bd8bdb1620b7f6eff9344bec7d2ef2ba89cf00d5b3c08" class="form-control" />
 </form>  </details-menu>
 </details>
 
@@ -709,10 +709,10 @@
       <p class="shelf-lead">
           Using the Hello World guide, you’ll start a branch, write comments, and open a pull request.
       </p>
-      <a class="btn btn-primary shelf-cta" target="_blank" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;READ_GUIDE&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="0b38974280e94c26fd0eb9231e898141766de8c3f0ea283ab01cca1b1690d8b0" href="https://guides.github.com/activities/hello-world/">Read the guide</a>
+      <a class="btn btn-primary shelf-cta" target="_blank" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;READ_GUIDE&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="4e3d927bd41ac3d867d360762a85822ab85aecfbf5466599b1da2adcb519fd6b" href="https://guides.github.com/activities/hello-world/">Read the guide</a>
     </div>
-    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="shelf-dismiss js-notice-dismiss" action="/dashboard/dismiss_bootcamp" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="delete" /><input type="hidden" name="authenticity_token" value="BrFMeZ2ybsu1GSS1ymdgh5gaZXsc9OkRpCPGG337KwyT0oz+ji824F6q6yoY03sqkV7WoTyS8X2kX7zFXECpjw==" />
-      <button name="button" type="submit" class="mr-1 close-button tooltipped tooltipped-w" aria-label="Hide this notice forever" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;DISMISS_BANNER&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="666b1fed7a3ee75c63d5925dd418fae4280fa4a9e3319aa3eb1eff1b5c1f05c0">
+    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="shelf-dismiss js-notice-dismiss" action="/dashboard/dismiss_bootcamp" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="delete" /><input type="hidden" name="authenticity_token" value="fV8MgGe8q8KK2P11IEuUHF/hyhX9jbNjul+cfjxHnuPoPMwHdCHz6WFrMury/4+xVqV5z93rqw+6I+agHfwcYA==" />
+      <button name="button" type="submit" class="mr-1 close-button tooltipped tooltipped-w" aria-label="Hide this notice forever" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;DISMISS_BANNER&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="6a4fe6f892c527fc32ecffc76003e247ec90dcd77451992405b4fccaf5fd323c">
         <svg aria-label="Hide this notice forever" class="octicon octicon-x v-align-text-top" viewBox="0 0 16 16" version="1.1" width="16" height="16" role="img"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
 </button></form>  </div>
 </div>
@@ -752,10 +752,10 @@
       <ul class="pagehead-actions flex-shrink-0 d-none d-md-inline" style="padding: 2px 0;">
 
   <li>
-        <form data-remote="true" class="d-flex js-social-form js-social-container" action="/notifications/subscribe" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="W3F0yeMZ9ttGpz81j95SUMWtbZJqnIox3BuEcnd4F+OeMWxBv8fHL/msNP0TgfMPLf/aw/F0j5mCj9cK17iqOQ==" />      <input type="hidden" name="repository_id" value="293222138">
+        <form data-remote="true" class="d-flex js-social-form js-social-container" action="/notifications/subscribe" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="3z5PK/6k1JHpoeY3ksrI2XldOCEjZYwo5wYt81/VMHwaflejonrlZVaq7f8OlWmGkQ+PcLiNiYC5kn6L/xWNpg==" />      <input type="hidden" name="repository_id" value="293222138">
 
       <details class="details-reset details-overlay select-menu hx_rsm">
-        <summary class="btn btn-sm btn-with-count" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;WATCH_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="6bbb707f73e54a4222f86053ce8d256bc8ad59330d072d77c1bcbd704f347335" data-ga-click="Repository, click Watch settings, action:blob#show">          <span data-menu-button>
+        <summary class="btn btn-sm btn-with-count" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;WATCH_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="b40cdde22a1d819947cc51c0e5aaee1f7533cc24bd6e42100e9dc15bbdf0a210" data-ga-click="Repository, click Watch settings, action:blob#show">          <span data-menu-button>
               <svg height="16" class="octicon octicon-eye" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.679 7.932c.412-.621 1.242-1.75 2.366-2.717C5.175 4.242 6.527 3.5 8 3.5c1.473 0 2.824.742 3.955 1.715 1.124.967 1.954 2.096 2.366 2.717a.119.119 0 010 .136c-.412.621-1.242 1.75-2.366 2.717C10.825 11.758 9.473 12.5 8 12.5c-1.473 0-2.824-.742-3.955-1.715C2.92 9.818 2.09 8.69 1.679 8.068a.119.119 0 010-.136zM8 2c-1.981 0-3.67.992-4.933 2.078C1.797 5.169.88 6.423.43 7.1a1.619 1.619 0 000 1.798c.45.678 1.367 1.932 2.637 3.024C4.329 13.008 6.019 14 8 14c1.981 0 3.67-.992 4.933-2.078 1.27-1.091 2.187-2.345 2.637-3.023a1.619 1.619 0 000-1.798c-.45-.678-1.367-1.932-2.637-3.023C11.671 2.992 9.981 2 8 2zm0 8a2 2 0 100-4 2 2 0 000 4z"></path></svg>
               Watch
           </span>
@@ -827,18 +827,18 @@
 
   <li>
       <div class="js-toggler-container js-social-container starring-container ">
-    <form class="starred js-social-form" action="/duanegtr/tltrusty/unstar" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="E4+6XgjBqoDeNWhAwS3TlvQU5SRY5y1WWYHZRzIRB+ZQWRtedzzYqBaIuGXeue85x/+mpkUaWolLE86OZNcP+w==" />
+    <form class="starred js-social-form" action="/duanegtr/tltrusty/unstar" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="6QnJpxngEC7jfladJla6oZwRk0gw/m3r1p4HD/GDsMqq32inZh1iBivDhrg5woYOr/rQyi0DGjTEDBDGp0W41w==" />
       <input type="hidden" name="context" value="repository"></input>
-      <button type="submit" class="btn btn-sm btn-with-count  js-toggler-target" aria-label="Unstar this repository" title="Unstar duanegtr/tltrusty" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;UNSTAR_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="c385e8713bfbdcb1133576bfcdb660f5b45d4b9a3eb6856ab796b4fa9e7e1c91" data-ga-click="Repository, click unstar button, action:blob#show; text:Unstar">        <svg height="16" class="octicon octicon-star-fill" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path></svg>
+      <button type="submit" class="btn btn-sm btn-with-count  js-toggler-target" aria-label="Unstar this repository" title="Unstar duanegtr/tltrusty" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;UNSTAR_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="ae2aaea3b9e078f72cac3945a7dc352e13ba0a8531d3d66ec6be8b90a03be8b3" data-ga-click="Repository, click unstar button, action:blob#show; text:Unstar">        <svg height="16" class="octicon octicon-star-fill" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path></svg>
         Unstar
 </button>        <a class="social-count js-social-count" href="/duanegtr/tltrusty/stargazers"
            aria-label="0 users starred this repository">
            0
         </a>
 </form>
-    <form class="unstarred js-social-form" action="/duanegtr/tltrusty/star" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="MjJnU7rd0RMjWVGA+iyAOsJeP43i9Uqp6g8+X65abLrIIaIoxoA5niCbqWmsxPM6dBB/48bygeiVET5sn/6AsA==" />
+    <form class="unstarred js-social-form" action="/duanegtr/tltrusty/star" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="C/epe6rhfl8Ns2R3w4ZhtS4vBYNgaS/c/Un4m0yO3Q7x5GwA1ryW0g5xnJ6VbhK1mGFF7URu5J2CV/iofSoxBA==" />
       <input type="hidden" name="context" value="repository"></input>
-      <button type="submit" class="btn btn-sm btn-with-count  js-toggler-target" aria-label="Unstar this repository" title="Star duanegtr/tltrusty" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;STAR_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="26396d2a7c7df07842e4496162d109d7ca016e0d8190e930ae93ca1d3ea7736a" data-ga-click="Repository, click star button, action:blob#show; text:Star">        <svg height="16" class="octicon octicon-star" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"></path></svg>
+      <button type="submit" class="btn btn-sm btn-with-count  js-toggler-target" aria-label="Unstar this repository" title="Star duanegtr/tltrusty" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;STAR_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="1860a6d97afbf3bf2a433b6408b54d57f368d5e8f26bebd797d68abd454f7580" data-ga-click="Repository, click star button, action:blob#show; text:Star">        <svg height="16" class="octicon octicon-star" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"></path></svg>
         Star
 </button>        <a class="social-count js-social-count" href="/duanegtr/tltrusty/stargazers"
            aria-label="0 users starred this repository">
@@ -972,9 +972,9 @@
   
 
 
-    <a class="d-none js-permalink-shortcut" data-hotkey="y" href="/duanegtr/tltrusty/blob/9465fe0a7820abd293a87871a433b7415cac7bdf/extendedmodlog/info.json">Permalink</a>
+    <a class="d-none js-permalink-shortcut" data-hotkey="y" href="/duanegtr/tltrusty/blob/9465fe0a7820abd293a87871a433b7415cac7bdf/extendedmodlog/settings.py">Permalink</a>
 
-    <!-- blob contrib key: blob_contributors:v22:3f56fdc5aa0741984df6203274fb626f -->
+    <!-- blob contrib key: blob_contributors:v22:47e195606546f2701764b272553f47d9 -->
     
 
     <div class="d-flex flex-items-start flex-shrink-0 pb-3 flex-wrap flex-md-nowrap flex-justify-between flex-md-justify-start">
@@ -989,7 +989,7 @@
       <span class="dropdown-caret"></span>
     </summary>
 
-    <details-menu class="SelectMenu SelectMenu--hasFilter" src="/duanegtr/tltrusty/refs/master/extendedmodlog/info.json?source_action=show&amp;source_controller=blob" preload>
+    <details-menu class="SelectMenu SelectMenu--hasFilter" src="/duanegtr/tltrusty/refs/master/extendedmodlog/settings.py?source_action=show&amp;source_controller=blob" preload>
       <div class="SelectMenu-modal">
         <include-fragment class="SelectMenu-loading" aria-label="Menu is loading">
           <svg class="octicon octicon-octoface anim-pulse" height="32" viewBox="0 0 24 24" version="1.1" width="32" aria-hidden="true"><path d="M7.75 11c-.69 0-1.25.56-1.25 1.25v1.5a1.25 1.25 0 102.5 0v-1.5C9 11.56 8.44 11 7.75 11zm1.27 4.5a.469.469 0 01.48-.5h5a.47.47 0 01.48.5c-.116 1.316-.759 2.5-2.98 2.5s-2.864-1.184-2.98-2.5zm7.23-4.5c-.69 0-1.25.56-1.25 1.25v1.5a1.25 1.25 0 102.5 0v-1.5c0-.69-.56-1.25-1.25-1.25z"></path><path fill-rule="evenodd" d="M21.255 3.82a1.725 1.725 0 00-2.141-1.195c-.557.16-1.406.44-2.264.866-.78.386-1.647.93-2.293 1.677A18.442 18.442 0 0012 5c-.93 0-1.784.059-2.569.17-.645-.74-1.505-1.28-2.28-1.664a13.876 13.876 0 00-2.265-.866 1.725 1.725 0 00-2.141 1.196 23.645 23.645 0 00-.69 3.292c-.125.97-.191 2.07-.066 3.112C1.254 11.882 1 13.734 1 15.527 1 19.915 3.13 23 12 23c8.87 0 11-3.053 11-7.473 0-1.794-.255-3.647-.99-5.29.127-1.046.06-2.15-.066-3.125a23.652 23.652 0 00-.689-3.292zM20.5 14c.5 3.5-1.5 6.5-8.5 6.5s-9-3-8.5-6.5c.583-4 3-6 8.5-6s7.928 2 8.5 6z"></path></svg>
@@ -1001,7 +1001,40 @@
 </div>
 
       <h2 id="blob-path" class="breadcrumb flex-auto min-width-0 text-normal mx-0 mx-md-3 width-full width-md-auto flex-order-1 flex-md-order-none mt-3 mt-md-0">
-        <span class="js-repo-root text-bold"><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/duanegtr/tltrusty"><span>tltrusty</span></a></span></span><span class="separator">/</span><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/duanegtr/tltrusty/tree/master/extendedmodlog"><span>extendedmodlog</span></a></span><span class="separator">/</span><strong class="final-path">info.json</strong>
+        <span class="js-repo-root text-bold"><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/duanegtr/tltrusty"><span>tltrusty</span></a></span></span><span class="separator">/</span><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/duanegtr/tltrusty/tree/master/extendedmodlog"><span>extendedmodlog</span></a></span><span class="separator">/</span><strong class="final-path">settings.py</strong>
+          <span class="separator">/</span><details class="details-reset details-overlay d-inline" id="jumpto-symbol-select-menu">
+  <summary class="btn-link link-gray css-truncate" aria-haspopup="true" data-hotkey="r" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.click_on_blob_definitions&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;click_on_blob_definitions&quot;,&quot;repository_id&quot;:293222138,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;Python&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="f870474458362ededb7042627cdf3a673433778accfea62e43c9d104c44cf93f">
+      <svg class="octicon octicon-code" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4.72 3.22a.75.75 0 011.06 1.06L2.06 8l3.72 3.72a.75.75 0 11-1.06 1.06L.47 8.53a.75.75 0 010-1.06l4.25-4.25zm6.56 0a.75.75 0 10-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 101.06 1.06l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25z"></path></svg>
+    <span data-menu-button>Jump to</span>
+    <span class="dropdown-caret"></span>
+  </summary>
+  <details-menu class="SelectMenu SelectMenu--hasFilter" role="menu">
+    <div class="SelectMenu-modal">
+      <header class="SelectMenu-header">
+        <span class="SelectMenu-title">Code definitions</span>
+        <button class="SelectMenu-closeButton" type="button" data-toggle-for="jumpto-symbol-select-menu">
+          <svg aria-label="Close menu" class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" role="img"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
+        </button>
+      </header>
+      <div class="SelectMenu-list">
+          <div class="SelectMenu-blankslate">
+            <p class="mb-0 text-gray">
+              No definitions found in this file.
+            </p>
+          </div>
+        <div data-filterable-for="jumpto-symbols-filter-field" data-filterable-type="substring">
+        </div>
+      </div>
+      <footer class="SelectMenu-footer">
+        <div class="d-flex flex-justify-between">
+          Code navigation not available for this commit
+          <svg class="octicon octicon-dot-fill text-light-gray" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+        </div>
+      </footer>
+    </div>
+  </details-menu>
+</details>
+
       </h2>
       <a href="/duanegtr/tltrusty/find/master"
             class="js-pjax-capture-input btn mr-2 d-none d-md-block"
@@ -1018,7 +1051,7 @@
 
 </summary>            <ul class="dropdown-menu dropdown-menu-sw">
             <li class="d-block d-md-none">
-              <a class="dropdown-item d-flex flex-items-baseline" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;FIND_FILE_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/info.json&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="df47f70c417d12edb3796b285c8c5600d5a1aa50e5bb4147cadfb0b7df5a9dbb" data-ga-click="Repository, find file, location:repo overview" data-hotkey="t" data-pjax="true" href="/duanegtr/tltrusty/find/master">
+              <a class="dropdown-item d-flex flex-items-baseline" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;FIND_FILE_BUTTON&quot;,&quot;repository_id&quot;:293222138,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}" data-hydro-click-hmac="8273fe984de7bb3974f653caebe2140836dca1caba98250d4db62d6920ef28df" data-ga-click="Repository, find file, location:repo overview" data-hotkey="t" data-pjax="true" href="/duanegtr/tltrusty/find/master">
                 <span class="flex-auto">Go to file</span>
                 <span class="text-small text-gray" aria-hidden="true">T</span>
 </a>            </li>
@@ -1030,9 +1063,17 @@
                 </span>
               </button>
             </li>
+            <li data-toggle-for="blob-more-options-details">
+              <button type="button" data-toggle-for="jumpto-symbol-select-menu" class="btn-link dropdown-item">
+                <span class="d-flex flex-items-baseline">
+                  <span class="flex-auto">Go to definition</span>
+                  <span class="text-small text-gray" aria-hidden="true">R</span>
+                </span>
+              </button>
+            </li>
             <li class="dropdown-divider" role="none"></li>
             <li>
-              <clipboard-copy value="extendedmodlog/info.json" class="dropdown-item cursor-pointer" data-toggle-for="blob-more-options-details">
+              <clipboard-copy value="extendedmodlog/settings.py" class="dropdown-item cursor-pointer" data-toggle-for="blob-more-options-details">
                 Copy path
               </clipboard-copy>
             </li>
@@ -1043,7 +1084,7 @@
 
 
     <div class="Box d-flex flex-column flex-shrink-0 mb-3">
-      <include-fragment src="/duanegtr/tltrusty/contributors/master/extendedmodlog/info.json" class="commit-loader">
+      <include-fragment src="/duanegtr/tltrusty/contributors/master/extendedmodlog/settings.py" class="commit-loader">
         <div class="Box-header Box-header--blue d-flex flex-items-center">
           <div class="Skeleton avatar avatar-user flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1" style="width:24px;height:24px;"></div>
           <div class="Skeleton Skeleton--text col-5 ml-2">&nbsp;</div>
@@ -1066,16 +1107,16 @@
 <div class="Box-header py-2 d-flex flex-column flex-shrink-0 flex-md-row flex-md-items-center">
   <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
 
-      31 lines (31 sloc)
+      131 lines (131 sloc)
       <span class="file-info-divider"></span>
-    846 Bytes
+    3.14 KB
   </div>
 
   <div class="d-flex py-1 py-md-0 flex-auto flex-order-1 flex-md-order-2 flex-sm-grow-0 flex-justify-between">
 
     <div class="BtnGroup">
-      <a href="/duanegtr/tltrusty/raw/master/extendedmodlog/info.json" id="raw-url" role="button" class="btn btn-sm BtnGroup-item ">Raw</a>
-        <a href="/duanegtr/tltrusty/blame/master/extendedmodlog/info.json" data-hotkey="b" role="button" class="btn js-update-url-with-hash btn-sm BtnGroup-item ">Blame</a>
+      <a href="/duanegtr/tltrusty/raw/master/extendedmodlog/settings.py" id="raw-url" role="button" class="btn btn-sm BtnGroup-item ">Raw</a>
+        <a href="/duanegtr/tltrusty/blame/master/extendedmodlog/settings.py" data-hotkey="b" role="button" class="btn js-update-url-with-hash btn-sm BtnGroup-item ">Blame</a>
     </div>
 
     <div>
@@ -1087,13 +1128,13 @@
               <svg class="octicon octicon-device-desktop" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.75 2.5h12.5a.25.25 0 01.25.25v7.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25v-7.5a.25.25 0 01.25-.25zM14.25 1H1.75A1.75 1.75 0 000 2.75v7.5C0 11.216.784 12 1.75 12h3.727c-.1 1.041-.52 1.872-1.292 2.757A.75.75 0 004.75 16h6.5a.75.75 0 00.565-1.243c-.772-.885-1.193-1.716-1.292-2.757h3.727A1.75 1.75 0 0016 10.25v-7.5A1.75 1.75 0 0014.25 1zM9.018 12H6.982a5.72 5.72 0 01-.765 2.5h3.566a5.72 5.72 0 01-.765-2.5z"></path></svg>
           </a>
 
-          <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="inline-form js-update-url-with-hash" action="/duanegtr/tltrusty/edit/master/extendedmodlog/info.json" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="LZX2I6FRxxxQA94tbK3xNliQsTMZp1V6GHTYbo6EZjSREtXZgwFe3lxR2nPkPuBYitDRSH+sVnScdhsrSqh5ug==" />
+          <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="inline-form js-update-url-with-hash" action="/duanegtr/tltrusty/edit/master/extendedmodlog/settings.py" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="E87TTBa7JS1Gw8GuyyFusmtPVVgEmImbwy4oV3doZpdwtL+lYcgRApNw1/M0QWqhV7Xgf35UoQNHxr8FttAAPg==" />
             <button class="btn-octicon tooltipped tooltipped-nw" type="submit"
               aria-label="Edit this file" data-hotkey="e" data-disable-with>
               <svg class="octicon octicon-pencil" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M11.013 1.427a1.75 1.75 0 012.474 0l1.086 1.086a1.75 1.75 0 010 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 01-.927-.928l.929-3.25a1.75 1.75 0 01.445-.758l8.61-8.61zm1.414 1.06a.25.25 0 00-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 000-.354l-1.086-1.086zM11.189 6.25L9.75 4.81l-6.286 6.287a.25.25 0 00-.064.108l-.558 1.953 1.953-.558a.249.249 0 00.108-.064l6.286-6.286z"></path></svg>
             </button>
 </form>
-          <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="inline-form" action="/duanegtr/tltrusty/delete/master/extendedmodlog/info.json" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="sk52HG/VzW91PPig5sqKzk1cP3i2SQAFuHSSLtFHnZMFGD1rmuV44AVYjBDH2zjBox26og9qIRcAmwo1pvAagA==" />
+          <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="inline-form" action="/duanegtr/tltrusty/delete/master/extendedmodlog/settings.py" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="e4GjNsKOeUuxDjTJukns7pE5T+jSIQwAN8+JBeCJWwS8JYerDXE+RuOBaqlABuZlJyDBuH330ca9vo83AMctdA==" />
             <button class="btn-octicon btn-octicon-danger tooltipped tooltipped-nw" type="submit"
               aria-label="Delete this file" data-disable-with>
               <svg class="octicon octicon-trashcan" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.5 1.75a.25.25 0 01.25-.25h2.5a.25.25 0 01.25.25V3h-3V1.75zm4.5 0V3h2.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75zM4.496 6.675a.75.75 0 10-1.492.15l.66 6.6A1.75 1.75 0 005.405 15h5.19c.9 0 1.652-.681 1.741-1.576l.66-6.6a.75.75 0 00-1.492-.149l-.66 6.6a.25.25 0 01-.249.225h-5.19a.25.25 0 01-.249-.225l-.66-6.6z"></path></svg>
@@ -1106,132 +1147,532 @@
 
       
 
-  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-json  gist-border-0">
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-python  gist-border-0">
       
 <table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip>
       <tr>
         <td id="L1" class="blob-num js-line-number" data-line-number="1"></td>
-        <td id="LC1" class="blob-code blob-code-inner js-file-line">{</td>
+        <td id="LC1" class="blob-code blob-code-inner js-file-line"><span class=pl-s1>inv_settings</span> <span class=pl-c1>=</span> {</td>
       </tr>
       <tr>
         <td id="L2" class="blob-num js-line-number" data-line-number="2"></td>
-        <td id="LC2" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>author<span class="pl-pds">&quot;</span></span> : [</td>
+        <td id="LC2" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;message_edit&quot;</span>: {</td>
       </tr>
       <tr>
         <td id="L3" class="blob-num js-line-number" data-line-number="3"></td>
-        <td id="LC3" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>RePulsR<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC3" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
       </tr>
       <tr>
         <td id="L4" class="blob-num js-line-number" data-line-number="4"></td>
-        <td id="LC4" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>TrustyJAID<span class="pl-pds">&quot;</span></span></td>
+        <td id="LC4" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
       </tr>
       <tr>
         <td id="L5" class="blob-num js-line-number" data-line-number="5"></td>
-        <td id="LC5" class="blob-code blob-code-inner js-file-line">    ],</td>
+        <td id="LC5" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;bots&quot;</span>: <span class=pl-c1>False</span>,</td>
       </tr>
       <tr>
         <td id="L6" class="blob-num js-line-number" data-line-number="6"></td>
-        <td id="LC6" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>description<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>Log changes within the server using extended modlogs, an extension of RedBot cores modlog.<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC6" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
       </tr>
       <tr>
         <td id="L7" class="blob-num js-line-number" data-line-number="7"></td>
-        <td id="LC7" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>disabled<span class="pl-pds">&quot;</span></span> : <span class="pl-c1">false</span>,</td>
+        <td id="LC7" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{MEMO}&quot;</span>,</td>
       </tr>
       <tr>
         <td id="L8" class="blob-num js-line-number" data-line-number="8"></td>
-        <td id="LC8" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>end_user_data_statement<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>This cog does not persistently store data or metadata about users.<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC8" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
       </tr>
       <tr>
         <td id="L9" class="blob-num js-line-number" data-line-number="9"></td>
-        <td id="LC9" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>hidden<span class="pl-pds">&quot;</span></span> : <span class="pl-c1">false</span>,</td>
+        <td id="LC9" class="blob-code blob-code-inner js-file-line">    },</td>
       </tr>
       <tr>
         <td id="L10" class="blob-num js-line-number" data-line-number="10"></td>
-        <td id="LC10" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>install_msg<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>Thanks for installing. Use `[p]modlog` to see the available commands.<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC10" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;message_delete&quot;</span>: {</td>
       </tr>
       <tr>
         <td id="L11" class="blob-num js-line-number" data-line-number="11"></td>
-        <td id="LC11" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>max_bot_version<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>0.0.0<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC11" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
       </tr>
       <tr>
         <td id="L12" class="blob-num js-line-number" data-line-number="12"></td>
-        <td id="LC12" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>min_bot_version<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>3.1.8<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC12" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
       </tr>
       <tr>
         <td id="L13" class="blob-num js-line-number" data-line-number="13"></td>
-        <td id="LC13" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>min_python_version<span class="pl-pds">&quot;</span></span> : [</td>
+        <td id="LC13" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;bots&quot;</span>: <span class=pl-c1>False</span>,</td>
       </tr>
       <tr>
         <td id="L14" class="blob-num js-line-number" data-line-number="14"></td>
-        <td id="LC14" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">3</span>,</td>
+        <td id="LC14" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;bulk_enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
       </tr>
       <tr>
         <td id="L15" class="blob-num js-line-number" data-line-number="15"></td>
-        <td id="LC15" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">7</span>,</td>
+        <td id="LC15" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;bulk_individual&quot;</span>: <span class=pl-c1>False</span>,</td>
       </tr>
       <tr>
         <td id="L16" class="blob-num js-line-number" data-line-number="16"></td>
-        <td id="LC16" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">2</span></td>
+        <td id="LC16" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;cached_only&quot;</span>: <span class=pl-c1>True</span>,</td>
       </tr>
       <tr>
         <td id="L17" class="blob-num js-line-number" data-line-number="17"></td>
-        <td id="LC17" class="blob-code blob-code-inner js-file-line">    ],</td>
+        <td id="LC17" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
       </tr>
       <tr>
         <td id="L18" class="blob-num js-line-number" data-line-number="18"></td>
-        <td id="LC18" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>name<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>ExtendedModLog<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC18" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{WASTEBASKET}\N{VARIATION SELECTOR-16}&quot;</span>,</td>
       </tr>
       <tr>
         <td id="L19" class="blob-num js-line-number" data-line-number="19"></td>
-        <td id="LC19" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>permissions<span class="pl-pds">&quot;</span></span> : [</td>
+        <td id="LC19" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
       </tr>
       <tr>
         <td id="L20" class="blob-num js-line-number" data-line-number="20"></td>
-        <td id="LC20" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>embed_links<span class="pl-pds">&quot;</span></span></td>
+        <td id="LC20" class="blob-code blob-code-inner js-file-line">    },</td>
       </tr>
       <tr>
         <td id="L21" class="blob-num js-line-number" data-line-number="21"></td>
-        <td id="LC21" class="blob-code blob-code-inner js-file-line">    ],</td>
+        <td id="LC21" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;user_change&quot;</span>: {</td>
       </tr>
       <tr>
         <td id="L22" class="blob-num js-line-number" data-line-number="22"></td>
-        <td id="LC22" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>required_cogs<span class="pl-pds">&quot;</span></span> : {},</td>
+        <td id="LC22" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
       </tr>
       <tr>
         <td id="L23" class="blob-num js-line-number" data-line-number="23"></td>
-        <td id="LC23" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>requirements<span class="pl-pds">&quot;</span></span> : [],</td>
+        <td id="LC23" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
       </tr>
       <tr>
         <td id="L24" class="blob-num js-line-number" data-line-number="24"></td>
-        <td id="LC24" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>short<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>ExtendedModLog, track changes made in the server.<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC24" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
       </tr>
       <tr>
         <td id="L25" class="blob-num js-line-number" data-line-number="25"></td>
-        <td id="LC25" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>tags<span class="pl-pds">&quot;</span></span> : [</td>
+        <td id="LC25" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;bots&quot;</span>: <span class=pl-c1>True</span>,</td>
       </tr>
       <tr>
         <td id="L26" class="blob-num js-line-number" data-line-number="26"></td>
-        <td id="LC26" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>mod<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC26" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;nicknames&quot;</span>: <span class=pl-c1>True</span>,</td>
       </tr>
       <tr>
         <td id="L27" class="blob-num js-line-number" data-line-number="27"></td>
-        <td id="LC27" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>logs<span class="pl-pds">&quot;</span></span>,</td>
+        <td id="LC27" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{MAN}\N{ZERO WIDTH JOINER}\N{WRENCH}&quot;</span>,</td>
       </tr>
       <tr>
         <td id="L28" class="blob-num js-line-number" data-line-number="28"></td>
-        <td id="LC28" class="blob-code blob-code-inner js-file-line">        <span class="pl-s"><span class="pl-pds">&quot;</span>modlogs<span class="pl-pds">&quot;</span></span></td>
+        <td id="LC28" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
       </tr>
       <tr>
         <td id="L29" class="blob-num js-line-number" data-line-number="29"></td>
-        <td id="LC29" class="blob-code blob-code-inner js-file-line">    ],</td>
+        <td id="LC29" class="blob-code blob-code-inner js-file-line">    },</td>
       </tr>
       <tr>
         <td id="L30" class="blob-num js-line-number" data-line-number="30"></td>
-        <td id="LC30" class="blob-code blob-code-inner js-file-line">    <span class="pl-s"><span class="pl-pds">&quot;</span>type<span class="pl-pds">&quot;</span></span> : <span class="pl-s"><span class="pl-pds">&quot;</span>COG<span class="pl-pds">&quot;</span></span></td>
+        <td id="LC30" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;role_change&quot;</span>: {</td>
       </tr>
       <tr>
         <td id="L31" class="blob-num js-line-number" data-line-number="31"></td>
-        <td id="LC31" class="blob-code blob-code-inner js-file-line">}</td>
+        <td id="LC31" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L32" class="blob-num js-line-number" data-line-number="32"></td>
+        <td id="LC32" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L33" class="blob-num js-line-number" data-line-number="33"></td>
+        <td id="LC33" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L34" class="blob-num js-line-number" data-line-number="34"></td>
+        <td id="LC34" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{WAVING WHITE FLAG}\N{VARIATION SELECTOR-16}&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L35" class="blob-num js-line-number" data-line-number="35"></td>
+        <td id="LC35" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L36" class="blob-num js-line-number" data-line-number="36"></td>
+        <td id="LC36" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L37" class="blob-num js-line-number" data-line-number="37"></td>
+        <td id="LC37" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;role_create&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L38" class="blob-num js-line-number" data-line-number="38"></td>
+        <td id="LC38" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L39" class="blob-num js-line-number" data-line-number="39"></td>
+        <td id="LC39" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L40" class="blob-num js-line-number" data-line-number="40"></td>
+        <td id="LC40" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L41" class="blob-num js-line-number" data-line-number="41"></td>
+        <td id="LC41" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{WAVING WHITE FLAG}\N{VARIATION SELECTOR-16}&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L42" class="blob-num js-line-number" data-line-number="42"></td>
+        <td id="LC42" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L43" class="blob-num js-line-number" data-line-number="43"></td>
+        <td id="LC43" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L44" class="blob-num js-line-number" data-line-number="44"></td>
+        <td id="LC44" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;role_delete&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L45" class="blob-num js-line-number" data-line-number="45"></td>
+        <td id="LC45" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L46" class="blob-num js-line-number" data-line-number="46"></td>
+        <td id="LC46" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L47" class="blob-num js-line-number" data-line-number="47"></td>
+        <td id="LC47" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L48" class="blob-num js-line-number" data-line-number="48"></td>
+        <td id="LC48" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{WAVING WHITE FLAG}\N{VARIATION SELECTOR-16}&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L49" class="blob-num js-line-number" data-line-number="49"></td>
+        <td id="LC49" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L50" class="blob-num js-line-number" data-line-number="50"></td>
+        <td id="LC50" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L51" class="blob-num js-line-number" data-line-number="51"></td>
+        <td id="LC51" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;voice_change&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L52" class="blob-num js-line-number" data-line-number="52"></td>
+        <td id="LC52" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L53" class="blob-num js-line-number" data-line-number="53"></td>
+        <td id="LC53" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L54" class="blob-num js-line-number" data-line-number="54"></td>
+        <td id="LC54" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L55" class="blob-num js-line-number" data-line-number="55"></td>
+        <td id="LC55" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{MICROPHONE}&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L56" class="blob-num js-line-number" data-line-number="56"></td>
+        <td id="LC56" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L57" class="blob-num js-line-number" data-line-number="57"></td>
+        <td id="LC57" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L58" class="blob-num js-line-number" data-line-number="58"></td>
+        <td id="LC58" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;user_join&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L59" class="blob-num js-line-number" data-line-number="59"></td>
+        <td id="LC59" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L60" class="blob-num js-line-number" data-line-number="60"></td>
+        <td id="LC60" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L61" class="blob-num js-line-number" data-line-number="61"></td>
+        <td id="LC61" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L62" class="blob-num js-line-number" data-line-number="62"></td>
+        <td id="LC62" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{INBOX TRAY}\N{VARIATION SELECTOR-16}&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L63" class="blob-num js-line-number" data-line-number="63"></td>
+        <td id="LC63" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L64" class="blob-num js-line-number" data-line-number="64"></td>
+        <td id="LC64" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L65" class="blob-num js-line-number" data-line-number="65"></td>
+        <td id="LC65" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;user_left&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L66" class="blob-num js-line-number" data-line-number="66"></td>
+        <td id="LC66" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L67" class="blob-num js-line-number" data-line-number="67"></td>
+        <td id="LC67" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L68" class="blob-num js-line-number" data-line-number="68"></td>
+        <td id="LC68" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L69" class="blob-num js-line-number" data-line-number="69"></td>
+        <td id="LC69" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{OUTBOX TRAY}\N{VARIATION SELECTOR-16}&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L70" class="blob-num js-line-number" data-line-number="70"></td>
+        <td id="LC70" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L71" class="blob-num js-line-number" data-line-number="71"></td>
+        <td id="LC71" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L72" class="blob-num js-line-number" data-line-number="72"></td>
+        <td id="LC72" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;channel_change&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L73" class="blob-num js-line-number" data-line-number="73"></td>
+        <td id="LC73" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L74" class="blob-num js-line-number" data-line-number="74"></td>
+        <td id="LC74" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L75" class="blob-num js-line-number" data-line-number="75"></td>
+        <td id="LC75" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L76" class="blob-num js-line-number" data-line-number="76"></td>
+        <td id="LC76" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L77" class="blob-num js-line-number" data-line-number="77"></td>
+        <td id="LC77" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L78" class="blob-num js-line-number" data-line-number="78"></td>
+        <td id="LC78" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L79" class="blob-num js-line-number" data-line-number="79"></td>
+        <td id="LC79" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;channel_create&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L80" class="blob-num js-line-number" data-line-number="80"></td>
+        <td id="LC80" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L81" class="blob-num js-line-number" data-line-number="81"></td>
+        <td id="LC81" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L82" class="blob-num js-line-number" data-line-number="82"></td>
+        <td id="LC82" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L83" class="blob-num js-line-number" data-line-number="83"></td>
+        <td id="LC83" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L84" class="blob-num js-line-number" data-line-number="84"></td>
+        <td id="LC84" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L85" class="blob-num js-line-number" data-line-number="85"></td>
+        <td id="LC85" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L86" class="blob-num js-line-number" data-line-number="86"></td>
+        <td id="LC86" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;channel_delete&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L87" class="blob-num js-line-number" data-line-number="87"></td>
+        <td id="LC87" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L88" class="blob-num js-line-number" data-line-number="88"></td>
+        <td id="LC88" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L89" class="blob-num js-line-number" data-line-number="89"></td>
+        <td id="LC89" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L90" class="blob-num js-line-number" data-line-number="90"></td>
+        <td id="LC90" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L91" class="blob-num js-line-number" data-line-number="91"></td>
+        <td id="LC91" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L92" class="blob-num js-line-number" data-line-number="92"></td>
+        <td id="LC92" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L93" class="blob-num js-line-number" data-line-number="93"></td>
+        <td id="LC93" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;guild_change&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L94" class="blob-num js-line-number" data-line-number="94"></td>
+        <td id="LC94" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L95" class="blob-num js-line-number" data-line-number="95"></td>
+        <td id="LC95" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L96" class="blob-num js-line-number" data-line-number="96"></td>
+        <td id="LC96" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L97" class="blob-num js-line-number" data-line-number="97"></td>
+        <td id="LC97" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{HAMMER AND WRENCH}\N{VARIATION SELECTOR-16}&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L98" class="blob-num js-line-number" data-line-number="98"></td>
+        <td id="LC98" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L99" class="blob-num js-line-number" data-line-number="99"></td>
+        <td id="LC99" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L100" class="blob-num js-line-number" data-line-number="100"></td>
+        <td id="LC100" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;emoji_change&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L101" class="blob-num js-line-number" data-line-number="101"></td>
+        <td id="LC101" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L102" class="blob-num js-line-number" data-line-number="102"></td>
+        <td id="LC102" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L103" class="blob-num js-line-number" data-line-number="103"></td>
+        <td id="LC103" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L104" class="blob-num js-line-number" data-line-number="104"></td>
+        <td id="LC104" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L105" class="blob-num js-line-number" data-line-number="105"></td>
+        <td id="LC105" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L106" class="blob-num js-line-number" data-line-number="106"></td>
+        <td id="LC106" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L107" class="blob-num js-line-number" data-line-number="107"></td>
+        <td id="LC107" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;commands_used&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L108" class="blob-num js-line-number" data-line-number="108"></td>
+        <td id="LC108" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L109" class="blob-num js-line-number" data-line-number="109"></td>
+        <td id="LC109" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L110" class="blob-num js-line-number" data-line-number="110"></td>
+        <td id="LC110" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;privs&quot;</span>: [<span class=pl-s>&quot;MOD&quot;</span>, <span class=pl-s>&quot;ADMIN&quot;</span>, <span class=pl-s>&quot;BOT_OWNER&quot;</span>, <span class=pl-s>&quot;GUILD_OWNER&quot;</span>],</td>
+      </tr>
+      <tr>
+        <td id="L111" class="blob-num js-line-number" data-line-number="111"></td>
+        <td id="LC111" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L112" class="blob-num js-line-number" data-line-number="112"></td>
+        <td id="LC112" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;\N{ROBOT FACE}&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L113" class="blob-num js-line-number" data-line-number="113"></td>
+        <td id="LC113" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L114" class="blob-num js-line-number" data-line-number="114"></td>
+        <td id="LC114" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L115" class="blob-num js-line-number" data-line-number="115"></td>
+        <td id="LC115" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;invite_created&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L116" class="blob-num js-line-number" data-line-number="116"></td>
+        <td id="LC116" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L117" class="blob-num js-line-number" data-line-number="117"></td>
+        <td id="LC117" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L118" class="blob-num js-line-number" data-line-number="118"></td>
+        <td id="LC118" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L119" class="blob-num js-line-number" data-line-number="119"></td>
+        <td id="LC119" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L120" class="blob-num js-line-number" data-line-number="120"></td>
+        <td id="LC120" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L121" class="blob-num js-line-number" data-line-number="121"></td>
+        <td id="LC121" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L122" class="blob-num js-line-number" data-line-number="122"></td>
+        <td id="LC122" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;invite_deleted&quot;</span>: {</td>
+      </tr>
+      <tr>
+        <td id="L123" class="blob-num js-line-number" data-line-number="123"></td>
+        <td id="LC123" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;enabled&quot;</span>: <span class=pl-c1>False</span>,</td>
+      </tr>
+      <tr>
+        <td id="L124" class="blob-num js-line-number" data-line-number="124"></td>
+        <td id="LC124" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;channel&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L125" class="blob-num js-line-number" data-line-number="125"></td>
+        <td id="LC125" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;colour&quot;</span>: <span class=pl-c1>None</span>,</td>
+      </tr>
+      <tr>
+        <td id="L126" class="blob-num js-line-number" data-line-number="126"></td>
+        <td id="LC126" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;emoji&quot;</span>: <span class=pl-s>&quot;&quot;</span>,</td>
+      </tr>
+      <tr>
+        <td id="L127" class="blob-num js-line-number" data-line-number="127"></td>
+        <td id="LC127" class="blob-code blob-code-inner js-file-line">        <span class=pl-s>&quot;embed&quot;</span>: <span class=pl-c1>True</span>,</td>
+      </tr>
+      <tr>
+        <td id="L128" class="blob-num js-line-number" data-line-number="128"></td>
+        <td id="LC128" class="blob-code blob-code-inner js-file-line">    },</td>
+      </tr>
+      <tr>
+        <td id="L129" class="blob-num js-line-number" data-line-number="129"></td>
+        <td id="LC129" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;ignored_channels&quot;</span>: [],</td>
+      </tr>
+      <tr>
+        <td id="L130" class="blob-num js-line-number" data-line-number="130"></td>
+        <td id="LC130" class="blob-code blob-code-inner js-file-line">    <span class=pl-s>&quot;invite_links&quot;</span>: {},</td>
+      </tr>
+      <tr>
+        <td id="L131" class="blob-num js-line-number" data-line-number="131"></td>
+        <td id="LC131" class="blob-code blob-code-inner js-file-line">}</td>
       </tr>
 </table>
 
@@ -1251,7 +1692,7 @@
             Copy permalink
           </clipboard-copy>
         </li>
-        <li><a class="dropdown-item js-update-url-with-hash" id="js-view-git-blame" role="menuitem" href="/duanegtr/tltrusty/blame/9465fe0a7820abd293a87871a433b7415cac7bdf/extendedmodlog/info.json">View git blame</a></li>
+        <li><a class="dropdown-item js-update-url-with-hash" id="js-view-git-blame" role="menuitem" href="/duanegtr/tltrusty/blame/9465fe0a7820abd293a87871a433b7415cac7bdf/extendedmodlog/settings.py">View git blame</a></li>
       </ul>
     </details-menu>
   </details>
@@ -1271,6 +1712,20 @@
         <button type="submit" class="btn" data-close-dialog>Go</button>
 </form>    </details-dialog>
   </details>
+
+    <div class="Popover anim-scale-in js-tagsearch-popover"
+     hidden
+     data-tagsearch-url="/duanegtr/tltrusty/find-definition"
+     data-tagsearch-ref="master"
+     data-tagsearch-path="extendedmodlog/settings.py"
+     data-tagsearch-lang="Python"
+     data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.click_on_symbol&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;click_on_symbol&quot;,&quot;repository_id&quot;:293222138,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;Python&quot;,&quot;originating_url&quot;:&quot;https://github.com/duanegtr/tltrusty/blob/master/extendedmodlog/settings.py&quot;,&quot;user_id&quot;:61340105}}"
+     data-hydro-click-hmac="f445c0c0a2cb3113c52697f645cc6edd4f77677812d9e68faf48fcfafc2b7a1a">
+  <div class="Popover-message Popover-message--large Popover-message--top-left TagsearchPopover mt-1 mb-4 mx-auto Box box-shadow-large">
+    <div class="TagsearchPopover-content js-tagsearch-popover-content overflow-auto" style="will-change:transform;">
+    </div>
+  </div>
+</div>
 
 
 
