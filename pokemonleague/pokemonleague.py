@@ -48,7 +48,15 @@ class PokemonLeague(commands.Cog):
             with open(self.leagues_file) as file:
                 self.gyms = dict(json.load(file))["gyms"]
         except Exception as exc:
-            log.exception("Error in gym data.", exc_info=exc)
+            log.exception("Error in gyms data.", exc_info=exc)
+            raise
+
+        try:
+            self.pokemons_file = str(bundled_data_path(self) / "pokemons.json")
+            with open(self.pokemons_file) as file:
+                self.pokemons = dict(json.load(file))
+        except Exception as exc:
+            log.exception("Error in pokemon data.", exc_info=exc)
             raise
 
         self.config = Config.get_conf(self, identifier=3424234, force_registration=True)
@@ -61,7 +69,9 @@ class PokemonLeague(commands.Cog):
             'gym_channels': {},
             'assigned_channels': {}
         }
+        default_user = {'pokemons': []}
         self.config.register_guild(**default_guild)
+        self.config.register_user(**default_user)
 
     async def challongetoken(self):
         token = await self.bot.get_shared_api_tokens("challonge")
@@ -118,6 +128,18 @@ class PokemonLeague(commands.Cog):
                 ctx,
                 "I am sorry. I see only one of {}. Now go get a third member.".format(user1.mention)
             )
+        captain_pokemons = await self.config.user(ctx.author).pokemons()
+        user_1_pokemons = await self.config.user(user1).pokemons()
+        user_2_pokemons = await self.config.user(user2).pokemons()
+        if any([len(p) == 0 for p in [captain_pokemons, user_1_pokemons, user_2_pokemons]]):
+            return await embed_helper(ctx, "Team members have not set their pokemon types.")
+        if not set(captain_pokemons).isdisjoint(user_1_pokemons):
+            return await embed_helper(ctx, f"{ctx.author.mention} has same pokemon type as {user1.mention}.")
+        if not set(captain_pokemons).isdisjoint(user_2_pokemons):
+            return await embed_helper(ctx, f"{ctx.author.mention} has same pokemon type as {user2.mention}.")
+        if not set(user_2_pokemons).isdisjoint(user_1_pokemons):
+            return await embed_helper(ctx, f"{user2.mention} has same pokemon type as {user1.mention}.")
+
         if len(teams) > 0:
             for team_id in teams.keys():
                 if teams[team_id]['name'] == name:
@@ -140,7 +162,7 @@ class PokemonLeague(commands.Cog):
             teams[participant_id]['name'] = name
             teams[participant_id]['captain_id'] = ctx.author.id
             teams[participant_id]['players'] = [user1.id, user2.id, ctx.author.id]
-            teams[participant_id]['pokemon_choices'] = {}
+            teams[participant_id]['pokemon_choices'] = list(captain_pokemons + user_1_pokemons + user_2_pokemons)
             role = discord.utils.get(ctx.guild.roles, name=name)
             if role:
                 await embed_helper(ctx, "There is already a role with name {}. Please contact the admins for the team roles.".format(name))
@@ -375,7 +397,7 @@ class PokemonLeague(commands.Cog):
         tournament = await self.config.guild(ctx.guild).tournament_id()
         tournament_name = await self.config.guild(ctx.guild).tournament_name()
         if tournament_url is None:
-            return await embed_helper("No tournaments running!")
+            return await embed_helper(ctx, "No tournaments running!")
         try:
             await self.discord_setup(ctx)
         except ExistingChannels:
@@ -527,7 +549,7 @@ class PokemonLeague(commands.Cog):
 
     async def discord_setup(self, ctx):
         teams = await self.config.guild(ctx.guild).teams()
-
+        pokemon_types = [name.split(' ')[0] for name in self.pokemons.keys()]
         number_of_gyms = int(math.floor(math.log(len(teams), 2)))
         # number of people eliminated in first round to make number
         # of teams power of 2 is distance to nearest power of 2
@@ -539,6 +561,10 @@ class PokemonLeague(commands.Cog):
         everyone_role = ctx.author.roles[0]
 
         channels_created = {}
+
+        for pokemon_type in pokemon_types:
+            role_name = pokemon_type + " Player"
+            role = discord.utils.get(ctx.guild.roles, name=role_name) or await ctx.guild.create_role(name=role_name)
 
         last_position = 0
         for c in ctx.guild.categories:
@@ -601,7 +627,7 @@ class PokemonLeague(commands.Cog):
         """
         url = await self.config.guild(ctx.guild).tournament_url()
         if url:
-            await embed_helper("There is a tournament running in the server! You cannot delete channels without finishing the tournament.")
+            await embed_helper(ctx, "There is a tournament running in the server! You cannot delete channels without finishing the tournament.")
             return
         await ctx.send((
             f"This command will delete all channels that have `badge` in ther name. Are you sure you want to do that?"
@@ -627,5 +653,38 @@ class PokemonLeague(commands.Cog):
     async def command_setleaguechannel(self, ctx, channel:discord.TextChannel):
         await self.config.guild(ctx.guild).channel_id.set(channel.id)
         await ctx.tick()
+
+    @commands.command(name="choosepokemon")
+    @commands.guild_only()
+    @checks.bot_has_permissions(manage_roles=True)
+    async def command_choosepokemon(self, ctx, pokemon1, pokemon2):
+        teams_data = await self.config.guild(ctx.guild).teams()
+        for team in teams_data.values():
+            if ctx.author.id in team["players"]:
+                return await embed_helper(ctx, f"You are already registered for team {team['name']}")
+
+        valid_types = [name.split(' ')[0].lower() for name in self.pokemons.keys()]
+        pokemon_role_names = [(pokemon.lower().capitalize().split(' ')[0] + " Player") for pokemon in self.pokemons.keys()]
+        if pokemon1.lower() not in valid_types:
+            return await embed_helper(ctx, f"{pokemon1} is not a valid pokemon type.")
+        if pokemon2.lower() not in valid_types:
+            return await embed_helper(ctx, f"{pokemon2} is not a valid pokemon type.")
+
+        await self.config.user(ctx.author).pokemons.set([pokemon1.lower(), pokemon2.lower()])
+        for pokemon_role_name in pokemon_role_names:
+            poke_role = discord.utils.get(ctx.guild.roles, name=pokemon_role_name)
+            if poke_role:
+                await ctx.author.remove_roles(poke_role)
+        poke1_role = discord.utils.get(ctx.guild.roles, name=(pokemon1.lower().capitalize().split(' ')[0] + " Player"))
+        if poke1_role:
+            await ctx.author.add_roles(poke1_role)
+        poke2_role = discord.utils.get(ctx.guild.roles, name=(pokemon2.lower().capitalize().split(' ')[0] + " Player"))
+        if poke2_role:
+            await ctx.author.add_roles(poke2_role)
+        await ctx.tick()
+
+
+
+
 
 
