@@ -11,6 +11,8 @@ from redbot.core.utils import AsyncIter
 from redbot.core.data_manager import bundled_data_path, cog_data_path
 from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
+from redbot.core.utils.chat_formatting import humanize_list
+from redbot.core.utils.menus import DEFAULT_CONTROLS, menu, start_adding_reactions
 
 """
 Important read below before you read the code
@@ -59,6 +61,8 @@ class PokemonLeague(commands.Cog):
             log.exception("Error in pokemon data.", exc_info=exc)
             raise
 
+        self.constants = getattr(self.bot.get_cog("ClashRoyaleTools"), "constants", None)
+
         self.config = Config.get_conf(self, identifier=3424234, force_registration=True)
         default_guild = {
             'teams': {},
@@ -74,6 +78,7 @@ class PokemonLeague(commands.Cog):
         self.config.register_user(**default_user)
 
     async def challongetoken(self):
+        """ Set challonge api token """
         token = await self.bot.get_shared_api_tokens("challonge")
         if token['token'] is None or token['username'] is None:
             log.error("Challonge API not setup correctly, use !set api challonge username,YOUR_USERNAME token,YOUR_CHALLONGE_TOKEN")
@@ -84,6 +89,9 @@ class PokemonLeague(commands.Cog):
     @commands.guild_only()
     @checks.admin_or_permissions()
     async def createbracket(self, ctx, *, name:str):
+        """
+            Start a new tournament
+        """
         assigned_url = await self.config.guild(ctx.guild).tournament_url()
         tournament_name = await self.config.guild(ctx.guild).tournament_name()
         if assigned_url is None:
@@ -131,7 +139,7 @@ class PokemonLeague(commands.Cog):
         captain_pokemons = await self.config.user(ctx.author).pokemons()
         user_1_pokemons = await self.config.user(user1).pokemons()
         user_2_pokemons = await self.config.user(user2).pokemons()
-        if any([len(p) == 0 for p in [captain_pokemons, user_1_pokemons, user_2_pokemons]]):
+        if any([len(p) != 2 for p in [captain_pokemons, user_1_pokemons, user_2_pokemons]]):
             return await embed_helper(ctx, "Team members have not set their pokemon types.")
         if not set(captain_pokemons).isdisjoint(user_1_pokemons):
             return await embed_helper(ctx, f"{ctx.author.mention} has same pokemon type as {user1.mention}.")
@@ -156,6 +164,7 @@ class PokemonLeague(commands.Cog):
             participant = challonge.participants.create(tournament=tournament, name=name)
         except challonge.api.ChallongeException as e:
             return await ctx.send("Registerations have ended")
+
         participant_id = participant['id']
         async with self.config.guild(ctx.guild).teams() as teams:
             teams[participant_id] = {}
@@ -163,20 +172,24 @@ class PokemonLeague(commands.Cog):
             teams[participant_id]['captain_id'] = ctx.author.id
             teams[participant_id]['players'] = [user1.id, user2.id, ctx.author.id]
             teams[participant_id]['pokemon_choices'] = list(captain_pokemons + user_1_pokemons + user_2_pokemons)
-            role = discord.utils.get(ctx.guild.roles, name=name)
-            if role:
-                await embed_helper(ctx, "There is already a role with name {}. Please contact the admins for the team roles.".format(name))
-                return
-            else:
-                role = await ctx.guild.create_role(name=name)
-                await ctx.author.add_roles(role)
-                await user1.add_roles(role)
-                await user2.add_roles(role)
-            await embed_helper(ctx, "Team {} successfuly registered.".format(name))
+        role = discord.utils.get(ctx.guild.roles, name=name)
+        if role:
+            await embed_helper(ctx, "There is already a role with name {}. Please contact the moderators for the team roles.".format(name))
+            return
+        else:
+            role = await ctx.guild.create_role(name=name)
+            await ctx.author.add_roles(role)
+            await user1.add_roles(role)
+            await user2.add_roles(role)
+        await embed_helper(ctx, "Team {} successfuly registered.".format(name))
+        await ctx.tick()
 
     @commands.command()
     @commands.guild_only()
-    async def showteam(self, ctx, *, name:str):
+    async def showteam(self, ctx, *, team_name:str):
+        """
+            Display data for a team
+        """
         team_found = False
         url = await self.config.guild(ctx.guild).tournament_url()
         if url is None:
@@ -184,12 +197,12 @@ class PokemonLeague(commands.Cog):
         teams = await self.config.guild(ctx.guild).teams()
         if len(teams) > 0:
             for team_id in teams.keys():
-                if teams[team_id]['name'] == name:
+                if teams[team_id]['name'] == team_name:
                     team_found = True
                     captain_id = teams[team_id]['captain_id']
                     players_id = teams[team_id]['players']
                     players_id.remove(captain_id)
-                    embed = discord.Embed(colour=0xFAA61A, title=name, url=url)
+                    embed = discord.Embed(colour=0xFAA61A, title=team_name, url=url)
                     captain = ctx.guild.get_member(captain_id)
                     embed.add_field(name="Captain", value=captain.mention, inline=False)
                     description = ""
@@ -197,6 +210,8 @@ class PokemonLeague(commands.Cog):
                         user = ctx.guild.get_member(player_id)
                         description += str(user.mention + "  ")
                     embed.add_field(name="Players", value=description, inline=False)
+                    pokemons = humanize_list(teams[team_id]["pokemon_choices"])
+                    embed.add_field(name="Pokemons", value=pokemons, inline=False)
                     return await ctx.send(embed=embed)
             if not(team_found):
                 await embed_helper(ctx, "Team not found")
@@ -683,8 +698,101 @@ class PokemonLeague(commands.Cog):
             await ctx.author.add_roles(poke2_role)
         await ctx.tick()
 
+    @commands.command(name="showtypes")
+    async def showtypes(self, ctx, *, pokemon_type=None):
+        """
+            Show all cards of specific type if type is mentioned and all types if type is not specified
+        """
+        if pokemon_type:
+            cards = None
+            for p_type in self.pokemons.keys():
+                if p_type.lower().split()[0] == pokemon_type.lower():
+                    cards = self.pokemons.get(p_type)
+            if not cards:
+                return await embed_helper(ctx, f"{pokemon_type} is not recognized as a valid pokemon type.")
+            else:
+                embed = discord.Embed(color=0xFAA61A,)
+                embed.set_author(
+                    name=f"Pokemon card index"
+                )
+                value = ["\u200b\n"]
+                for card in cards:
+                    emoji = await self.get_card_emoji(card)
+                    if emoji:
+                        value.append(emoji)
+                    else:
+                        value.append(f" {card} ")
+                if len(value):
+                    value = " ".join(value)
+                    embed.add_field(
+                        name=f"{pokemon_type.lower().capitalize()} cards", value=value, inline=False,
+                    )
+                return await ctx.send(embed=embed)
 
+        pages = []
+        for pokemon_type in self.pokemons.keys():
+            cards = None
+            cards = self.pokemons[pokemon_type]
+            embed = discord.Embed(color=0xFAA61A)
+            embed.set_author(
+                name=f"Pokemon card index"
+            )
+            value = ["\u200b\n"]
+            for card in cards:
+                emoji = await self.get_card_emoji(card)
+                if emoji:
+                    value.append(emoji)
+                else:
+                    value.append(f" {card} ")
+            if len(value):
+                value = " ".join(value)
+                embed.add_field(
+                    name=f"{pokemon_type.lower().capitalize()} cards", value=value, inline=False,
+                )
+                pages.append(embed)
+        return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=120)
 
+    @commands.command(name="showcardtype")
+    async def command_showcardtype(self, ctx, *, card_name):
+        """
+            Show type of card.
+        """
+        card_type = []
+        for pokemon_type in self.pokemons.keys():
+            cards = self.pokemons[pokemon_type]
+            for card in cards:
+                if card.lower() == card_name.lower():
+                    card_name = card
+                    card_type.append(pokemon_type.split()[0])
+        if len(card_type) > 0:
+            return await embed_helper(ctx, f"{card_name} belongs to  {humanize_list(card_type)} types.")
+        url = "https://docs.google.com/spreadsheets/d/1TIH9iwTb9UpHYWKIgHpY72wizLSp79ROt4D4lWe8YIM/edit?usp=sharing"
+        await embed_helper(ctx, "Cannot find card {}. Please use the [spreadsheet]({}).".format(card_name, url))
+
+    async def get_card_emoji(self, card_name: str):
+        if not self.constants:
+            return ""
+        card_key = await self.constants.card_to_key(card_name)
+        emoji = ""
+        if card_key:
+            emoji = self.emoji(card_key)
+        if emoji == "":
+            emoji = self.emoji(card_name)
+        return emoji
+
+        def emoji(self, name: str):
+            """Emoji by name."""
+            for emoji in self.bot.emojis:
+                if emoji.name == name.replace(" ", "").replace("-", "").replace(".", ""):
+                    return "<:{}:{}>".format(emoji.name, emoji.id)
+            return ""
+
+    def emoji(self, name: str):
+        """Emoji by name."""
+        for emoji in self.bot.emojis:
+            if emoji.name == name.replace(" ", "").replace("-", "").replace(".", ""):
+                return "<:{}:{}>".format(emoji.name, emoji.id)
+        return ""
 
 
 
