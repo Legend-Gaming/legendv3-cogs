@@ -221,6 +221,9 @@ class PokemonLeague(commands.Cog):
     @checks.admin_or_permissions()
     @checks.bot_has_permissions(manage_roles=True)
     async def removeteam(self, ctx, *,team_name):
+        """
+            Remove a team from the tournament. Cannot be done after starting the bracket
+        """
         team_found = False
         url = await self.config.guild(ctx.guild).tournament_url()
         tournament_name = await self.config.guild(ctx.guild).tournament_name()
@@ -669,10 +672,10 @@ class PokemonLeague(commands.Cog):
         await self.config.guild(ctx.guild).channel_id.set(channel.id)
         await ctx.tick()
 
-    @commands.command(name="choosepokemon")
+    @commands.command(name="choosepokemontype")
     @commands.guild_only()
     @checks.bot_has_permissions(manage_roles=True)
-    async def command_choosepokemon(self, ctx, pokemon1, pokemon2):
+    async def command_choosepokemontype(self, ctx, pokemon1, pokemon2):
         teams_data = await self.config.guild(ctx.guild).teams()
         for team in teams_data.values():
             if ctx.author.id in team["players"]:
