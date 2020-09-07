@@ -239,13 +239,15 @@ class ClashRoyaleClans(commands.Cog):
                 else:
                     shown_members = "**FULL**  "
 
-                desc = "{}   {} {} " "{}+  {} {}".format(
+                desc = "{}  {}  {} {}+  {} {}  {}{}".format(
                     self.discord_helper.emoji(emoji),
                     shown_members,
-                    self.discord_helper.emoji("crtrophy"),
+                    self.discord_helper.emoji("pb"),
                     clan["required_trophies"],
                     self.discord_helper.getLeagueEmoji(clan["clan_war_trophies"]),
                     clan["clan_war_trophies"],
+                    self.discord_helper.emoji("crtrophy"),
+                    clan["clan_score"]
                 )
 
                 if (
