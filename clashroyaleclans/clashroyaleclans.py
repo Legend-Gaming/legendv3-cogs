@@ -239,7 +239,7 @@ class ClashRoyaleClans(commands.Cog):
                 else:
                     shown_members = "**FULL**  "
 
-                desc = "{}  {}  {} {}+  {} {}  {}{}".format(
+                desc = "{} {}   {} {}+  {} {}  {}{}".format(
                     self.discord_helper.emoji(emoji),
                     shown_members,
                     self.discord_helper.emoji("PB"),
