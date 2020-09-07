@@ -1,0 +1,10 @@
+{
+  "author": ["milan_25"],
+  "name" : "Clash Royale",
+  "description": "Clash Royale cog",
+  "install_msg": "Thank you for installing our Clash Royale cog. Set your CR API token with `[p]set api crapi api_key,YOURAPIKEY`",
+  "short": "Clash Royale related commands",
+  "requirements" : ["clashroyale"],
+  "tags": ["Clash Royale", "Stats"],
+  "end_user_data_statement" : "Stores Brawl Clash Royale in-game tag."
+}
