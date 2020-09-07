@@ -242,7 +242,7 @@ class ClashRoyaleClans(commands.Cog):
                 desc = "{}  {}  {} {}+  {} {}  {}{}".format(
                     self.discord_helper.emoji(emoji),
                     shown_members,
-                    self.discord_helper.emoji("pb"),
+                    self.discord_helper.emoji("PB"),
                     clan["required_trophies"],
                     self.discord_helper.getLeagueEmoji(clan["clan_war_trophies"]),
                     clan["clan_war_trophies"],
