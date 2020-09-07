@@ -1302,7 +1302,7 @@ class ClashRoyaleClans(commands.Cog):
         pass
 
     @crclansset.group(name="clanmention")
-    async def crclansset_clanmention(self, ctx, value: bool):
+    async def crclansset_clanmention(self, ctx):
         """ Set whether clan will be mentioned """
         pass
 
