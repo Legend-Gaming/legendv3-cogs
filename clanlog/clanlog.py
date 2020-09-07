@@ -3,7 +3,7 @@ import json
 import logging
 from copy import deepcopy
 from datetime import datetime
-from time import time
+from time import time, sleep
 from typing import Optional
 
 import clashroyale
@@ -36,9 +36,9 @@ class ClanLog(commands.Cog):
             "clans": list(),
         }
         self.config.register_global(**default_global)
-
+        sleep(2)
         self.crclans = self.bot.get_cog("ClashRoyaleClans")
-        if not self.crclans:
+        if self.crclans is None:
             log.error("Load clashroyale clans for this cog to work.")
             raise NoClansCog
         self.claninfo_path = str(cog_data_path(self.crclans) / "clans.json")
