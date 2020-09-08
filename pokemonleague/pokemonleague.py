@@ -5,29 +5,32 @@ import math
 import random
 import re
 import string
-import time
 from typing import Optional
 
 import challonge
 import discord
-from discord.channel import TextChannel
 from redbot.core import Config, checks, commands
-from redbot.core.data_manager import bundled_data_path, cog_data_path
+from redbot.core.data_manager import bundled_data_path
 from redbot.core.utils import AsyncIter
 from redbot.core.utils.chat_formatting import humanize_list
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu, start_adding_reactions
 from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
 
 """
-Important read below before you read the code
-https://api.challonge.com/v1/documents,
-teams are saved in the config,dict looks something like this; 'teams': 'participant_id'(from challonge): 'name':
-                                                                                                          'captain_id':
-                                                                                                          'players':
-                                                                                                          'pokemon_choices':
+Important read below before you read the code: https://api.challonge.com/v1/documents
+
+teams are saved in the config:
+'teams': {
+    'participant_id': <from challonge>,
+    'name': <name>
+    'captain_id': <id>,
+    'players': <list of id>,
+    'pokemon_choices': <list of type>
+}
+
 regex:
     to check await :     ^((?!await).)* embed_helper
-    to check ctx:         embed_helper\(\n?[\t ]*c(tx|hannel),
+    to check ctx:         r"embed_helper\(\n?[\t ]*(ctx|channel),"
 """
 
 log = logging.getLogger("red.cogs.pokemonleague")
@@ -91,7 +94,8 @@ class PokemonLeague(commands.Cog):
         token = await self.bot.get_shared_api_tokens("challonge")
         if token.get("token") is None or token.get("username") is None:
             log.error(
-                "Challonge API not setup correctly, use !set api challonge username,YOUR_USERNAME token,YOUR_CHALLONGE_TOKEN"
+                "Challonge API not setup correctly. "
+                "Use !set api challonge username,YOUR_USERNAME token,YOUR_CHALLONGE_TOKEN"
             )
             raise NoToken
         challonge.set_credentials(username=token["username"], api_key=token["token"])
@@ -244,7 +248,7 @@ class PokemonLeague(commands.Cog):
         await ctx.author.add_roles(role)
         await user1.add_roles(role)
         await user2.add_roles(role)
-        await embed_helper(ctx, "Team {} successfuly registered.".format(name))
+        await embed_helper(ctx, "Team {} successfully registered.".format(name))
         await ctx.tick()
 
     @commands.command(name="showteam")
@@ -276,7 +280,8 @@ class PokemonLeague(commands.Cog):
                 embed.add_field(name="Players", value=player_list, inline=False)
                 pokemons = humanize_list(team["pokemon_choices"])
                 embed.add_field(name="Pokemons", value=pokemons, inline=False)
-                return await ctx.send(embed=embed)
+                await ctx.send(embed=embed)
+                break
         if not team_found:
             await embed_helper(ctx, "Team not found")
 
@@ -349,13 +354,14 @@ class PokemonLeague(commands.Cog):
                 role = discord.utils.get(ctx.guild.roles, name=team_name)
                 if role:
                     await role.delete()
-                return await embed_helper(
+                await embed_helper(
                     ctx,
                     "Team {} has been removed from {}".format(
                         team_name, tournament_name
                     ),
                 )
-        if not (team_found):
+                break
+        if not team_found:
             await embed_helper(ctx, "Team {} not found".format(team_name))
 
     @commands.command(name="updatescore")
@@ -378,8 +384,6 @@ class PokemonLeague(commands.Cog):
         match_found = False
         team_found = False
         teams_data = await self.config.guild(ctx.guild).teams()
-        team_1_id = None
-        team_2_id = None
         for team_id in teams_data.keys():
             if teams_data[team_id]["name"] == team_name:
                 if ctx.author.id != teams_data[team_id][
@@ -492,7 +496,6 @@ class PokemonLeague(commands.Cog):
                                     assigned_channels = await self.config.guild(
                                         ctx.guild
                                     ).assigned_channels()
-                                    highest_gym = None
                                     team_1_channel_id = assigned_channels.get(
                                         team_1_name, None
                                     )
@@ -624,19 +627,19 @@ class PokemonLeague(commands.Cog):
                                     ),
                                 )
 
-                    if not (new_match_found):
+                    if not new_match_found:
                         await embed_helper(
                             ctx,
                             "Thanks for updating the scores. You don't have any new matches pending as of now.",
                         )
-                elif not (match_found):
+                elif not match_found:
                     await embed_helper(
                         ctx,
                         "You have either been eliminated or your match is still pending, check [bracket]({})".format(
                             url
                         ),
                     )
-        if not (team_found):
+        if not team_found:
             await embed_helper(ctx, f"Team {team_name} not found")
 
     @commands.command(name="startbracket")
@@ -745,8 +748,6 @@ class PokemonLeague(commands.Cog):
                 team_2_captain = ctx.guild.get_member(team_2_captain_id)
                 team_1_name = teams[str(team_1_id)]["name"]
                 team_2_name = teams[str(team_2_id)]["name"]
-                team_1_players = teams[str(team_1_id)]["players"]
-                team_2_players = teams[str(team_2_id)]["players"]
 
                 async with self.assigned_channel_lock:
                     assigned_channels = await self.config.guild(
@@ -898,7 +899,6 @@ class PokemonLeague(commands.Cog):
                 ctx.guild.roles, name=gym["badge"]
             ) or await ctx.guild.create_role(name=gym["badge"])
 
-            category = None
             category = discord.utils.get(ctx.guild.categories, name=gym["name"])
             if not category:
                 category = await ctx.guild.create_category(
@@ -911,7 +911,8 @@ class PokemonLeague(commands.Cog):
                     await embed_helper(
                         ctx,
                         (
-                            f"There are channels under category {category.mention}. This might cause messed up permissions."
+                            f"There are channels under category {category.mention}. "
+                            "This might cause messed up permissions."
                             "Are you sure you want to continue without deleting those channels?"
                         ),
                     )
@@ -947,8 +948,7 @@ class PokemonLeague(commands.Cog):
                     number_of_channels_required, category.name
                 )
             )
-            for index in range(number_of_channels_required):
-                new_channel = None
+            for _ in range(number_of_channels_required):
                 new_channel = await category.create_text_channel(
                     name=gym["badge"].replace(" ", "-"), overwrites=overwrites
                 )
@@ -969,12 +969,16 @@ class PokemonLeague(commands.Cog):
         if url:
             await embed_helper(
                 ctx,
-                "There is a tournament running in the server! You cannot delete channels without finishing the tournament.",
+                (
+                    "There is a tournament running in the server! "
+                    "You cannot delete channels without finishing the tournament."
+                )
             )
             return
         await ctx.send(
             (
-                f"This command will delete all channels that have `badge` in ther name. Are you sure you want to do that?"
+                "This command will delete all channels that have `badge` in their name. "
+                "Are you sure you want to do that?"
             )
         )
         pred = MessagePredicate.yes_or_no(ctx)
@@ -1120,7 +1124,6 @@ class PokemonLeague(commands.Cog):
 
         pages = []
         for pokemon_type in self.pokemons.keys():
-            cards = None
             cards = self.pokemons[pokemon_type]
             embed = discord.Embed(color=0xFAA61A)
             embed.set_author(name=f"Pokemon card index")
@@ -1174,7 +1177,7 @@ class PokemonLeague(commands.Cog):
             Check if cards are valid types according to member's pokemons
         """
         is_valid = re.search(
-            "(http|ftp|https)://link.clashroyale.com/deck/en\?deck=[0-9\;]+", deck_url
+            "(http|ftp|https)://link.clashroyale.com/deck/en\?deck=[0-9;]+", deck_url
         )
         if not is_valid:
             return await embed_helper(ctx, "Deck url is not valid.")
@@ -1194,7 +1197,7 @@ class PokemonLeague(commands.Cog):
         cog = self.bot.get_cog("ClashRoyaleClans")
         if not cog:
             return await embed_helper(
-                ctx, "Clashroyale cog needs to be loaded for this to work."
+                ctx, "ClashRoyale cog needs to be loaded for this to work."
             )
         all_cards = list(await cog.clash.get_all_cards())
         for card in all_cards:
@@ -1275,15 +1278,6 @@ class PokemonLeague(commands.Cog):
         if emoji == "":
             emoji = self.emoji(card_name)
         return emoji
-
-        def emoji(self, name: str):
-            """Emoji by name."""
-            for emoji in self.bot.emojis:
-                if emoji.name == name.replace(" ", "").replace("-", "").replace(
-                    ".", ""
-                ):
-                    return "<:{}:{}>".format(emoji.name, emoji.id)
-            return ""
 
     def emoji(self, name: str):
         """Emoji by name."""
