@@ -1,5 +1,7 @@
 import challonge
+
 from .pokemonleague import PokemonLeague
+
 
 async def setup(bot):
     cog = PokemonLeague(bot)
