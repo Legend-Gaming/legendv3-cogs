@@ -577,7 +577,7 @@ class ClashRoyaleClans(commands.Cog):
                         role_to_ping.mention,
                         embed=embed,
                         allowed_mentions=discord.AllowedMentions(
-                            users=True, roles=True
+                            users=True, roles=False
                         ),
                     )
                 elif not channel:
