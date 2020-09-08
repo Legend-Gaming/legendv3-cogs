@@ -1,4 +1,6 @@
 make.bat
+.vscode
+.stignore
 *.xml
 *.iml
 *.pyc
