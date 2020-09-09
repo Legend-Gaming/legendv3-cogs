@@ -1312,6 +1312,24 @@ class ClashRoyaleClans(commands.Cog):
                 json.dump(self.family_clans, file)
         await ctx.tick()
 
+    @clans.command(name="wdwins")
+    async def clans_wdwins(self, ctx, clankey, value: str):
+        """ Set warday wins requirements for clan """
+        clan_name = None
+        for name, data in self.family_clans.items():
+            if data["nickname"].lower() == clankey.lower():
+                clan_name = name
+        if not clan_name:
+            return await ctx.send(f"No clan named {clankey}.")
+        try:
+            self.family_clans[clan_name]["requirements"]["wdwins"] = value
+        except KeyError:
+            return await ctx.send("There is something wrong with clan database.")
+        async with self.claninfo_lock:
+            with open(self.claninfo_path, "w") as file:
+                json.dump(self.family_clans, file)
+        await ctx.tick()
+
     @commands.group(name="crclansset")
     @commands.guild_only()
     @checks.admin()
