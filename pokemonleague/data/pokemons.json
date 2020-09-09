@@ -1,0 +1,187 @@
+{
+    "Bug Pokemon": [
+        "Prince",
+        "Inferno Dragon",
+        "Inferno Tower",
+        "Barbarian Barrel",
+        "Battle Ram",
+        "Dart Goblin",
+        "Goblin Cage",
+        "Mortar",
+        "Rascals",
+        "Barbarian Barrel",
+        "Goblin Giant",
+        "X-Bow",
+        "Goblin Cage"
+    ],
+    "Dark Pokemon": [
+        "Bandit",
+        "Miner",
+        "Dark Prince",
+        "Hunter",
+        "Wall Breakers",
+        "Balloon",
+        "Night Witch",
+        "Executioner"
+    ],
+    "Dragon Pokemon": [
+        "Lava Hound",
+        "Baby Dragon",
+        "Inferno Dragon",
+        "Firecracker",
+        "Skeleton Dragons",
+        "Electro Dragon"
+    ],
+    "Electric Pokemon": [
+        "Zap",
+        "Electro Wizard",
+        "Sparky",
+        "Tesla",
+        "Lightning",
+        "Electro Dragon",
+        "Zappies"
+    ],
+    "Fairy Pokemon": [
+        "Valkyrie",
+        "Princess",
+        "Magic Archer",
+        "Archers",
+        "Bomber",
+        "Firecracker",
+        "Royal Giant",
+        "Heal Spirit",
+        "Wall Breakers",
+        "Elite Barbarians",
+        "Guards",
+        "Bowler",
+        "Battle Healer"
+    ],
+    "Fighting Pokemon": [
+        "Valkyrie",
+        "Mega Knight",
+        "P.E.K.K.A",
+        "Barbarian Barrel",
+        "Giant Skeleton",
+        "Giant",
+        "Battle Ram",
+        "Royal Ghost",
+        "Goblin Cage",
+        "Barbarian Hut"
+    ],
+    "Fire Pokemon": [
+        "Baby Dragon",
+        "Fireball",
+        "Wizard",
+        "Rocket",
+        "Sparky",
+        "Rage",
+        "Fire Spirits",
+        "Furnace"
+    ],
+    "Flying Pokemon": [
+        "Balloon",
+        "Minions",
+        "Minion Horde",
+        "Tornado",
+        "Mega Minion",
+        "Skeleton Barrel",
+        "Flying Machine",
+        "Bats"
+    ],
+    "Ghost Pokemon": [
+        "Bomber",
+        "Witch",
+        "Night Witch",
+        "Royal Ghost",
+        "Graveyard",
+        "Skeleton Dragons"
+    ],
+    "Grass Pokemon": [
+        "Goblin Barrel",
+        "Goblin Giant",
+        "Goblin Gang",
+        "Spear Goblins",
+        "Goblin Hut",
+        "Goblins"
+    ],
+    "Ground Pokemon": [
+        "The Log",
+        "Hog Rider",
+        "Musketeer",
+        "Miner",
+        "Inferno Tower",
+        "Golem",
+        "Mega Minion",
+        "Ram Rider",
+        "Cannon",
+        "Tombstone",
+        "Bomb Tower",
+        "Barbarian Hut",
+        "Earthquake",
+        "Three Musketeers",
+        "Cannon Cart"
+    ],
+    "Ice Pokemon": [
+        "Ice Wizard",
+        "Ice Spirit",
+        "Ice Golem",
+        "Giant Snowball",
+        "Freeze",
+        "X-Bow"
+    ],
+    "Normal Pokemon": [
+        "Skeleton Army",
+        "Knight",
+        "Skeletons",
+        "Skeleton Barrel",
+        "Barbarians",
+        "Royal Delivery",
+        "Royal Recruits"
+    ],
+    "Poison Pokemon": [
+        "Lumberjack",
+        "Goblin Gang",
+        "Poison",
+        "Royal Hogs",
+        "Elixir Golem"
+    ],
+    "Psychic Pokemon": [
+        "Wizard",
+        "Electro Wizard",
+        "Witch",
+        "Magic Archer",
+        "Ice Wizard",
+        "Mirror"
+    ],
+    "Rock Pokemon": [
+        "Golem",
+        "Furnace",
+        "Goblin Hut",
+        "Royal Hogs",
+        "Bomb Tower"
+    ],
+    "Steel Pokemon": [
+        "Mega Knight",
+        "Arrows",
+        "Mini P.E.K.K.A",
+        "Prince",
+        "Dark Prince",
+        "Executioner",
+        "Royal Giant",
+        "Royal Delivery",
+        "Guards",
+        "Royal Recruits"
+    ],
+    "Water Pokemon": [
+        "Bandit",
+        "Lumberjack",
+        "Hunter",
+        "Giant Skeleton",
+        "Ram Rider",
+        "Fisherman",
+        "Clone",
+        "Bowler",
+        "Elixir Golem",
+        "Elixir Collector"
+    ]
+}

@@ -1,0 +1,56 @@
+{
+    "gyms":
+        {
+            "Violet City": {
+                "level": 0,
+                "name": "Violet City",
+                "badge": "Zephyr Badge"
+            },
+            "Azalea Town": {
+                "level": 1,
+                "name": "Azalea Town",
+                "badge": "Hive Badge"
+            },
+            "Goldenrod City": {
+                "level": 2,
+                "name": "Goldenrod City",
+                "badge": "Plain Badge"
+            },
+            "Ecruteak City": {
+                "level": 3,
+                "name": "Ecruteak City",
+                "badge": "Fog Badge"
+            },
+            "Cianwood City": {
+                "level": 4,
+                "name": "Cianwood City",
+                "badge": "Storm Badge"
+            },
+            "Olivine City": {
+                "level": 5,
+                "name": "Olivine City",
+                "badge": "Mineral Badge"
+            },
+            "Mahogany Town": {
+                "level": 6,
+                "name": "Mahogany Town",
+                "badge": "Glacier Badge"
+            },
+            "Blackthorn City": {
+                "level": 7,
+                "name": "Blackthorn City",
+                "badge": "Pewter Badge"
+            },
+            "Pewter City": {
+                "level": 8,
+                "name": "Pewter City",
+                "badge": "Boulder Badge"
+            },
+            "Cerulean City": {
+                "level": 9,
+                "name": "Cerulean City",
+                "badge": "Cascade Badge"
+            }
+        }
+
+}
