@@ -564,7 +564,7 @@ class ClashRoyaleClans(commands.Cog):
 
                 embed = discord.Embed(color=0x0080FF)
                 embed.set_author(
-                    name="New Recruit", icon_url="https://i.imgur.com/dtSMITE.jpg"
+                    name="New Recruit", icon_url="https://cdn.discordapp.com/attachments/718649031009501285/750779100783837194/TL-Skull-Trans.png"
                 )
                 embed.add_field(name="Name", value=ign, inline=True)
                 embed.add_field(name="Recruit Code", value=recruit_code, inline=True)
@@ -577,7 +577,7 @@ class ClashRoyaleClans(commands.Cog):
                         role_to_ping.mention,
                         embed=embed,
                         allowed_mentions=discord.AllowedMentions(
-                            users=True, roles=False
+                            users=False, roles=False
                         ),
                     )
                 elif not channel:
