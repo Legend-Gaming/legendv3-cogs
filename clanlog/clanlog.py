@@ -128,10 +128,10 @@ class ClanLog(commands.Cog):
         except Exception as e:
             if debug_channel:
                 debug_channel.send(f"Error {e} when updating data.")
-            if self.last_error:
-                if self.last_error - time.time() >= 300:
-                    log.error(f"Error {e} when updating data.")
-                    self.last_error = time.time()
+            if self.last_error_time:
+                if self.last_error_time - time.time() >= 300:
+                    log.exception(f"Error {e} when updating data.", exc_info=e)
+                    self.last_error_time = time.time()
             return
 
         new_data = deepcopy(await self.config.clans())
