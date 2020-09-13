@@ -573,7 +573,7 @@ class RiverRace(commands.Cog):
 
     @commands.command(name="Pwardata")
     @checks.mod()
-    async def player_wardata(self, ctx, member: discord.Member = None):
+    async def player_wardata(self, ctx, member: discord.Member = None, account: int = 1):
 
         threshold = 0
         Pages = []
@@ -582,7 +582,7 @@ class RiverRace(commands.Cog):
 
         if member is not None:
             try:
-                player_tag = self.tags.getTag(member.id, member)
+                player_tag = self.tags.getTag(member.id, account)
                 ptag = player_tag
                 if player_tag is None:
                     await ctx.send(
