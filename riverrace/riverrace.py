@@ -94,6 +94,14 @@ class RiverRace(commands.Cog):
         z = (time.strip(".000Z")).split("T")
         new_time = datetime.strptime(z[0]+z[1], '%Y%m%d%H%M%S')
         return(new_time)
+    
+    def emoji(self, emoji):
+        
+        for e in self.bot.emojis:
+            if e.name == emoji:
+                break
+    
+        return e.id
 
     def camelToString(self, label):
         """Convert from camel case to normal"""
