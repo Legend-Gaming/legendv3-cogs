@@ -599,9 +599,6 @@ class RiverRace(commands.Cog):
                 player_cards = player_data.cards
                 player_pb = player_data.best_trophies
                 player_maxwins = player_data.challenge_max_wins
-                player_cwr = await self.discord_helper.clanwar_readiness(
-                    player_cards
-                )
                 player_wd_wins = player_data.warDayWins
 
                 if player_data.clan is None:
