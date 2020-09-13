@@ -7,6 +7,7 @@ from redbot.core.utils.menus import DEFAULT_CONTROLS, menu, start_adding_reactio
 from redbot.core.utils.predicates import MessagePredicate
 import clashroyale
 import requests
+import random
 import json
 import re
 from datetime import datetime
@@ -48,7 +49,7 @@ async def simple_embed(
     else:
         colour = discord.Colour.blue()
     embed = discord.Embed(description=message, color=colour)
-    embed.set_footer(text=credits, icon_url=credits_icon)
+#    embed.set_footer(text=credits, icon_url=credits_icon)
     return await ctx.send(
         embed=embed, allowed_mentions=discord.AllowedMentions(**mentions)
     )
@@ -67,7 +68,7 @@ class RiverRace(commands.Cog):
         self.tags = self.bot.get_cog('ClashRoyaleTools').tags
         self.constants = self.bot.get_cog('ClashRoyaleTools').constants
 
-        self.claninfo_path = str("/root/.local/share/Red-DiscordBot/data/legendv3/cogs/ClashRoyaleClans/clans.json")
+        self.claninfo_path = "/root/.local/share/Red-DiscordBot/data/legendv3/cogs/ClashRoyaleClans/clans.json"
         with open(self.claninfo_path) as file:
             self.family_clans = dict(json.load(file))
 
@@ -574,13 +575,14 @@ class RiverRace(commands.Cog):
     @checks.mod()
     async def player_wardata(self, ctx, member: discord.Member = None):
 
+        threshold = 0
         Pages = []
         if member is None:
             member = ctx.author
 
         if member is not None:
             try:
-                player_tag = self.tags.getTag(member.id, account)
+                player_tag = self.tags.getTag(member.id, member)
                 ptag = player_tag
                 if player_tag is None:
                     await ctx.send(
@@ -703,6 +705,7 @@ class RiverRace(commands.Cog):
         self,
         ctx: commands.Context,
         clankey: str,
+        threshold: Optional[int] = 500,
         number: Optional[int] = 1,
     ):
 
