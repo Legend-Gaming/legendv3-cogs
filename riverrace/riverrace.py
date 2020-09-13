@@ -619,6 +619,7 @@ class RiverRace(commands.Cog):
                 )   
 
         url = f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace"
+        await ctx.send(url)
         clan = json.loads(((requests.get(url, headers = headers)).content).decode("utf-8"))["clan"]
 
         pList = clan['participants']
