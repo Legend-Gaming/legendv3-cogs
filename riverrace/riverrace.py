@@ -72,6 +72,8 @@ class RiverRace(commands.Cog):
         with open(self.claninfo_path) as file:
             self.family_clans = dict(json.load(file))
 
+        self.token_task = self.bot.loop.create_task(self.crtoken())
+
     async def crtoken(self):
         # Clash Royale API config
         token = await self.bot.get_shared_api_tokens("clashroyale")
@@ -82,6 +84,8 @@ class RiverRace(commands.Cog):
                                                      url="https://proxy.royaleapi.dev/v1")
 
     def cog_unload(self):
+        if self.token_task:
+            self.token_task.cancel()
         if self.clash:
             self.bot.loop.create_task(self.clash.close())
 
