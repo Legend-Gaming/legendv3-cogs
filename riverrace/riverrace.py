@@ -67,7 +67,7 @@ class RiverRace(commands.Cog):
         self.tags = self.bot.get_cog('ClashRoyaleTools').tags
         self.constants = self.bot.get_cog('ClashRoyaleTools').constants
 
-        self.claninfo_path = str(cog_data_path(self) / "clans.json")
+        self.claninfo_path = str("/root/.local/share/Red-DiscordBot/data/legendv3/cogs/ClashRoyaleClans/clans.json")
         with open(self.claninfo_path) as file:
             self.family_clans = dict(json.load(file))
 
