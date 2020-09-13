@@ -54,7 +54,7 @@ async def simple_embed(
         embed=embed, allowed_mentions=discord.AllowedMentions(**mentions)
     )
 
-key = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImE4ODViYjEzLTJhODEtNGE0ZC1hMGRkLTcxMzUxNDAyYjgwZSIsImlhdCI6MTU5NjIxMTI0Niwic3ViIjoiZGV2ZWxvcGVyLzUwMjMyNDViLTBhOGQtMmM1Mi1jMDE1LWExNGRmODhiNjFmOCIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNjIuMTU3LjEzMy4yMjMiLCIxMjguMTI4LjEyOC4xMjgiXSwidHlwZSI6ImNsaWVudCJ9XX0.WXkl-PWMZbDK1SAgjV3duFBLnJyWVQdH81rFUFM4i187nj28DPO6gARGptvvJw6J1GZxXOrlTK0I3NKwzhNuYg'
+key = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjA0MmIwMjQ5LWFkZGEtNDU1OS1iMzRlLTRiMGY2YWQ1MDllMCIsImlhdCI6MTYwMDAyMDQwOCwic3ViIjoiZGV2ZWxvcGVyLzFiYjYxZDk0LTA2NWMtNzJmNi05NmM0LWQwMDY4MDM3NzNjZCIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI1MS4xNS4yMjEuOCJdLCJ0eXBlIjoiY2xpZW50In1dfQ.kqYb1IZohSMhHusrDAzPQaVzL2-TcCSPFa9uTu4RSZNUBago4iNcWN4vUCGPWKLDfO41uMdGuzP2maWCu98HdA'
 headers = {
           'Accept': 'application/json',
           'Authorization': f'Bearer {key}'
@@ -619,10 +619,7 @@ class RiverRace(commands.Cog):
                 )   
 
         url = f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace"
-        await ctx.send(url)
-        clan = json.loads(((requests.get(url, headers = headers)).content).decode("utf-8"))
-        return await ctx.send(clan)
-                                        
+        clan = json.loads(((requests.get(url, headers = headers)).content).decode("utf-8"))["clan"]
 
         pList = clan['participants']
         noboth = []
