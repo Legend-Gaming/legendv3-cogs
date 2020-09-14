@@ -114,7 +114,7 @@ class RiverRace(commands.Cog):
         
     async def get_monday(self):
         today = datetime.date(datetime.utcnow())
-        Monday = today - Datetime.timedelta(days=today.weekday())
+        Monday = (today - Datetime.timedelta(days=today.weekday())) - timedelta(hours=10)
         monday = datetime.strptime(str(Monday), "%Y-%m-%d")
         return monday
 
@@ -685,7 +685,6 @@ class RiverRace(commands.Cog):
 
         for i in pList:
             if i['tag'] =='#'+ptag:
-                await ctx.send("found")
                 trophy = 0
                 for j in pList2:
                     if i['tag'] == j['tag']:
