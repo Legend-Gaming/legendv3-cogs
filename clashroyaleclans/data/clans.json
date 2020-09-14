@@ -113,7 +113,7 @@
 		},
 		"waiting": []
 	},
-	"TL Justice!": {
+	"TL Justice": {
 		"name": "TL Justice",
 		"tag": "LR9CY9VQ",
 		"nickname": "Justice",
@@ -253,6 +253,25 @@
 		"clanrole": "LP3 Typhon",
 		"requirements": {
 			"personalbest": 4000,
+			"wdwins": 0,
+			"cwr": {
+				"legendary": 0,
+				"gold": 0,
+				"silver": 0,
+				"bronze": 0
+			},
+			"bonus": "",
+			"private": false
+		},
+		"waiting": []
+	},
+	"TL Smoke": {
+		"name": "TL Smoke",
+		"tag": "PV9UQPYGL",
+		"nickname": "Smoke",
+		"clanrole": "Smoke",
+		"requirements": {
+			"personalbest": 0,
 			"wdwins": 0,
 			"cwr": {
 				"legendary": 0,
