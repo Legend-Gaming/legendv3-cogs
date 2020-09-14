@@ -286,9 +286,9 @@ class ClashRoyaleClans(commands.Cog):
                         "**CW Readiness:** {}\n"
                         "**Max Challenge Wins:** {}\n"
                         "**Clan:** {}\n\n"
-                        ":warning: **YOU WILL BE REJECTED "
-                        "IF YOU JOIN ANY CLAN WITHOUT "
-                        "APPROVAL**".format(
+                        ":warning: **NOTIFY TL Leadership "
+                        "when approved to gain access "
+                        "to the server.**".format(
                             ign,
                             ign,
                             player_tag,
