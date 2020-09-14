@@ -19,7 +19,7 @@ from redbot.core.utils.predicates import MessagePredicate
 
 credits = "Bot by Legend Gaming"
 credits_icon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
-new_recruits_channel_id = 692090731271290891
+new_recruits_channel_id = 754879780889034933
 global_channel_id = 678115765219622922
 log = logging.getLogger("red.cogs.clashroyaleclans")
 
@@ -712,7 +712,7 @@ class ClashRoyaleClans(commands.Cog):
                     "**{}** recruited **{} (#{})** to {}".format(
                         ctx.author.display_name, ign, tag, roleName.name
                     ),
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=False),
+                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
 
             global_channel = self.bot.get_channel(global_channel_id)
@@ -720,7 +720,7 @@ class ClashRoyaleClans(commands.Cog):
                 greeting_to_send = (random.choice(self.greetings)).format(member)
                 await global_channel.send(
                     greeting_to_send,
-                    allowed_mentions=discord.AllowedMentions(users=True, roles=False),
+                    allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
 
             try:
