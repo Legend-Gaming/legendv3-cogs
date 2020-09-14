@@ -114,7 +114,7 @@ class RiverRace(commands.Cog):
         
     async def get_monday(self):
         today = datetime.date(datetime.utcnow())
-        Monday = (today - Datetime.timedelta(days=today.weekday())) - timedelta(hours=10)
+        Monday = (today - Datetime.timedelta(days=today.weekday())) - Datetime.timedelta(hours=10)
         monday = datetime.strptime(str(Monday), "%Y-%m-%d")
         return monday
 
