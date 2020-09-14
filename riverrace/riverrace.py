@@ -15,6 +15,9 @@ from typing import List, Optional
 import datetime as Datetime
 import asyncio
 
+credits = "Bot by Legend Gaming"
+credits_icon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
+
 legends = {
          '29YPJYY'  : ['Dragons Eight'   , 702608063185551423 , 750749628747743352],
          'Y8G9C09'  : ['Dragons Eight 2' , 702608063185551423 , 750749630362419231],
@@ -49,7 +52,9 @@ async def simple_embed(
     else:
         colour = discord.Colour.blue()
     embed = discord.Embed(description=message, color=colour)
-#    embed.set_footer(text=credits, icon_url=credits_icon)
+    embed.set_footer(text=credits, icon_url=credits_icon)
+    
+    
     return await ctx.send(
         embed=embed, allowed_mentions=discord.AllowedMentions(**mentions)
     )
@@ -211,7 +216,7 @@ class RiverRace(commands.Cog):
         return tot
         
 
-    @commands.command(name="Swardata")
+    @commands.command(name="Swardata", aliases=['swd'])
     @checks.mod_or_permissions()
     async def simple_wardata(
         self,
@@ -219,7 +224,7 @@ class RiverRace(commands.Cog):
         clankey: str,
         threshold: int = 500,
     ):
-
+        """Audit for the last war in a simplified form"""
         guild = ctx.guild
         valid_keys = [k["nickname"].lower() for k in self.family_clans.values()]
         if clankey.lower() not in valid_keys:
@@ -261,6 +266,8 @@ class RiverRace(commands.Cog):
         await ctx.send(f"STUFF INCOMING {tag}")                
         if 0 < len(p_noboth) < 20:
             e_noboth = discord.Embed(title = f"**No Fame or Repair**", color = 0xFAA61A)
+            e_noboth.set_footer(text=credits, icon_url=credits_icon)
+
             for i in p_noboth:        
                 e_noboth.add_field(name=f"{i['name']} ({i['tag']})",
                                 value=f"<:famehammer3:750978996740685835> {i['famerepair']}",
@@ -270,6 +277,10 @@ class RiverRace(commands.Cog):
         elif len(p_noboth) > 20:
             e_noboth = discord.Embed(title = f"**No Fame or Repair**", color = 0xFAA61A)
             e_noboth2 = discord.Embed(title = f"**No Fame or Repair**", color = 0xFAA61A)
+            e_noboth.set_footer(text=credits, icon_url=credits_icon)
+            e_noboth2.set_footer(text=credits, icon_url=credits_icon)
+
+
             count = 0
             for i in p_noboth:
                 if count < 20:
@@ -287,7 +298,9 @@ class RiverRace(commands.Cog):
         
         
         if 0 < len(p_noT) < 20:
-            e_noT = discord.Embed(title = f"**Under Threshold**", color = 0xFAA61A)
+            e_noT = discord.Embed(title = f"**Under Threshold**", color=0xff4d00)
+            e_noT.set_footer(text=credits, icon_url=credits_icon)
+
             for i in p_noT:
                 e_noT.add_field(name=f"{i['name']} ({i['tag']})",
                                 value=f"<:famehammer3:750978996740685835> {i['famerepair']}",
@@ -295,8 +308,11 @@ class RiverRace(commands.Cog):
             pages.append(e_noT)
                 
         elif len(p_noT) > 20:
-            e_noT = discord.Embed(title = f"**Under Threshold**", color = 0xFAA61A)
-            e_noT2 = discord.Embed(title = f"**Under Threshold**", color = 0xFAA61A)
+            e_noT = discord.Embed(title = f"**Under Threshold**", color=0xff4d00)
+            e_noT2 = discord.Embed(title = f"**Under Threshold**", color=0xff4d00)
+            e_noT.set_footer(text=credits, icon_url=credits_icon)
+            e_noT2.set_footer(text=credits, icon_url=credits_icon)
+
             count = 0
             for i in p_noT:
                 if count < 20:
@@ -314,7 +330,9 @@ class RiverRace(commands.Cog):
         
         
         if 0 < len(p_yesT) < 20:
-            e_yesT = discord.Embed(title = f"**Good Bois**", color = 0xFAA61A)
+            e_yesT = discord.Embed(title = f"**Above Threshold**", color=0x12b525)
+            e_yesT.set_footer(text=credits, icon_url=credits_icon)
+
             for i in p_yesT:
                 e_yesT.add_field(name=f"{i['name']} ({i['tag']})",
                                 value=f"<:famehammer3:750978996740685835> {i['famerepair']}",
@@ -324,8 +342,11 @@ class RiverRace(commands.Cog):
             
             
         elif len(p_yesT) > 20:
-            e_yesT = discord.Embed(title = f"**Good Bois**", color = 0xFAA61A)
-            e_yesT2 = discord.Embed(title = f"**Good Bois**", color = 0xFAA61A)
+            e_yesT = discord.Embed(title = f"**Good Bois**", color=0x12b525)
+            e_yesT2 = discord.Embed(title = f"**Good Bois**", color=0x12b525)
+            e_yesT.set_footer(text=credits, icon_url=credits_icon)
+            e_yesT2.set_footer(text=credits, icon_url=credits_icon)
+
             count = 0
             for i in p_yesT:
                 if count < 20:
@@ -342,7 +363,7 @@ class RiverRace(commands.Cog):
 
         return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=60)
 
-    @commands.command(name="wardata")
+    @commands.command(name="wardata", aliases=['wd'])
     @checks.mod_or_permissions()
     async def detail_wardata(
         self,
@@ -350,6 +371,8 @@ class RiverRace(commands.Cog):
         clankey: str,
         threshold: Optional[int] = 500,
     ):
+
+        """Audit for the last war in a detailed form featuring each players aquirable battle log and last seen data"""
 
         Pages = []
         guild = ctx.guild
@@ -394,6 +417,7 @@ class RiverRace(commands.Cog):
                                 color = 0xD4AF37)
 
         clanEmbed.set_thumbnail(url=f"https://cdn.discordapp.com/emojis/{str(legends[clandata['tag'].strip('#')][1])}.png?v=1")
+        clanEmbed.set_footer(text=credits, icon_url=credits_icon)
         clanEmbed.add_field(name="Members", value="<:members:685013097530130453> {}/50".format(clandata["members"]), inline=True)
         clanEmbed.add_field(name="Donations", value="<:cards:685013098670850078> {:,}".format(clandata["donationsPerWeek"]), inline=True)
         clanEmbed.add_field(name="Score", value="<:PB:685013097684926472> {:,}".format(clandata["clanScore"]), inline=True)
@@ -404,6 +428,9 @@ class RiverRace(commands.Cog):
         clanEmbed.add_field(name="Status", value=":envelope_with_arrow: {}".format(self.camelToString(clandata["type"]).capitalize()), inline=True)
 
         
+        embed = discord.Embed(title="No Fame/Repair Points", color = 0xff0000)
+        embed.set_footer(text=credits, icon_url=credits_icon)
+        Pages.append(embed)
 
         for i in noboth:
             trophy = 0
@@ -414,7 +441,7 @@ class RiverRace(commands.Cog):
                     level = 'level'+str(j['expLevel'])
                     trophy = j['trophies']
             if trophy != 0:        
-                embed = discord.Embed(description = f"**Trophies:** {tab} **Donations:** \n<:crtrophy:685013098801004544> {trophy}{tab*2}<:cards:685013098670850078> {donation}", timestamp =lastseen)
+                embed = discord.Embed(description = f"**Trophies:** {tab} **Donations:** \n<:crtrophy:685013098801004544> {trophy}{tab*2}<:cards:685013098670850078> {donation}", timestamp = lastseen, color = 0xff0000)
                 embed.set_author(name= f"{i['name']} ({i['tag']})", icon_url= f"https://cdn.discordapp.com/emojis/{self.emoji(level)}.png?v=1")
                 embed.set_footer(text="Last Seen")
                 if 'finishTime' in clan:
@@ -443,7 +470,7 @@ class RiverRace(commands.Cog):
                                         value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
 
                 else:
-                    embed.add_field(name="⚠INACCURACY ALERT⚠", value= 't  ')
+                    embed.add_field(name="⚠INACCURACY ALERT⚠", value= f'{tab}')
 
                     for l in duel:
                         embed.add_field(name= "<:duel:751728648347844669> River Race Duel <:duel:751728648347844669>",
@@ -463,6 +490,10 @@ class RiverRace(commands.Cog):
 
                 Pages.append(embed)
 
+        embed = discord.Embed(title="Under Threshold", color=0xff4d00)
+        embed.set_footer(text=credits, icon_url=credits_icon)
+        Pages.append(embed)
+
         for i in Tminus:
             trophy = 0
             for j in pList2:
@@ -472,7 +503,7 @@ class RiverRace(commands.Cog):
                     level = 'level'+str(j['expLevel'])
                     trophy = j['trophies']
             if trophy != 0:        
-                embed = discord.Embed(description = f"**Trophies:** {tab} **Donations:** \n<:crtrophy:685013098801004544> {trophy}{tab*2}<:cards:685013098670850078> {donation}", timestamp =lastseen)
+                embed = discord.Embed(description = f"**Trophies:** {tab} **Donations:** \n<:crtrophy:685013098801004544> {trophy}{tab*2}<:cards:685013098670850078> {donation}", timestamp =lastseen, color = 0xff4d00)
                 embed.set_author(name= f"{i['name']} ({i['tag']})", icon_url= f"https://cdn.discordapp.com/emojis/{self.emoji(level)}.png?v=1")
                 embed.set_footer(text="Last Seen")
                 if 'finishTime' in clan:
@@ -501,7 +532,7 @@ class RiverRace(commands.Cog):
                                         value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
 
                 else:
-                    embed.add_field(name="⚠INACCURACY ALERT⚠", value= 't  ')
+                    embed.add_field(name="⚠INACCURACY ALERT⚠", value= f'{tab}')
 
                     for l in duel:
                         embed.add_field(name= "<:duel:751728648347844669> River Race Duel <:duel:751728648347844669>",
@@ -521,6 +552,10 @@ class RiverRace(commands.Cog):
 
                 Pages.append(embed)
 
+        embed = discord.Embed(title="Above Threshold", color=0x12b525)
+        embed.set_footer(text=credits, icon_url=credits_icon)
+        Pages.append(embed)
+
         for i in Tplus:
             trophy = 0
             for j in pList2:
@@ -530,7 +565,7 @@ class RiverRace(commands.Cog):
                     level = 'level'+str(j['expLevel'])
                     trophy = j['trophies']
             if trophy != 0:        
-                embed = discord.Embed(description = f"**Trophies:** {tab} **Donations:** \n<:crtrophy:685013098801004544> {trophy}{tab*2}<:cards:685013098670850078> {donation}", timestamp =lastseen)
+                embed = discord.Embed(description = f"**Trophies:** {tab} **Donations:** \n<:crtrophy:685013098801004544> {trophy}{tab*2}<:cards:685013098670850078> {donation}", timestamp =lastseen, color=0x12b525)
                 embed.set_author(name= f"{i['name']} ({i['tag']})", icon_url= f"https://cdn.discordapp.com/emojis/{self.emoji(level)}.png?v=1")
                 embed.set_footer(text="Last Seen")
                 if 'finishTime' in clan:
@@ -559,7 +594,7 @@ class RiverRace(commands.Cog):
                                         value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
 
                 else:
-                    embed.add_field(name="⚠INACCURACY ALERT⚠", value= 't  ')
+                    embed.add_field(name="⚠INACCURACY ALERT⚠", value= f'{tab}')
 
                     for l in duel:
                         embed.add_field(name= "<:duel:751728648347844669> River Race Duel <:duel:751728648347844669>",
@@ -583,9 +618,11 @@ class RiverRace(commands.Cog):
         return await menu(ctx, Pages, DEFAULT_CONTROLS, timeout=60)
 
 
-    @commands.command(name="Pwardata")
+    @commands.command(name="Pwardata", aliases=['pwd'])
     @checks.mod()
     async def player_wardata(self, ctx, member: discord.Member = None, account: int = 1):
+
+        """Player's perfomance in the last war, data based on available battle log"""
 
         threshold = 0
         Pages = []
@@ -657,7 +694,7 @@ class RiverRace(commands.Cog):
                         level = 'level'+str(j['expLevel'])
                         trophy = j['trophies']
                 if trophy != 0:        
-                    embed = discord.Embed(description = f"**Trophies:** {tab} **Donations:** \n<:crtrophy:685013098801004544> {trophy}{tab*2}<:cards:685013098670850078> {donation}", timestamp =lastseen)
+                    embed = discord.Embed(description = f"**Trophies:** {tab} **Donations:** \n<:crtrophy:685013098801004544> {trophy}{tab*2}<:cards:685013098670850078> {donation}", timestamp = lastseen)
                     embed.set_author(name= f"{i['name']} ({i['tag']})", icon_url= f"https://cdn.discordapp.com/emojis/{self.emoji(level)}.png?v=1")
                     embed.set_footer(text="Last Seen")
                     if 'finishTime' in clan:
@@ -686,7 +723,7 @@ class RiverRace(commands.Cog):
                                             value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
 
                     else:
-                        embed.add_field(name="⚠INACCURACY ALERT⚠", value= 't  ')
+                        embed.add_field(name="⚠INACCURACY ALERT⚠", value= f'{tab}')
 
                         for l in duel:
                             embed.add_field(name= "<:duel:751728648347844669> River Race Duel <:duel:751728648347844669>",
@@ -718,6 +755,8 @@ class RiverRace(commands.Cog):
         number: Optional[int] = 1,
     ):
 
+        """Draws a number of players above the threshold value based randomly (Probability based on their activity in the past war)"""
+
         guild = ctx.guild
         valid_keys = [k["nickname"].lower() for k in self.family_clans.values()]
         if clankey.lower() not in valid_keys:
@@ -740,7 +779,7 @@ class RiverRace(commands.Cog):
         plist = json.loads(((requests.get(url, headers = headers)).content).decode("utf-8"))["clan"]['participants']
         raffle = {}
         details = {}
-        if number > 25:
+        if 0 > number > 25:
             await ctx.send("You can only draw 25 winners")
             return
         entry = 0
@@ -756,7 +795,8 @@ class RiverRace(commands.Cog):
         if number > len(choice):
             await ctx.send(f"There is only {len(choice)} choices to choose from. Please try again with a less number of winners.")
             return
-        embed = discord.Embed(title="Winners")
+        embed = discord.Embed(title="Winners", color=0x12b525)
+        embed.set_footer(text=credits, icon_url=credits_icon)
         for winner in range(1,number+1):
             win = random.choices(choice,weights=weight)[0]
             choice.remove(win)
