@@ -124,7 +124,7 @@ class RiverRace(commands.Cog):
         today = datetime.utcnow()
         Yday = today - Datetime.timedelta(hours=24)
         yday = datetime.strptime((str(Yday).split("."))[0], "%Y-%m-%d %H:%M:%S")
-        print(yday)
+        return yday
 
     async def check_accuracy(self, battles, monday):
         last_battle = battles[-1]
