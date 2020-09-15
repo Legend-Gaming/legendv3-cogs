@@ -120,6 +120,12 @@ class RiverRace(commands.Cog):
         monday = datetime.strptime(str(Monday), "%Y-%m-%d")
         return monday
 
+    async def get_yday(self):
+        today = datetime.date(datetime.utcnow())
+        Yday = today - Datetime.timedelta(days=1)
+        yday = datetime.strptime(str(Yday), "%Y-%m-%d")
+        return yday
+
     async def check_accuracy(self, battles, monday):
         last_battle = battles[-1]
         lastbattleTime = await self.clean_time(last_battle["battleTime"])
@@ -135,6 +141,31 @@ class RiverRace(commands.Cog):
 
         race_data = json.loads(((requests.get(url, headers = headers)).content).decode("utf-8"))
         starttime = await self.get_monday()
+        if finishtime == 0:
+            finishtime = False
+        riverBattles = []
+        accuracy = await self.check_accuracy(race_data, starttime)
+        if finishtime:
+            for i in race_data: 
+                if i['type'] in ['riverRaceDuel', 'boatBattle', 'riverRacePvP']:
+                    battletime = await self.clean_time(i["battleTime"])
+                    if finishtime > battletime and starttime < battletime:
+                        riverBattles.append(i)
+        else:
+            for i in race_data: 
+                if i['type'] in ['riverRaceDuel', 'boatBattle', 'riverRacePvP']:
+                    battletime = await self.clean_time(i["battleTime"])
+                    if starttime < battletime:
+                        riverBattles.append(i)
+                    
+        return accuracy, riverBattles
+
+    async def get_lastriverBattles(self, tag, finishtime):
+        
+        url = f"https://api.clashroyale.com/v1/players/%23{tag}/battlelog"
+
+        race_data = json.loads(((requests.get(url, headers = headers)).content).decode("utf-8"))
+        starttime = await self.get_yday()
         if finishtime == 0:
             finishtime = False
         riverBattles = []
@@ -744,6 +775,132 @@ class RiverRace(commands.Cog):
                 else:
                     await ctx.send("`UNKNOWN ERROR`")
 
+    @commands.command(name="Pydata", aliases=['pyd'])
+    @checks.admin()
+    async def player_Ydata(self, ctx, member: discord.Member = None, account: int = 1):
+
+        """Player's perfomance in the last 24 hours, data based on available battle log"""
+
+        threshold = 0
+        Pages = []
+        if member is None:
+            member = ctx.author
+
+        if member is not None:
+            try:
+                player_tag = self.tags.getTag(member.id, account)
+                ptag = player_tag
+                if player_tag is None:
+                    await ctx.send(
+                        "You must associate a tag with this member first using "
+                        "``{}save #tag @member``".format(ctx.prefix)
+                    )
+                    return
+                player_data = await self.clash.get_player(player_tag)
+                player_trophies = player_data.trophies
+                player_cards = player_data.cards
+                player_pb = player_data.best_trophies
+                player_maxwins = player_data.challenge_max_wins
+                player_wd_wins = player_data.warDayWins
+
+                if player_data.clan is None:
+                    player_clanname = "*None*"
+                    return await ctx.send("This player is not in a clan")
+                else:
+                    tag = player_data.clan.tag.strip('#')
+                    player_clanname = player_data.clan.name
+
+                ign = player_data.name
+            # REMINDER: Order is important. RequestError is base exception class.
+            except clashroyale.NotFoundError:
+                return await ctx.send("Player tag is invalid.")
+            except clashroyale.RequestError:
+                return await ctx.send(
+                    "Error: cannot reach Clash Royale Servers. "
+                    "Please try again later."
+                )   
+
+        url = f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace"
+        clan = json.loads(((requests.get(url, headers = headers)).content).decode("utf-8"))["clan"]
+
+        pList = clan['participants']
+        noboth = []
+        Tminus = []
+        Tplus = []
+        for p in pList:
+            p['total'] = p['fame'] + p['repairPoints']
+            if p['total'] == 0:
+                noboth.append(p)
+            elif p['total'] < threshold:
+                Tminus.append(p)
+            else:
+                Tplus.append(p)
+
+        url2 = f"https://api.clashroyale.com/v1/clans/%23{tag}"
+        clandata = json.loads(((requests.get(url2, headers = headers)).content).decode("utf-8"))
+        pList2 = clandata["memberList"] 
+
+        for i in pList:
+            if i['tag'] =='#'+ptag:
+                trophy = 0
+                for j in pList2:
+                    if i['tag'] == j['tag']:
+                        lastseen = await self.clean_time(j["lastSeen"])
+                        donation = j['donations']
+                        level = 'level'+str(j['expLevel'])
+                        trophy = j['trophies']
+                if trophy != 0:        
+                    embed = discord.Embed(description = f"**Trophies:** {tab} **Donations:** \n<:crtrophy:685013098801004544> {trophy}{tab*2}<:cards:685013098670850078> {donation}", timestamp = lastseen)
+                    embed.set_author(name= f"{i['name']} ({i['tag']})", icon_url= f"https://cdn.discordapp.com/emojis/{self.emoji(level)}.png?v=1")
+                    embed.set_footer(text="Last Seen")
+                    if 'finishTime' in clan:
+                        accuracy, battles = await self.get_lastriverBattles(i['tag'].strip('#'), await self.clean_time(clan['finishTime']))
+                    else:
+                        accuracy, battles = await self.get_lastriverBattles(i['tag'].strip('#'), int(0))
+                    dBB, aBB, pvp, duel = await self.seperate(battles)
+                    embed.add_field(name= "<:cw2:751746305830682644> __River Stats__ <:cw2:751746305830682644>",
+                                    value= f"**Fame & Repair:{tab}Total:**\n<:fame:685013098540564502> {i['fame']} \u200B <:repair:750646558483284020> {i['repairPoints']}", inline=False)
+                    if accuracy == True: 
+                        
+                        for l in duel:
+                            embed.add_field(name= "<:duel:751728648347844669> River Race Duel <:duel:751728648347844669>",
+                                            value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
+
+                        for l in pvp:
+                            embed.add_field(name= "<:PvP:751729032218935339> River Race 1v1 <:PvP:751729032218935339>",
+                                            value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
+
+                        for l in aBB:
+                            embed.add_field(name= "<:boatB:751728931010248724> Boat Battle Attack <:boatB:751728931010248724>",
+                                            value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
+
+                        for l in dBB:
+                            embed.add_field(name= "<:boatB:751728931010248724> Boat Battle Defense <:boatB:751728931010248724>",
+                                            value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
+
+                    else:
+                        embed.add_field(name="⚠INACCURACY ALERT⚠", value= f'{tab}')
+
+                        for l in duel:
+                            embed.add_field(name= "<:duel:751728648347844669> River Race Duel <:duel:751728648347844669>",
+                                            value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
+
+                        for l in pvp:
+                            embed.add_field(name= "<:PvP:751729032218935339> River Race 1v1 <:PvP:751729032218935339>",
+                                            value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
+
+                        for l in aBB:
+                            embed.add_field(name= "<:boatB:751728931010248724> Boat Battle Attack <:boatB:751728931010248724>",
+                                            value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
+
+                        for l in dBB:
+                            embed.add_field(name= "<:boatB:751728931010248724> Boat Battle Defense <:boatB:751728931010248724>",
+                                            value = f"<:blueCrown:685013097173352452> {l['team'][0]['crowns']} - {l['opponent'][0]['crowns']} <:redCrown:685013097408233503>", inline = False)
+                    return await ctx.send(embed=embed)
+                else:
+                    await ctx.send("`UNKNOWN ERROR`")
+
+
 
     @commands.command()
     @checks.mod_or_permissions()
@@ -803,4 +960,4 @@ class RiverRace(commands.Cog):
     
             weight.remove(raffle[win])
             embed.add_field(name=details[win][1],value=f"Chances: {details[win][0]}")
-        await ctx.send(embed=embed)   
+        await ctx.send(embed=embed)
