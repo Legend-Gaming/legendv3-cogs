@@ -263,7 +263,7 @@ class RiverRace(commands.Cog):
                         p_noT.append(p)
                     else: 
                         p_yesT.append(p)
-        await ctx.send(f"STUFF INCOMING {tag}")                
+        await ctx.send(f"**Current RiverRace details for {clan_name} (#{tag})**")                
         if 0 < len(p_noboth) < 20:
             e_noboth = discord.Embed(title = f"**No Fame or Repair**", color = 0xFAA61A)
             e_noboth.set_footer(text=credits, icon_url=credits_icon)
