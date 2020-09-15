@@ -365,7 +365,7 @@ class RiverRace(commands.Cog):
         return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=60)
 
     @commands.command(name="wardata", aliases=['wd'])
-    @checks.mod_or_permissions()
+    @checks.admin_or_permissions()
     async def detail_wardata(
         self,
         ctx: commands.Context,
@@ -619,7 +619,7 @@ class RiverRace(commands.Cog):
 
 
     @commands.command(name="Pwardata", aliases=['pwd'])
-    @checks.mod()
+    @checks.admin()
     async def player_wardata(self, ctx, member: discord.Member = None, account: int = 1):
 
         """Player's perfomance in the last war, data based on available battle log"""
