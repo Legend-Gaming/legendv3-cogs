@@ -59,7 +59,7 @@ async def simple_embed(
         embed=embed, allowed_mentions=discord.AllowedMentions(**mentions)
     )
 
-key = self.bot.get_shared_api_tokens("clashroyale")
+key = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjA0MmIwMjQ5LWFkZGEtNDU1OS1iMzRlLTRiMGY2YWQ1MDllMCIsImlhdCI6MTYwMDAyMDQwOCwic3ViIjoiZGV2ZWxvcGVyLzFiYjYxZDk0LTA2NWMtNzJmNi05NmM0LWQwMDY4MDM3NzNjZCIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI1MS4xNS4yMjEuOCJdLCJ0eXBlIjoiY2xpZW50In1dfQ.kqYb1IZohSMhHusrDAzPQaVzL2-TcCSPFa9uTu4RSZNUBago4iNcWN4vUCGPWKLDfO41uMdGuzP2maWCu98HdA'
 headers = {
           'Accept': 'application/json',
           'Authorization': f'Bearer {key}'
@@ -78,6 +78,7 @@ class RiverRace(commands.Cog):
             self.family_clans = dict(json.load(file))
 
         self.token_task = self.bot.loop.create_task(self.crtoken())
+        
 
     async def crtoken(self):
         # Clash Royale API config
