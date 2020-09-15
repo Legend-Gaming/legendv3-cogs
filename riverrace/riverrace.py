@@ -59,7 +59,7 @@ async def simple_embed(
         embed=embed, allowed_mentions=discord.AllowedMentions(**mentions)
     )
 
-key = await self.bot.get_shared_api_tokens("clashroyale")
+key = self.bot.get_shared_api_tokens("clashroyale")
 headers = {
           'Accept': 'application/json',
           'Authorization': f'Bearer {key}'
