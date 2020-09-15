@@ -115,16 +115,16 @@ class RiverRace(commands.Cog):
         return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', label)
         
     async def get_monday(self):
-        today = datetime.date(datetime.utcnow())
+        today = datetime.utcnow()
         Monday = (today - Datetime.timedelta(hours=10)) - Datetime.timedelta(days=today.weekday())
-        monday = datetime.strptime(str(Monday), "%Y-%m-%d")
+        monday = datetime.strptime((str(Monday).split("."))[0], "%Y-%m-%d %H:%M:%S")
         return monday
 
     async def get_yday(self):
-        today = datetime.date(datetime.utcnow())
-        Yday = today - Datetime.timedelta(days=1)
-        yday = datetime.strptime(str(Yday), "%Y-%m-%d")
-        return yday
+        today = datetime.utcnow()
+        Yday = today - Datetime.timedelta(hours=24)
+        yday = datetime.strptime((str(Yday).split("."))[0], "%Y-%m-%d %H:%M:%S")
+        print(yday)
 
     async def check_accuracy(self, battles, monday):
         last_battle = battles[-1]
