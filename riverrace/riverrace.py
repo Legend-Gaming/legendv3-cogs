@@ -169,7 +169,7 @@ class RiverRace(commands.Cog):
         if finishtime == 0:
             finishtime = False
         riverBattles = []
-        accuracy = await self.check_accuracy(race_data, starttime)
+        accuracy = True
         if finishtime:
             for i in race_data: 
                 if i['type'] in ['riverRaceDuel', 'boatBattle', 'riverRacePvP']:
