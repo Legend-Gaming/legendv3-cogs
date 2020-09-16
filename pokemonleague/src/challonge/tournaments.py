@@ -1,4 +1,4 @@
-class Tournaments():
+class Tournaments:
     def __init__(self, account):
         self._account = account
 
@@ -8,21 +8,25 @@ class Tournaments():
 
     async def create(self, name, url, tournament_type="single elimination", **params):
         """Create a new tournament."""
-        params.update({
-            "name": name,
-            "url": url,
-            "tournament_type": tournament_type,
-        })
+        params.update(
+            {"name": name, "url": url, "tournament_type": tournament_type,}
+        )
 
-        return await self._account.fetch_and_parse("POST", "tournaments", "tournament", **params)
+        return await self._account.fetch_and_parse(
+            "POST", "tournaments", "tournament", **params
+        )
 
     async def show(self, tournament, **params):
         """Retrieve a single tournament record created with your account."""
-        return await self._account.fetch_and_parse("GET", "tournaments/%s" % tournament, **params)
+        return await self._account.fetch_and_parse(
+            "GET", "tournaments/%s" % tournament, **params
+        )
 
     async def update(self, tournament, **params):
         """Update a tournament's attributes."""
-        await self._account.fetch("PUT", "tournaments/%s" % tournament, "tournament", **params)
+        await self._account.fetch(
+            "PUT", "tournaments/%s" % tournament, "tournament", **params
+        )
 
     async def destroy(self, tournament):
         """Deletes a tournament along with all its associated records.
@@ -61,14 +65,18 @@ class Tournaments():
         The tournament must have at least 2 participants.
 
         """
-        return await self._account.fetch_and_parse("POST", "tournaments/%s/start" % tournament)
+        return await self._account.fetch_and_parse(
+            "POST", "tournaments/%s/start" % tournament
+        )
 
     async def finalize(self, tournament, **params):
         """Finalize a tournament that has had all match scores submitted,
         rendering its results permanent.
 
         """
-        return await self._account.fetch_and_parse("POST", "tournaments/%s/finalize" % tournament, **params)
+        return await self._account.fetch_and_parse(
+            "POST", "tournaments/%s/finalize" % tournament, **params
+        )
 
     async def reset(self, tournament):
         """Reset a tournament, clearing all of its scores and attachments.

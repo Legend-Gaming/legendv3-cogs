@@ -1,13 +1,14 @@
-import decimal
-import iso8601
-import itertools
-import aiohttp
 import asyncio
+import decimal
+import itertools
 
-from .tournaments import Tournaments
-from .participants import Participants
-from .matches import Matches
+import aiohttp
+import iso8601
+
 from .attachments import Attachments
+from .matches import Matches
+from .participants import Participants
+from .tournaments import Tournaments
 
 try:
     from xml.etree import cElementTree as ElementTree
@@ -23,7 +24,7 @@ class ChallongeException(Exception):
     pass
 
 
-class Account():
+class Account:
     def __init__(self, username, api_key, loop=None, timeout=DEFAULT_TIMEOUT):
         self._user = username
         self._api_key = api_key
@@ -32,7 +33,9 @@ class Account():
         self._matches = Matches(self)
         self._attachments = Attachments(self)
         self._loop = loop or asyncio.get_event_loop()
-        self._session = aiohttp.ClientSession(loop=self._loop, timeout=aiohttp.ClientTimeout(total=timeout))
+        self._session = aiohttp.ClientSession(
+            loop=self._loop, timeout=aiohttp.ClientTimeout(total=timeout)
+        )
         self.timeout = timeout
 
     def __del__(self):
@@ -58,7 +61,7 @@ class Account():
     @property
     async def is_valid(self):
         t = await self.fetch("GET", "tournaments")
-        return t != ''
+        return t != ""
 
     async def fetch(self, method, uri, params_prefix=None, **params):
         """Fetch the given uri and return the contents of the response."""
@@ -67,8 +70,12 @@ class Account():
         # build the HTTP request and use basic authentication
         url = "https://%s/%s.xml" % (CHALLONGE_API_URL, uri)
 
-        
-        async with self._session.request(method, url, params=params, auth=aiohttp.BasicAuth(self._user, self._api_key)) as response:
+        async with self._session.request(
+            method,
+            url,
+            params=params,
+            auth=aiohttp.BasicAuth(self._user, self._api_key),
+        ) as response:
             resp = await response.text()
             if response.status >= 400:
                 raise ChallongeException(response.reason)
@@ -77,7 +84,9 @@ class Account():
 
     async def fetch_and_parse(self, method, uri, params_prefix=None, **params):
         """Fetch the given uri and return the root Element of the response."""
-        doc = ElementTree.fromstring(await self.fetch(method, uri, params_prefix, **params))
+        doc = ElementTree.fromstring(
+            await self.fetch(method, uri, params_prefix, **params)
+        )
         return self._parse(doc)
 
     def _parse(self, root):
@@ -119,17 +128,15 @@ class Account():
         objects.
 
         """
-        if prefix and prefix.endswith('[]'):
+        if prefix and prefix.endswith("[]"):
             keys = []
             values = []
             for k, v in dirty_params.items():
                 if isinstance(v, (tuple, list)):
                     keys.append(k)
                     values.append(v)
-            firstiter = ((k, v) for vals in zip(*values)
-                         for k, v in zip(keys, vals))
-            lastiter = ((k, v)
-                        for k, v in dirty_params.items() if k not in keys)
+            firstiter = ((k, v) for vals in zip(*values) for k, v in zip(keys, vals))
+            lastiter = ((k, v) for k, v in dirty_params.items() if k not in keys)
             dpiter = itertools.chain(firstiter, lastiter)
         else:
             dpiter = dirty_params.items()

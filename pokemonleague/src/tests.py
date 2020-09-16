@@ -1,18 +1,22 @@
 from __future__ import print_function
+
+import asyncio
 import datetime
 import os
 import random
 import string
 import unittest
+
 from challonge import Account, ChallongeException
-import asyncio
 
 username = None
 api_key = None
 
 
 def _get_random_name():
-    return "pychallonge_" + "".join(random.choice(string.ascii_lowercase) for _ in range(0, 15))
+    return "pychallonge_" + "".join(
+        random.choice(string.ascii_lowercase) for _ in range(0, 15)
+    )
 
 
 def async_test(f):
@@ -21,11 +25,11 @@ def async_test(f):
         future = coro(*args, **kwargs)
         loop = asyncio.get_event_loop()
         loop.run_until_complete(future)
+
     return wrapper
 
 
 class AccountTestCase(unittest.TestCase):
-
     def test_init(self):
         account = Account(username, api_key)
         self.assertEqual(account._user, username)
@@ -41,11 +45,10 @@ class AccountTestCase(unittest.TestCase):
     def test_call(self):
         account = Account(username, api_key)
         t = yield from account.fetch("GET", "tournaments")
-        self.assertNotEqual(t, '')
+        self.assertNotEqual(t, "")
 
 
 class TournamentsTestCase(unittest.TestCase):
-
     @async_test
     def setUp(self):
         self._account = Account(username, api_key)
@@ -78,7 +81,8 @@ class TournamentsTestCase(unittest.TestCase):
     @async_test
     def test_index_filter_by_created(self):
         ts = yield from self._account.tournaments.index(
-            created_after=datetime.datetime.now().date() - datetime.timedelta(days=1))
+            created_after=datetime.datetime.now().date() - datetime.timedelta(days=1)
+        )
         ts = filter(lambda x: x["id"] == self.t["id"], ts)
         self.assertTrue(self.t["id"] in map(lambda x: x["id"], ts))
 
@@ -113,7 +117,9 @@ class TournamentsTestCase(unittest.TestCase):
 
     @async_test
     def test_update_type(self):
-        yield from self._account.tournaments.update(self.t["id"], tournament_type="round robin")
+        yield from self._account.tournaments.update(
+            self.t["id"], tournament_type="round robin"
+        )
 
         t = yield from self._account.tournaments.show(self.t["id"])
 
@@ -127,15 +133,17 @@ class TournamentsTestCase(unittest.TestCase):
         except ChallongeException:
             self.assertTrue(True)
         else:
-            self.fail('Could start tournament without participants')
+            self.fail("Could start tournament without participants")
 
         self.assertEqual(self.t["started-at"], None)
 
         yield from self._account.participants.create(self.t["id"], "#1")
         yield from self._account.participants.create(self.t["id"], "#2")
 
-        t = yield from self._account.tournaments.show(self.t["id"], include_participants=1, include_matches=1)
-        self.assertNotEqual(t['participants'], [])
+        t = yield from self._account.tournaments.show(
+            self.t["id"], include_participants=1, include_matches=1
+        )
+        self.assertNotEqual(t["participants"], [])
 
         t = yield from self._account.tournaments.start(self.t["id"])
         self.assertNotEqual(t["started-at"], None)
@@ -153,7 +161,8 @@ class TournamentsTestCase(unittest.TestCase):
             self.t["id"],
             ms[0]["id"],
             scores_csv="3-2,4-1,2-2",
-            winner_id=ms[0]["player1-id"])
+            winner_id=ms[0]["player1-id"],
+        )
 
         yield from self._account.tournaments.finalize(self.t["id"])
         t = yield from self._account.tournaments.show(self.t["id"])
@@ -185,7 +194,6 @@ class TournamentsTestCase(unittest.TestCase):
 
 
 class ParticipantsTestCase(unittest.TestCase):
-
     @async_test
     def setUp(self):
         self._account = Account(username, api_key)
@@ -193,9 +201,13 @@ class ParticipantsTestCase(unittest.TestCase):
 
         self.t = yield from self._account.tournaments.create(self.t_name, self.t_name)
         self.p1_name = _get_random_name()
-        self.p1 = yield from self._account.participants.create(self.t["id"], self.p1_name)
+        self.p1 = yield from self._account.participants.create(
+            self.t["id"], self.p1_name
+        )
         self.p2_name = _get_random_name()
-        self.p2 = yield from self._account.participants.create(self.t["id"], self.p2_name)
+        self.p2 = yield from self._account.participants.create(
+            self.t["id"], self.p2_name
+        )
 
     @async_test
     def tearDown(self):
@@ -219,7 +231,9 @@ class ParticipantsTestCase(unittest.TestCase):
         ps_names = [_get_random_name(), _get_random_name()]
         misc = ["test_bulk1", "test_bulk2"]
 
-        ps = yield from self._account.participants.bulk_add(self.t["id"], ps_names, misc=misc)
+        ps = yield from self._account.participants.bulk_add(
+            self.t["id"], ps_names, misc=misc
+        )
         self.assertEqual(len(ps), 2)
 
         self.assertTrue(ps_names[0] == ps[0]["name"] or ps_names[0] == ps[1]["name"])
@@ -230,7 +244,9 @@ class ParticipantsTestCase(unittest.TestCase):
 
     @async_test
     def test_update(self):
-        yield from self._account.participants.update(self.t["id"], self.p1["id"], misc="Test!")
+        yield from self._account.participants.update(
+            self.t["id"], self.p1["id"], misc="Test!"
+        )
         p1 = yield from self._account.participants.show(self.t["id"], self.p1["id"])
 
         self.assertEqual(p1["misc"], "Test!")
@@ -251,7 +267,6 @@ class ParticipantsTestCase(unittest.TestCase):
 
 
 class MatchesTestCase(unittest.TestCase):
-
     @async_test
     def setUp(self):
         self._account = Account(username, api_key)
@@ -259,9 +274,13 @@ class MatchesTestCase(unittest.TestCase):
 
         self.t = yield from self._account.tournaments.create(self.t_name, self.t_name)
         self.p1_name = _get_random_name()
-        self.p1 = yield from self._account.participants.create(self.t["id"], self.p1_name)
+        self.p1 = yield from self._account.participants.create(
+            self.t["id"], self.p1_name
+        )
         self.p2_name = _get_random_name()
-        self.p2 = yield from self._account.participants.create(self.t["id"], self.p2_name)
+        self.p2 = yield from self._account.participants.create(
+            self.t["id"], self.p2_name
+        )
         yield from self._account.tournaments.start(self.t["id"])
 
     @async_test
@@ -296,29 +315,37 @@ class MatchesTestCase(unittest.TestCase):
             self.t["id"],
             m["id"],
             scores_csv="3-2,4-1,2-2",
-            winner_id=str(m["player1-id"]))
+            winner_id=str(m["player1-id"]),
+        )
 
         m = yield from self._account.matches.show(self.t["id"], m["id"])
         self.assertEqual(m["state"], "complete")
 
 
 class AttachmentsTestCase(unittest.TestCase):
-
     @async_test
     def setUp(self):
         self._account = Account(username, api_key)
         self.t_name = _get_random_name()
 
         p = {"accept_attachments": "true"}
-        self.t = yield from self._account.tournaments.create(self.t_name, self.t_name, **p)
+        self.t = yield from self._account.tournaments.create(
+            self.t_name, self.t_name, **p
+        )
         self.p1_name = _get_random_name()
-        self.p1 = yield from self._account.participants.create(self.t["id"], self.p1_name)
+        self.p1 = yield from self._account.participants.create(
+            self.t["id"], self.p1_name
+        )
         self.p2_name = _get_random_name()
-        self.p2 = yield from self._account.participants.create(self.t["id"], self.p2_name)
+        self.p2 = yield from self._account.participants.create(
+            self.t["id"], self.p2_name
+        )
         yield from self._account.tournaments.start(self.t["id"])
         ms = yield from self._account.matches.index(self.t["id"])
         self.m = ms[0]
-        self.a1 = yield from self._account.attachments.create(self.t["id"], self.m["id"], "test_attachment_desc", "", "http://example.com")
+        self.a1 = yield from self._account.attachments.create(
+            self.t["id"], self.m["id"], "test_attachment_desc", "", "http://example.com"
+        )
 
     @async_test
     def tearDown(self):
@@ -332,13 +359,22 @@ class AttachmentsTestCase(unittest.TestCase):
 
     @async_test
     def test_show(self):
-        ats = yield from self._account.attachments.show(self.t["id"], self.m["id"], self.a1["id"])
+        ats = yield from self._account.attachments.show(
+            self.t["id"], self.m["id"], self.a1["id"]
+        )
         self.assertEqual(ats["id"], self.a1["id"])
 
     @async_test
     def test_update(self):
-        yield from self._account.attachments.update(self.t["id"], self.m["id"], self.a1["id"], description="new_test_attachment_desc")
-        ats = yield from self._account.attachments.show(self.t["id"], self.m["id"], self.a1["id"])
+        yield from self._account.attachments.update(
+            self.t["id"],
+            self.m["id"],
+            self.a1["id"],
+            description="new_test_attachment_desc",
+        )
+        ats = yield from self._account.attachments.show(
+            self.t["id"], self.m["id"], self.a1["id"]
+        )
         self.assertEqual(ats["description"], "new_test_attachment_desc")
 
 
@@ -346,6 +382,8 @@ if __name__ == "__main__":
     username = os.environ.get("CHALLONGE_USER") if username is None else username
     api_key = os.environ.get("CHALLONGE_KEY") if api_key is None else api_key
     if not username or not api_key:
-        raise RuntimeError("You must add CHALLONGE_USER and CHALLONGE_KEY to your environment variables to run the test suite")
+        raise RuntimeError(
+            "You must add CHALLONGE_USER and CHALLONGE_KEY to your environment variables to run the test suite"
+        )
 
     unittest.main()
