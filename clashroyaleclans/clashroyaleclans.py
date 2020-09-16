@@ -291,7 +291,7 @@ class ClashRoyaleClans(commands.Cog):
                     total_waiting,
                 )
             )
-            return await ctx.send(embed=embed)
+            await ctx.send(embed=embed)
 
             if member is not None:
                 return await ctx.send(
