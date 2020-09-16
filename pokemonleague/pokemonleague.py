@@ -19,7 +19,7 @@ from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
 """
 Important read below before you read the code: https://api.challonge.com/v1/documents
 
-teams are saved in the config:
+Teams are saved in the config:
 'teams': {
     'participant_id': <from challonge>,
     'name': <name>
@@ -100,6 +100,7 @@ class PokemonLeague(commands.Cog):
             raise NoToken
         challonge.set_credentials(username=token["username"], api_key=token["token"])
 
+    # Completed
     @commands.command(name="createbracket")
     @commands.guild_only()
     @checks.admin_or_permissions()
@@ -132,10 +133,11 @@ class PokemonLeague(commands.Cog):
                 ),
             )
 
+    # Completed
     @commands.command(name="registerteam")
     @commands.guild_only()
     @checks.bot_has_permissions(manage_roles=True)
-    async def command_register(
+    async def command_registerteam(
         self,
         ctx: commands.Context,
         user1: discord.Member,
@@ -146,34 +148,35 @@ class PokemonLeague(commands.Cog):
         """
             Register your team with you as captain
         """
-        teams = await self.config.guild(ctx.guild).teams()
         url = await self.config.guild(ctx.guild).tournament_url()
-        tournament = await self.config.guild(ctx.guild).tournament_id()
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
+        tournament = await self.config.guild(ctx.guild).tournament_id()
         start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
         if start_time is not None:
             return await embed_helper(
                 ctx, "Tournament has already been started. Registrations are closed."
             )
-        elif user1 == ctx.author or user2 == ctx.author:
+
+        if user1 == ctx.author or user2 == ctx.author:
             return await embed_helper(
                 ctx,
                 (
                     "You cannot add yourself more than once. "
                     "Maybe its your evil twin but they'll need to get their own discord."
-                ),
+                )
             )
         if user1 == user2:
             return await embed_helper(
                 ctx,
                 "I am sorry. I see only one of {}. Now go get a third member.".format(
                     user1.mention
-                ),
+                )
             )
-        captain_pokemons = await self.config.user(ctx.author).pokemons()
-        user_1_pokemons = await self.config.user(user1).pokemons()
-        user_2_pokemons = await self.config.user(user2).pokemons()
+        teams = await self.config.guild(ctx.guild).teams()
+        captain_pokemons = set(await self.config.user(ctx.author).pokemons())
+        user_1_pokemons = set(await self.config.user(user1).pokemons())
+        user_2_pokemons = set(await self.config.user(user2).pokemons())
         if any(
             [len(p) != 2 for p in [captain_pokemons, user_1_pokemons, user_2_pokemons]]
         ):
@@ -194,24 +197,21 @@ class PokemonLeague(commands.Cog):
                 ctx, f"{user2.mention} has same pokemon type as {user1.mention}."
             )
 
-        if len(teams) > 0:
-            for team_id in teams.keys():
-                if teams[team_id]["name"] == name:
-                    return await embed_helper(
-                        ctx, "This name is already taken. Choose a better name."
+        for team_id in teams.keys():
+            if teams[team_id]["name"] == name:
+                return await embed_helper(
+                    ctx, "This name is already taken. Choose a better name."
+                )
+            if (
+                    any([u.id in teams[team_id]["players"] for u in [user1, user2, ctx.author]])
+                    or any([u.id in teams[team_id]["subs"] for u in [user1, user2, ctx.author]])
+            ):
+                return await embed_helper(
+                    ctx,
+                    "A team member is already registered with team {}".format(
+                        teams[team_id]["name"]
                     )
-                elif any(
-                    [
-                        u.id in teams[team_id]["players"]
-                        for u in [user1, user2, ctx.author]
-                    ]
-                ):
-                    return await embed_helper(
-                        ctx,
-                        "A team member is already registered with team {}".format(
-                            teams[team_id]["name"]
-                        ),
-                    )
+                )
 
         try:
             participant = challonge.participants.create(
@@ -220,7 +220,7 @@ class PokemonLeague(commands.Cog):
         except challonge.api.ChallongeException as e:
             log.exception("Error when registering team", exc_info=e)
             return await ctx.send(
-                "Error when registering team.\nPlease contact the admins with:`{}`".format(
+                "Error when registering team.\nPlease contact the moderators with:`{}`".format(
                     e
                 )
             )
@@ -234,135 +234,143 @@ class PokemonLeague(commands.Cog):
             teams[participant_id]["pokemon_choices"] = list(
                 captain_pokemons + user_1_pokemons + user_2_pokemons
             )
+            teams[participant_id]["subs"] = list()
         role = discord.utils.get(ctx.guild.roles, name=name)
-
         if role:
             return await embed_helper(
                 ctx,
                 "There is already a role with name {}. Please contact the moderators for the team roles.".format(
                     name
-                ),
+                )
             )
         else:
-            role = await ctx.guild.create_role(name=name)
-        await ctx.author.add_roles(role)
-        await user1.add_roles(role)
-        await user2.add_roles(role)
+            try:
+                role = await ctx.guild.create_role(name=name)
+            except discord.Forbidden:
+                await embed_helper(ctx, "Failed to create role. Ask the admins to give bot perms.")
+        try:
+            await ctx.author.add_roles(role)
+            await user1.add_roles(role)
+            await user2.add_roles(role)
+        except discord.Forbidden:
+            await embed_helper(ctx, "Failed to add role for one of team members. Please contact moderators.")
         await embed_helper(ctx, "Team {} successfully registered.".format(name))
         await ctx.tick()
 
-    @commands.command(name="showteam")
+    # Completed
+    @commands.command(name="registersubs")
     @commands.guild_only()
-    async def command_showteam(self, ctx: commands.Context, *, team_name: str):
+    @checks.bot_has_permissions(manage_roles=True)
+    async def command_registersubs(
+        self,
+        ctx: commands.Context,
+        team_name: str,
+        *substitute_players: discord.Member
+    ):
         """
-            Display data for a team
+            Register your subtitute players
         """
-        team_found = False
-        url = await self.config.guild(ctx.guild).tournament_url()
-        if url is None:
-            return await embed_helper(ctx, "No tournaments running!")
-        teams = await self.config.guild(ctx.guild).teams()
-        for team in teams.values():
-            if team["name"] == team_name:
-                team_found = True
-                captain_id = team["captain_id"]
-                players_id = team["players"]
-                players_id.remove(captain_id)
-                embed = discord.Embed(colour=0xFAA61A, title=team["name"], url=url)
-                captain = ctx.guild.get_member(captain_id)
-                embed.add_field(name="Captain", value=captain.mention, inline=False)
-                player_list = " ".join(
-                    [
-                        ctx.guild.get_member(player_id).mention
-                        for player_id in players_id
-                    ]
-                )
-                embed.add_field(name="Players", value=player_list, inline=False)
-                pokemons = humanize_list(team["pokemon_choices"])
-                embed.add_field(name="Pokemons", value=pokemons, inline=False)
-                await ctx.send(embed=embed)
-                break
-        if not team_found:
-            await embed_helper(ctx, "Team not found")
+        if not substitute_players:
+            return await ctx.send_help()
 
-    @commands.command(name="showallteams")
-    @commands.guild_only()
-    async def command_showallteams(self, ctx: commands.Context, pagify: bool = True):
-        """
-            Show all teams as menu if pagify is true and as list of embeds if pagify is false
-        """
         url = await self.config.guild(ctx.guild).tournament_url()
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
-        teams = await self.config.guild(ctx.guild).teams()
-        pages = []
-        for team in teams.values():
-            captain_id = team["captain_id"]
-            players_id = team["players"]
-            players_id.remove(captain_id)
-            embed = discord.Embed(colour=0xFAA61A, title=team["name"])
-            captain = ctx.guild.get_member(captain_id)
-            embed.add_field(name="Captain", value=captain.mention, inline=False)
-            player_list = " ".join(
-                [ctx.guild.get_member(player_id).mention for player_id in players_id]
+        tournament = await self.config.guild(ctx.guild).tournament_id()
+
+        start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
+        if start_time is not None:
+            return await embed_helper(
+                ctx, "Tournament has already been started. Registrations are closed."
             )
-            embed.add_field(name="Players", value=player_list, inline=False)
-            pokemons = humanize_list(team["pokemon_choices"])
-            embed.add_field(name="Pokemons", value=pokemons, inline=False)
-            pages.append(embed)
-        if not pages:
-            return await embed_helper(ctx, "No teams to show")
-        if pagify:
-            if pages:
-                return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=120)
-        else:
-            for page in pages:
-                await ctx.send(embed=page)
 
-    @commands.command(name="removeteam")
+        substitute_players = set(substitute_players)
+        teams = await self.config.guild(ctx.guild).teams()
+        team_id_to_modify = None
+
+        if any(
+            [len(set(await self.config.user(p).pokemons())) != 2 for p in substitute_players]
+        ):
+            return await embed_helper(
+                ctx, "Some members have not set their pokemon types."
+            )
+
+        for team_id in teams.keys():
+            # Need to iterate through all items even after match is found to check
+            # if any of substitute players are registered with other teams
+            if any([u.id in teams[team_id]["players"] for u in substitute_players]):
+                return await embed_helper(
+                    ctx,
+                    f"A member is already registered as a team player with team {teams[team_id]['name']}"
+                )
+            if any([u.id in teams[team_id]["subs"]for u in substitute_players]):
+                return await embed_helper(
+                    ctx,
+                    f"A member is already registered as a substitute player with team {teams[team_id]['name']}"
+                )
+
+            if teams[team_id]["name"] == team_name:
+                if ctx.author.id != teams[team_id][
+                    "captain_id"
+                ] and not await self.bot.is_admin(ctx.author):
+                    return await embed_helper(
+                        ctx, "Only captains and admins are allowed to add players."
+                    )
+                team_id_to_modify = team_id
+
+        if team_id_to_modify is None:
+            return await embed_helper(ctx, f"No team named {team_name} found")
+        role = discord.utils.get(ctx.guild.roles, name=team_name)
+        if not role:
+            return await embed_helper(
+                ctx,
+                f"There is no role with name {team_name}. "
+                "Please contact the moderators for the team roles."
+                )
+        async with self.config.guild(ctx.guild).teams() as teams:
+            for substitute_player in substitute_players:
+                teams[team_id_to_modify]["subs"].append(substitute_player.id)
+                try:
+                    await substitute_player.add_roles(role)
+                except:
+                    await embed_helper(ctx, f"Failed to add role for {substitute_player}")
+        await embed_helper(ctx, f"Registered {humanize_list([p.mention for p in substitute_players])} as subs")
+
+    @commands.command(name="startbracket")
     @commands.guild_only()
     @checks.admin_or_permissions()
-    @checks.bot_has_permissions(manage_roles=True)
-    async def command_removeteam(self, ctx: commands.Context, *, team_name: str):
+    @checks.bot_has_permissions(manage_roles=True, manage_channels=True)
+    async def command_startbracket(self, ctx: commands.Context):
         """
-            Remove a team from the tournament. Cannot be done after starting the bracket
+            Start the bracket and end registration
         """
-        team_found = False
-        url = await self.config.guild(ctx.guild).tournament_url()
-        tournament_name = await self.config.guild(ctx.guild).tournament_name()
-        tournament_id = await self.config.guild(ctx.guild).tournament_id()
-        if url is None:
+        tournament_url = await self.config.guild(ctx.guild).tournament_url()
+        if tournament_url is None:
             return await embed_helper(ctx, "No tournaments running!")
-        start_time = challonge.tournaments.show(tournament=tournament_id)["started-at"]
+        tournament = await self.config.guild(ctx.guild).tournament_id()
+        tournament_name = await self.config.guild(ctx.guild).tournament_name()
+        start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
         if start_time is not None:
             return await embed_helper(ctx, "Tournament has already been started!")
-
-        teams_data = await self.config.guild(ctx.guild).teams()
-        for team_id in teams_data.keys():
-            if teams_data[team_id]["name"] == team_name:
-                team_found = True
-                try:
-                    challonge.participants.destroy(tournament_id, team_id)
-                except challonge.api.ChallongeException as e:
-                    log.exception(
-                        f"Error when removing participant from tournament {tournament_name}",
-                        exc_info=e,
-                    )
-                    return await embed_helper(ctx, "Tournament already started!")
-                async with self.config.guild(ctx.guild).teams() as teams:
-                    del teams[team_id]
-                role = discord.utils.get(ctx.guild.roles, name=team_name)
-                if role:
-                    await role.delete()
-                await embed_helper(
-                    ctx,
-                    "Team {} has been removed from {}".format(
-                        team_name, tournament_name
-                    ),
-                )
-                break
-        if not team_found:
-            await embed_helper(ctx, "Team {} not found".format(team_name))
+        try:
+            await self.discord_setup(ctx)
+        except ExistingChannels:
+            return
+        except Exception as e:
+            log.exception(
+                "Encountered error when preparing server for upcoming battles.",
+                exc_info=e,
+            )
+            await embed_helper(ctx, "Error when prepping up the gyms.")
+            return
+        challonge.participants.randomize(tournament=tournament)
+        challonge.tournaments.start(tournament=tournament)
+        await embed_helper(
+            ctx,
+            "Tournament [{}]({}) has been started.".format(
+                tournament_name, tournament_url
+            ),
+        )
 
     @commands.command(name="updatescore")
     @commands.guild_only()
@@ -502,6 +510,7 @@ class PokemonLeague(commands.Cog):
                                     team_2_channel_id = assigned_channels.get(
                                         team_2_name, None
                                     )
+                                    current_gym = None
                                     for gym in self.gyms.values():
                                         if gym["level"] == (single_match["round"] - 1):
                                             current_gym = gym
@@ -536,12 +545,12 @@ class PokemonLeague(commands.Cog):
                                             team_1_channel is None
                                             or (
                                                 team_1_channel.category.name
-                                                != gym["name"]
+                                                != current_gym["name"]
                                             )
                                             or team_2_channel is None
                                             or (
                                                 team_2_channel.category.name
-                                                != gym["name"]
+                                                != current_gym["name"]
                                             )
                                             or team_1_channel_id != team_2_channel_id
                                         ):
@@ -616,16 +625,27 @@ class PokemonLeague(commands.Cog):
                                         ctx.guild
                                     ).assigned_channels.set(assigned_channels)
 
-                                await embed_helper(
-                                    channel,
-                                    "{} vs {}\nCaptains: {}  {}\nGym: {}".format(
-                                        team_1_name,
-                                        team_2_name,
-                                        team_1_captain.mention,
-                                        team_2_captain.mention,
-                                        current_gym["name"],
-                                    ),
+                                message = "{} vs {}\nCaptains: {}  {}\nGym: {}".format(
+                                    team_1_name,
+                                    team_2_name,
+                                    team_1_captain.mention,
+                                    team_2_captain.mention,
+                                    current_gym["name"],
                                 )
+                                embed = discord.Embed(
+                                    description=message, color=discord.Colour.blue()
+                                )
+                                if channel:
+                                    return await channel.send(
+                                        content=f"{team_1_captain.mention} {team_2_captain.mention}",
+                                        embed=embed,
+                                        allowed_mentions=discord.AllowedMentions(users=False),
+                                    )
+                                else:
+                                    await embed_helper(
+                                        ctx,
+                                        f"Announcement channel not set. Use {ctx.prefix}setleaguechannel command",
+                                    )
 
                     if not new_match_found:
                         await embed_helper(
@@ -642,93 +662,63 @@ class PokemonLeague(commands.Cog):
         if not team_found:
             await embed_helper(ctx, f"Team {team_name} not found")
 
-    @commands.command(name="startbracket")
-    @commands.guild_only()
-    @checks.admin_or_permissions()
-    @checks.bot_has_permissions(manage_roles=True, manage_channels=True)
-    async def command_startbracket(self, ctx: commands.Context):
+    # Completed
+    @commands.command(name="changecaptain")
+    async def command_changecaptain(
+        self, ctx: commands.Context, team_name: str, new_captain: discord.Member
+    ):
         """
-            Start the bracket and end registration
+            Change captain to new one
         """
-        tournament_url = await self.config.guild(ctx.guild).tournament_url()
-        tournament = await self.config.guild(ctx.guild).tournament_id()
-        tournament_name = await self.config.guild(ctx.guild).tournament_name()
-        if tournament_url is None:
-            return await embed_helper(ctx, "No tournaments running!")
-        start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
-        if start_time is not None:
-            return await embed_helper(ctx, "Tournament has already been started!")
-        try:
-            await self.discord_setup(ctx)
-        except ExistingChannels:
-            return
-        except Exception as e:
-            log.exception(
-                "Encountered error when preparing server for upcoming battles.",
-                exc_info=e,
-            )
-            await embed_helper(ctx, "Error when prepping up the gyms.")
-            return
-        challonge.participants.randomize(tournament=tournament)
-        challonge.tournaments.start(tournament=tournament)
-        await embed_helper(
-            ctx,
-            "Tournament [{}]({}) has been started.".format(
-                tournament_name, tournament_url
-            ),
-        )
-
-    @commands.command(name="deletebracket")
-    @commands.guild_only()
-    @checks.admin_or_permissions()
-    @checks.bot_has_permissions(manage_roles=True, add_reactions=True)
-    async def command_deletebracket(self, ctx: commands.Context):
-        """
-            Delete a bracket from bot and optionally from challonge site too
-        """
-        channel_id = await self.config.guild(ctx.guild).channel_id()
-        url = await self.config.guild(ctx.guild).tournament_url()
-        tournament = await self.config.guild(ctx.guild).tournament_id()
-        if url is None:
-            return await embed_helper(ctx, "No tournaments running!")
+        team_found = False
         teams_data = await self.config.guild(ctx.guild).teams()
-        for team in teams_data.values():
-            name = team["name"]
-            role = discord.utils.get(ctx.guild.roles, name=name)
-            if role:
-                try:
-                    await role.delete()
-                except discord.HTTPException:
-                    await embed_helper(
-                        ctx, "Failed to delete role {}".format(role.mention)
+        for team_id in teams_data.keys():
+            # Need to iterate through all data even after match if found in order to check if
+            # new captain is registered with another team
+            if (
+                new_captain.id in teams_data[team_id]["players"]
+                and teams_data[team_id]["name"] != team_name
+            ):
+                return await embed_helper(
+                    ctx,
+                    f"Player {new_captain.mention} is already registered with team {teams_data[team_id]['name']}",
+                )
+            if teams_data[team_id]["name"] == team_name:
+                team_found = True
+                if (
+                        ctx.author.id != teams_data[team_id]["captain_id"]
+                        and not await self.bot.is_admin(ctx.author)
+                ):
+                    return await embed_helper(
+                        ctx, "Only captains and admins are allowed to change captains."
                     )
-        await self.config.guild(ctx.guild).clear()
-        await embed_helper(
-            ctx,
-            "Bracket has been removed from the bot but still can be accessed [here]({}).".format(
-                url
-            ),
-        )
-        msg = await embed_helper(
-            ctx, "Do you want to delete from the challonge site too?"
-        )
-        start_adding_reactions(msg, ReactionPredicate.YES_OR_NO_EMOJIS)
-        pred = ReactionPredicate.yes_or_no(msg, ctx.author)
-        await ctx.bot.wait_for("reaction_add", check=pred)
-        if pred.result is True:
-            challonge.api.fetch("DELETE", "tournaments/{}".format(tournament))
-        await self.config.guild(ctx.guild).channel_id.set(channel_id)
+                if new_captain.id not in teams_data[team_id]["players"]:
+                    return await embed_helper(
+                        ctx,
+                        f"{new_captain.mention} is not a team member for {team_name}",
+                    )
+                if new_captain.id == teams_data[team_id]["captain_id"]:
+                    await ctx.send("You assigning yourself as captain: ")
+                    return await ctx.send(
+                        "https://i.kym-cdn.com/entries/icons/facebook/000/030/329/cover1.jpg"
+                    )
+                teams_data[team_id]["captain_id"] = new_captain.id
+
+        if team_found:
+            await self.config.guild(ctx.guild).teams.set(teams_data)
+        else:
+            await embed_helper(ctx, f"Team {team_name} not found")
         await ctx.tick()
 
+    # TODO: Optimize assignment of channel
     @commands.command(name="makematches")
     @commands.guild_only()
     @checks.admin_or_permissions()
+    @checks.bot_has_permissions(manage_roles=True, manage_channels=True)
     async def command_makematches(self, ctx: commands.Context):
         """
             Post matches in channel
         """
-        channel_id = await self.config.guild(ctx.guild).channel_id()
-        channel = ctx.guild.get_channel(channel_id)
         url = await self.config.guild(ctx.guild).tournament_url()
         tournament = await self.config.guild(ctx.guild).tournament_id()
         if url is None:
@@ -736,6 +726,8 @@ class PokemonLeague(commands.Cog):
         start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
         if start_time is None:
             return await embed_helper(ctx, "Tournament has not been started.")
+        channel_id = await self.config.guild(ctx.guild).channel_id()
+        channel = ctx.guild.get_channel(channel_id)
         all_matches = challonge.matches.index(tournament=tournament)
         async for single_match in AsyncIter(all_matches):
             if single_match["state"] == "open":
@@ -748,7 +740,7 @@ class PokemonLeague(commands.Cog):
                 team_2_captain = ctx.guild.get_member(team_2_captain_id)
                 team_1_name = teams[str(team_1_id)]["name"]
                 team_2_name = teams[str(team_2_id)]["name"]
-
+                current_gym = None
                 async with self.assigned_channel_lock:
                     assigned_channels = await self.config.guild(
                         ctx.guild
@@ -757,6 +749,27 @@ class PokemonLeague(commands.Cog):
                     team_1_channel_id = assigned_channels.get(team_1_name, None)
                     team_2_channel_id = assigned_channels.get(team_2_name, None)
                     for gym in self.gyms.values():
+                        if gym["level"] < (single_match["round"] - 1):
+                            for player_id in teams[str(team_1_id)]["players"]:
+                                player = ctx.guild.get_member(player_id)
+                                if player:
+                                    badge_role = discord.utils.get(ctx.guild.roles, name=gym["badge"])
+                                    if badge_role:
+                                        player.add_roles(badge_role)
+                                    else:
+                                        await embed_helper(ctx, f"Role {gym['badge']} not found")
+                                else:
+                                    await embed_helper(ctx, f"Player {player_id} not found")
+                            for player_id in teams[str(team_2_id)]["players"]:
+                                player = ctx.guild.get_member(player_id)
+                                if player:
+                                    badge_role = discord.utils.get(ctx.guild.roles, name=gym["badge"])
+                                    if badge_role:
+                                        player.add_roles(badge_role)
+                                    else:
+                                        await embed_helper(ctx, f"Role {gym['badge']} not found")
+                                else:
+                                    await embed_helper(ctx, f"Player {player_id} not found")
                         if gym["level"] == (single_match["round"] - 1):
                             current_gym = gym
                             break
@@ -774,9 +787,9 @@ class PokemonLeague(commands.Cog):
 
                         if (
                             team_1_channel is None
-                            or (team_1_channel.category.name != gym["name"])
+                            or (team_1_channel.category.name != current_gym["name"])
                             or team_2_channel is None
-                            or (team_2_channel.category.name != gym["name"])
+                            or (team_2_channel.category.name != current_gym["name"])
                             or team_1_channel_id != team_2_channel_id
                         ):
                             if team_1_channel:
@@ -848,7 +861,7 @@ class PokemonLeague(commands.Cog):
                     )
                     if channel:
                         return await channel.send(
-                            f"{team_1_captain.mention} {team_2_captain.mention}",
+                            content=f"{team_1_captain.mention} {team_2_captain.mention}",
                             embed=embed,
                             allowed_mentions=discord.AllowedMentions(users=False),
                         )
@@ -857,6 +870,527 @@ class PokemonLeague(commands.Cog):
                             ctx,
                             f"Announcement channel not set. Use {ctx.prefix}setleaguechannel command",
                         )
+
+    # Completed
+    @commands.command(name="deletebracket")
+    @commands.guild_only()
+    @checks.admin_or_permissions()
+    @checks.bot_has_permissions(manage_roles=True, add_reactions=True)
+    async def command_deletebracket(self, ctx: commands.Context):
+        """
+            Delete a bracket from bot and optionally from challonge site too
+        """
+        channel_id = await self.config.guild(ctx.guild).channel_id()
+        url = await self.config.guild(ctx.guild).tournament_url()
+        tournament = await self.config.guild(ctx.guild).tournament_id()
+        if url is None:
+            return await embed_helper(ctx, "No tournaments running!")
+        teams_data = await self.config.guild(ctx.guild).teams()
+        for team in teams_data.values():
+            name = team["name"]
+            role = discord.utils.get(ctx.guild.roles, name=name)
+            if role:
+                try:
+                    await role.delete()
+                except discord.Forbidden:
+                    await embed_helper(
+                        ctx, "No permissions to delete role {}".format(role.mention)
+                    )
+                except discord.HTTPException:
+                    await embed_helper(
+                        ctx, "Failed to delete role {}".format(role.mention)
+                    )
+        await self.config.guild(ctx.guild).clear()
+        await embed_helper(
+            ctx,
+            "Bracket has been removed from the bot but still can be accessed [here]({}).".format(
+                url
+            ),
+        )
+        msg = await embed_helper(
+            ctx, "Do you want to delete from the challonge site too?"
+        )
+        start_adding_reactions(msg, ReactionPredicate.YES_OR_NO_EMOJIS)
+        pred = ReactionPredicate.yes_or_no(msg, ctx.author)
+        await ctx.bot.wait_for("reaction_add", check=pred)
+        if pred.result is True:
+            challonge.api.fetch("DELETE", "tournaments/{}".format(tournament))
+        await self.config.guild(ctx.guild).channel_id.set(channel_id)
+        await ctx.tick()
+
+    # Completed
+    @commands.command(name="deletebadgechannels")
+    @checks.admin()
+    @checks.bot_has_permissions(manage_channels=True)
+    async def command_deletebadgechannels(self, ctx: commands.Context):
+        """
+            Delete all text channels with badge in their name
+            To be used when tournament ends to prepare for next tournament
+        """
+        url = await self.config.guild(ctx.guild).tournament_url()
+        if url:
+            return await embed_helper(
+                ctx,
+                (
+                    "There is a tournament running in the server! "
+                    "You cannot delete channels without finishing the tournament."
+                )
+            )
+        await ctx.send(
+            (
+                "This command will delete all channels that have `badge` in their name. "
+                "Are you sure you want to do that?"
+            )
+        )
+        pred = MessagePredicate.yes_or_no(ctx)
+        await self.bot.wait_for("message", check=pred)
+        if pred.result is False:
+            return await ctx.send("You have chosen not to delete the channels.")
+        for channel in ctx.guild.text_channels:
+                if "badge" in channel.name:
+                    try:
+                        await channel.delete()
+                    except discord.Forbidden:
+                        return await embed_helper(ctx, f"No permission to delete channel {channel.name}.")
+                    except discord.HTTPException:
+                        return await embed_helper(ctx, f"Error when deleting channel {channel.name}.")
+        await ctx.tick()
+
+    # Completed
+    @commands.command(name="resetbadges")
+    @checks.admin()
+    @checks.bot_has_permissions(manage_roles=True)
+    async def command_resetbadges(self, ctx: commands.Context):
+        """
+            Remove badge from all guild members
+        """
+        url = await self.config.guild(ctx.guild).tournament_url()
+        if url:
+            return await embed_helper(
+                ctx,
+                "There is a tournament running in the server! You cannot reset without finishing the tournament.",
+            )
+        await ctx.send(
+            (
+                f"This command will delete all badge roles. Are you sure you want to do that?"
+            )
+        )
+        pred = MessagePredicate.yes_or_no(ctx)
+        await self.bot.wait_for("message", check=pred)
+        if not pred.result:
+            return await ctx.send("You have chosen not to reset the badges.")
+
+        gym_badges = [g["badge"] for g in self.gyms.values()]
+        for badge_name in gym_badges:
+            for role in ctx.guild.roles:
+                if role.name == badge_name:
+                    member_list = role.members
+                    for member in member_list:
+                        try:
+                            await member.remove_roles(role)
+                        except discord.Forbidden:
+                            return await embed_helper(ctx, f"No permission to remove roles for {member.mention}")
+                        except discord.HTTPException:
+                            return await embed_helper(ctx, f"Error when removing roles for {member.mention}")
+        await ctx.tick()
+
+    # Completed
+    @commands.command(name="setleaguechannel")
+    @checks.admin_or_permissions()
+    async def command_setleaguechannel(
+        self, ctx: commands.Context, channel: discord.TextChannel
+    ):
+        """
+            Set announcement channel for matches
+        """
+        await self.config.guild(ctx.guild).channel_id.set(channel.id)
+        await ctx.tick()
+
+    # Completed
+    @commands.command(name="choosepokemontype")
+    @commands.guild_only()
+    @checks.bot_has_permissions(manage_roles=True)
+    async def command_choosepokemontype(
+        self, ctx: commands.Context, pokemontype1, pokemontype2
+    ):
+        """
+            Choose your pokemon types
+        """
+        teams_data = await self.config.guild(ctx.guild).teams()
+        for team in teams_data.values():
+            if ctx.author.id in team["players"]:
+                return await embed_helper(
+                    ctx, f"You are already registered for team {team['name']}"
+                )
+        valid_types = [name.split(" ")[0].lower() for name in self.pokemons.keys()]
+        pokemon_role_names = [
+            (pokemon.lower().capitalize().split(" ")[0] + " Player")
+            for pokemon in self.pokemons.keys()
+        ]
+        if pokemontype1.lower() not in valid_types:
+            return await embed_helper(
+                ctx, f"{pokemontype1} is not a valid pokemon type."
+            )
+        if pokemontype2.lower() not in valid_types:
+            return await embed_helper(
+                ctx, f"{pokemontype2} is not a valid pokemon type."
+            )
+        await self.config.user(ctx.author).pokemons.set(
+            [pokemontype1.lower(), pokemontype2.lower()]
+        )
+        for pokemon_role_name in pokemon_role_names:
+            poke_role = discord.utils.get(ctx.author.roles, name=pokemon_role_name)
+            if poke_role:
+                try:
+                    await ctx.author.remove_roles(poke_role)
+                except discord.Forbidden:
+                    return await embed_helper(ctx, f"No permission to remove roles for {ctx.author.mention}")
+                except discord.HTTPException:
+                    return await embed_helper(ctx, "Error when removing roles for {ctx.author.mention}.")
+
+        poke1_role = discord.utils.get(
+            ctx.guild.roles,
+            name=(pokemontype1.lower().capitalize().split(" ")[0] + " Player"),
+        )
+        if poke1_role:
+            try:
+                await ctx.author.add_roles(poke1_role)
+            except discord.Forbidden:
+                return await embed_helper(ctx, f"No permission to remove roles for {ctx.author.mention}")
+            except discord.HTTPException:
+                return await embed_helper(ctx, "Error when removing roles for {ctx.author.mention}.")
+
+        poke2_role = discord.utils.get(
+            ctx.guild.roles,
+            name=(pokemontype2.lower().capitalize().split(" ")[0] + " Player"),
+        )
+        if poke2_role:
+            try:
+                await ctx.author.add_roles(poke2_role)
+            except discord.Forbidden:
+                return await embed_helper(ctx, f"No permission to remove roles for {ctx.author.mention}")
+            except discord.HTTPException:
+                return await embed_helper(ctx, "Error when removing roles for {ctx.author.mention}.")
+
+        await ctx.tick()
+
+    # Completed
+    @commands.command(name="showtypes")
+    async def showtypes(self, ctx, *, pokemon_type=None):
+        """
+            Show all cards of specific type if type is mentioned and all types if type is not specified
+        """
+        if pokemon_type:
+            cards = None
+            for p_type in self.pokemons.keys():
+                if p_type.lower().split()[0] == pokemon_type.lower():
+                    cards = self.pokemons.get(p_type)
+            if not cards:
+                return await embed_helper(
+                    ctx, f"{pokemon_type} is not recognized as a valid pokemon type."
+                )
+            else:
+                embed = discord.Embed(color=0xFAA61A,)
+                embed.set_author(name=f"Pokemon card index")
+                value = ["\u200b\n"]
+                for card in cards:
+                    emoji = await self.get_card_emoji(card)
+                    if emoji:
+                        value.append(emoji)
+                    else:
+                        value.append(f" {card} ")
+                if len(value):
+                    value = " ".join(value)
+                    embed.add_field(
+                        name=f"{pokemon_type.lower().capitalize()} cards",
+                        value=value,
+                        inline=False,
+                    )
+                return await ctx.send(embed=embed)
+
+        pages = []
+        for pokemon_type in self.pokemons.keys():
+            cards = self.pokemons[pokemon_type]
+            embed = discord.Embed(color=0xFAA61A)
+            embed.set_author(name=f"Pokemon card index")
+            value = ["\u200b\n"]
+            for card in cards:
+                emoji = await self.get_card_emoji(card)
+                if emoji:
+                    value.append(emoji)
+                else:
+                    value.append(f" {card} ")
+            if len(value):
+                value = " ".join(value)
+                embed.add_field(
+                    name=f"{pokemon_type.lower().capitalize()} cards",
+                    value=value,
+                    inline=False,
+                )
+                pages.append(embed)
+        return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=120)
+
+    # Completed
+    @commands.command(name="showcardtype")
+    async def command_showcardtype(self, ctx: commands.Context, *, card_names: str):
+        """
+            Show type of card.
+        """
+        url = "https://docs.google.com/spreadsheets/d/1TIH9iwTb9UpHYWKIgHpY72wizLSp79ROt4D4lWe8YIM/edit?usp=sharing"
+        for card_name in card_names.split(";"):
+            card_name = card_name.strip()
+            card_type = []
+            for pokemon_type in self.pokemons.keys():
+                cards = self.pokemons[pokemon_type]
+                for card in cards:
+                    if card.lower() == card_name.lower():
+                        card_name = card
+                        card_type.append(pokemon_type.split()[0])
+            if len(card_type) > 0:
+                await embed_helper(
+                    ctx, f"{card_name} belongs to  {humanize_list(card_type)} types."
+                )
+            else:
+                await embed_helper(
+                    ctx,
+                    "Cannot find card {}. Please use the [spreadsheet]({}).".format(
+                        card_name, url
+                    )
+                )
+
+    # Completed
+    @commands.command(name="checkdeck")
+    async def command_checkdeck(
+        self, ctx: commands.Context, member: discord.Member, deck_url: str
+    ):
+        """
+            Check if cards are valid types according to member's pokemons
+        """
+        is_valid = re.search(
+            r"(http|ftp|https)://link.clashroyale.com/deck/en\?deck=[0-9;]+", deck_url
+        )
+        if not is_valid:
+            return await embed_helper(ctx, "Deck url is not valid.")
+        deck_cards = re.findall("2[0-9]{7}", deck_url)
+
+        user_pokemon_types = await self.config.user(member).pokemons()
+        if len(user_pokemon_types) != 2:
+            return await embed_helper(
+                ctx, f"{member.mention} has not set their pokemon types"
+            )
+        await embed_helper(
+            ctx,
+            f"Member {member.mention} has chosen types:\n{humanize_list(user_pokemon_types)}",
+        )
+        valid_card_names = []
+        invalid_card_names = []
+        cog = self.bot.get_cog("ClashRoyaleClans")
+        if not cog:
+            return await embed_helper(
+                ctx, "ClashRoyale cog needs to be loaded for this to work."
+            )
+        try:
+            all_cards = list(await cog.clash.get_all_cards())
+        except:
+            return await embed_helper(ctx, "Cannot reach clashroyale servers!")
+        for card in all_cards:
+            if str(card.id) in deck_cards:
+                for pokemon_type in self.pokemons.keys():
+                    if card.name in self.pokemons[pokemon_type]:
+                        if pokemon_type.split(" ")[0].lower() not in user_pokemon_types:
+                            invalid_card_names.append(card.name)
+                        else:
+                            valid_card_names.append(card.name)
+                            break
+
+        # Account for card having two types. If a card is both bug and steel type and user has chosen
+        # bug type but not steel, it will be in both valid and invalid card list
+        invalid_card_names = [
+            i for i in invalid_card_names if i not in valid_card_names
+        ]
+        if invalid_card_names:
+            return await embed_helper(
+                ctx,
+                (
+                    f"The deck has {len(invalid_card_names)} invalid cards:\n"
+                    f"{humanize_list([(await self.get_card_emoji(c) or c) for c in invalid_card_names])}"
+                )
+            )
+        else:
+            return await embed_helper(ctx, "All cards are valid.")
+
+    # Completed
+    async def get_team_embed(self, ctx: commands.Context, team_id):
+        teams = await self.config.guild(ctx.guild).teams()
+        url = await self.config.guild(ctx.guild).tournament_url()
+        team = teams[team_id]
+        captain_id = team["captain_id"]
+        players_id = team["players"]
+        players_id.remove(captain_id)
+        subs_id = team["subs"]
+        embed = discord.Embed(colour=0xFAA61A, title=team["name"], url=url)
+        captain = ctx.guild.get_member(captain_id)
+        embed.add_field(name="Captain", value=captain.mention, inline=False)
+        player_list = " ".join(
+            [
+                ctx.guild.get_member(player_id).mention
+                for player_id in players_id
+            ]
+        )
+        sub_list = " ".join(
+            [
+                ctx.guild.get_member(sub_id).mention
+                for sub_id in subs_id
+            ]
+        )
+        embed.add_field(name="Team Players", value=player_list, inline=False)
+        embed.add_field(name="Substitute Players", value=sub_list, inline=False)
+        pokemons = humanize_list(team["pokemon_choices"])
+        embed.add_field(name="Pokemons", value=pokemons, inline=False)
+        return embed
+
+    # Completed
+    @commands.command(name="showteam")
+    @commands.guild_only()
+    async def command_showteam(self, ctx: commands.Context, *, team_name: str):
+        """
+            Display data for a team
+        """
+        team_found = False
+        url = await self.config.guild(ctx.guild).tournament_url()
+        if url is None:
+            return await embed_helper(ctx, "No tournaments running!")
+        teams = await self.config.guild(ctx.guild).teams()
+        for id, team in teams.items():
+            if team["name"] == team_name:
+                team_found = True
+                embed = await self.get_team_embed(ctx, id)
+                await ctx.send(embed=embed)
+                break
+        if not team_found:
+            await embed_helper(ctx, "Team not found")
+
+    # Completed
+    @commands.command(name="showallteams")
+    @commands.guild_only()
+    async def command_showallteams(self, ctx: commands.Context, pagify: bool = True):
+        """
+            Show all teams as menu if pagify is true and as list of embeds if pagify is false
+        """
+        url = await self.config.guild(ctx.guild).tournament_url()
+        if url is None:
+            return await embed_helper(ctx, "No tournaments running!")
+        teams = await self.config.guild(ctx.guild).teams()
+        pages = []
+        for id in teams.keys():
+            embed = await self.get_team_embed(ctx, id)
+            pages.append(embed)
+        if not pages:
+            return await embed_helper(ctx, "No teams to show")
+        if pagify:
+            if pages:
+                return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=120)
+        else:
+            for page in pages:
+                await ctx.send(embed=page)
+
+    # Completed
+    @commands.command(name="removeteam")
+    @commands.guild_only()
+    @checks.admin_or_permissions()
+    @checks.bot_has_permissions(manage_roles=True)
+    async def command_removeteam(self, ctx: commands.Context, *, team_name: str):
+        """
+            Remove a team from the tournament. Cannot be done after starting the bracket
+        """
+
+        url = await self.config.guild(ctx.guild).tournament_url()
+        if url is None:
+            return await embed_helper(ctx, "No tournaments running!")
+        tournament_id = await self.config.guild(ctx.guild).tournament_id()
+        start_time = challonge.tournaments.show(tournament=tournament_id)["started-at"]
+        if start_time is not None:
+            return await embed_helper(ctx, "Tournament has already been started!")
+        tournament_name = await self.config.guild(ctx.guild).tournament_name()
+        team_found = False
+
+        teams = await self.config.guild(ctx.guild).teams()
+        for team_id, team_data in teams.items():
+            if team_data["name"] == team_name:
+                team_found = True
+                try:
+                    challonge.participants.destroy(tournament_id, team_id)
+                except challonge.api.ChallongeException as e:
+                    log.exception(
+                        f"Error when removing participant from tournament {tournament_name}",
+                        exc_info=e,
+                    )
+                    return await embed_helper(ctx, f"An error has occurred:\n`{e}`")
+                async with self.config.guild(ctx.guild).teams() as all_teams:
+                    del all_teams[team_id]
+                try:
+                    role = discord.utils.get(ctx.guild.roles, name=team_name)
+                    if role:
+                        await role.delete()
+                except discord.Forbidden:
+                    return await embed_helper(ctx, f"Failed to delete role {team_name}")
+                return await embed_helper(
+                    ctx,
+                    "Team {} has been removed from {}".format(
+                        team_name, tournament_name
+                    )
+                )
+        if not team_found:
+            await embed_helper(ctx, "Team {} not found".format(team_name))
+
+    @commands.command(name="substituteplayer")
+    @commands.guild_only()
+    @checks.admin_or_permissions()
+    @checks.bot_has_permissions(manage_roles=True)
+    async def command_substituteplayer(self, ctx: commands.Context, team_name: str, team_player: discord.Member, substitute_player: discord.Member):
+        """
+            Replace team member with substitute player
+        """
+        url = await self.config.guild(ctx.guild).tournament_url()
+        if url is None:
+            return await embed_helper(ctx, "No tournaments running!")
+        team_found = False
+        teams = await self.config.guild(ctx.guild).teams()
+        for team_id, team_data in teams.items():
+            if team_data["name"] == team_name:
+                team_found = True
+                if team_player not in team_data["players"]:
+                    return await embed_helper(ctx, f"{team_player} is not a member of team {team_name}")
+                if substitute_player not in team_data["subs"]:
+                    return await embed_helper(ctx, f"{substitute_player} is not a substitute of team {team_name}")
+                if team_player == team_data["captain_id"]:
+                    return await embed_helper(ctx, "You cannot switch out the captain")
+                teams[team_id]["subs"] = [i for i in team_data["subs"] if i != substitute_player.id] + [team_player.id]
+                teams[team_id]["players"] = [i for i in team_data["players"] if i != team_player.id] + [substitute_player.id]
+                break
+        if team_found:
+            await self.config.guild(ctx.guild).teams.set(teams)
+        else:
+            await embed_helper(ctx, f"Team {team_name} not found")
+        await ctx.tick()
+
+    async def get_card_emoji(self, card_name: str):
+        if not self.constants:
+            return ""
+        card_key = await self.constants.card_to_key(card_name)
+        emoji = ""
+        if card_key:
+            emoji = self.emoji(card_key)
+        if emoji == "":
+            emoji = self.emoji(card_name)
+        return emoji
+
+    def emoji(self, name: str):
+        """Emoji by name."""
+        for emoji in self.bot.emojis:
+            if emoji.name == name.replace(" ", "").replace("-", "").replace(".", ""):
+                return "<:{}:{}>".format(emoji.name, emoji.id)
+        return ""
 
     async def discord_setup(self, ctx: commands.Context):
         teams = await self.config.guild(ctx.guild).teams()
@@ -871,7 +1405,7 @@ class PokemonLeague(commands.Cog):
 
         overwrites = {
             ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-            ctx.guild.me: discord.PermissionOverwrite(read_messages=True),
+            ctx.guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True),
         }
 
         everyone_role = ctx.author.roles[0]
@@ -956,332 +1490,3 @@ class PokemonLeague(commands.Cog):
                     channels_created[category.name].append(new_channel.id)
         await self.config.guild(ctx.guild).gym_channels.set(channels_created)
         await ctx.tick()
-
-    @commands.command(name="deletebadgechannels")
-    @checks.admin()
-    @checks.bot_has_permissions(manage_channels=True)
-    async def command_deletebadgechannels(self, ctx: commands.Context):
-        """
-            Delete all text channels with badge in their name
-            To be used when tournament ends to prepare for next tournament
-        """
-        url = await self.config.guild(ctx.guild).tournament_url()
-        if url:
-            await embed_helper(
-                ctx,
-                (
-                    "There is a tournament running in the server! "
-                    "You cannot delete channels without finishing the tournament."
-                )
-            )
-            return
-        await ctx.send(
-            (
-                "This command will delete all channels that have `badge` in their name. "
-                "Are you sure you want to do that?"
-            )
-        )
-        pred = MessagePredicate.yes_or_no(ctx)
-        await self.bot.wait_for("message", check=pred)
-        if pred.result is False:
-            await ctx.send("You have chosen not to delete the channels.")
-            return
-        try:
-            for channel in ctx.guild.text_channels:
-                if "badge" in channel.name:
-                    await channel.delete()
-        except discord.Forbidden:
-            return await embed_helper(ctx, "No permission to delete channel.")
-        except discord.HTTPException:
-            return await embed_helper(ctx, "Error when deleting channel.")
-        await ctx.tick()
-
-    @commands.command(name="resetbadges")
-    @checks.admin()
-    @checks.bot_has_permissions(manage_roles=True)
-    async def command_resetbadges(self, ctx: commands.Context):
-        """
-            Remove badge from all guild members
-        """
-        url = await self.config.guild(ctx.guild).tournament_url()
-        if url:
-            return await embed_helper(
-                ctx,
-                "There is a tournament running in the server! You cannot reset without finishing the tournament.",
-            )
-        await ctx.send(
-            (
-                f"This command will delete all badge roles. Are you sure you want to do that?"
-            )
-        )
-        pred = MessagePredicate.yes_or_no(ctx)
-        await self.bot.wait_for("message", check=pred)
-        if pred.result is False:
-            await ctx.send("You have chosen not to reset the badges.")
-            return
-
-        gym_badges = [g["badge"] for g in self.gyms.values()]
-        for badge_name in gym_badges:
-            for role in ctx.guild.roles:
-                if role.name == badge_name:
-                    member_list = role.members
-                    for member in member_list:
-                        await member.remove_roles(role)
-        await ctx.tick()
-
-    @commands.command(name="setleaguechannel")
-    @checks.admin_or_permissions()
-    async def command_setleaguechannel(
-        self, ctx: commands.Context, channel: discord.TextChannel
-    ):
-        """
-            Set announcement channel for matches
-        """
-        await self.config.guild(ctx.guild).channel_id.set(channel.id)
-        await ctx.tick()
-
-    @commands.command(name="choosepokemontype")
-    @commands.guild_only()
-    @checks.bot_has_permissions(manage_roles=True)
-    async def command_choosepokemontype(
-        self, ctx: commands.Context, pokemontype1, pokemontype2
-    ):
-        """
-            Choose your pokemon types
-        """
-        teams_data = await self.config.guild(ctx.guild).teams()
-        for team in teams_data.values():
-            if ctx.author.id in team["players"]:
-                return await embed_helper(
-                    ctx, f"You are already registered for team {team['name']}"
-                )
-        valid_types = [name.split(" ")[0].lower() for name in self.pokemons.keys()]
-        pokemon_role_names = [
-            (pokemon.lower().capitalize().split(" ")[0] + " Player")
-            for pokemon in self.pokemons.keys()
-        ]
-        if pokemontype1.lower() not in valid_types:
-            return await embed_helper(
-                ctx, f"{pokemontype1} is not a valid pokemon type."
-            )
-        if pokemontype2.lower() not in valid_types:
-            return await embed_helper(
-                ctx, f"{pokemontype2} is not a valid pokemon type."
-            )
-        await self.config.user(ctx.author).pokemons.set(
-            [pokemontype1.lower(), pokemontype2.lower()]
-        )
-        for pokemon_role_name in pokemon_role_names:
-            poke_role = discord.utils.get(ctx.author.roles, name=pokemon_role_name)
-            if poke_role:
-                await ctx.author.remove_roles(poke_role)
-        poke1_role = discord.utils.get(
-            ctx.guild.roles,
-            name=(pokemontype1.lower().capitalize().split(" ")[0] + " Player"),
-        )
-        if poke1_role:
-            await ctx.author.add_roles(poke1_role)
-        poke2_role = discord.utils.get(
-            ctx.guild.roles,
-            name=(pokemontype2.lower().capitalize().split(" ")[0] + " Player"),
-        )
-        if poke2_role:
-            await ctx.author.add_roles(poke2_role)
-        await ctx.tick()
-
-    @commands.command(name="showtypes")
-    async def showtypes(self, ctx, *, pokemon_type=None):
-        """
-            Show all cards of specific type if type is mentioned and all types if type is not specified
-        """
-        if pokemon_type:
-            cards = None
-            for p_type in self.pokemons.keys():
-                if p_type.lower().split()[0] == pokemon_type.lower():
-                    cards = self.pokemons.get(p_type)
-            if not cards:
-                return await embed_helper(
-                    ctx, f"{pokemon_type} is not recognized as a valid pokemon type."
-                )
-            else:
-                embed = discord.Embed(color=0xFAA61A,)
-                embed.set_author(name=f"Pokemon card index")
-                value = ["\u200b\n"]
-                for card in cards:
-                    emoji = await self.get_card_emoji(card)
-                    if emoji:
-                        value.append(emoji)
-                    else:
-                        value.append(f" {card} ")
-                if len(value):
-                    value = " ".join(value)
-                    embed.add_field(
-                        name=f"{pokemon_type.lower().capitalize()} cards",
-                        value=value,
-                        inline=False,
-                    )
-                return await ctx.send(embed=embed)
-
-        pages = []
-        for pokemon_type in self.pokemons.keys():
-            cards = self.pokemons[pokemon_type]
-            embed = discord.Embed(color=0xFAA61A)
-            embed.set_author(name=f"Pokemon card index")
-            value = ["\u200b\n"]
-            for card in cards:
-                emoji = await self.get_card_emoji(card)
-                if emoji:
-                    value.append(emoji)
-                else:
-                    value.append(f" {card} ")
-            if len(value):
-                value = " ".join(value)
-                embed.add_field(
-                    name=f"{pokemon_type.lower().capitalize()} cards",
-                    value=value,
-                    inline=False,
-                )
-                pages.append(embed)
-        return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=120)
-
-    @commands.command(name="showcardtype")
-    async def command_showcardtype(self, ctx: commands.Context, *, card_names: str):
-        """
-            Show type of card.
-        """
-        for card_name in card_names.split(";"):
-            card_type = []
-            for pokemon_type in self.pokemons.keys():
-                cards = self.pokemons[pokemon_type]
-                for card in cards:
-                    if card.lower() == card_name.lower():
-                        card_name = card
-                        card_type.append(pokemon_type.split()[0])
-            if len(card_type) > 0:
-                return await embed_helper(
-                    ctx, f"{card_name} belongs to  {humanize_list(card_type)} types."
-                )
-            url = "https://docs.google.com/spreadsheets/d/1TIH9iwTb9UpHYWKIgHpY72wizLSp79ROt4D4lWe8YIM/edit?usp=sharing"
-            await embed_helper(
-                ctx,
-                "Cannot find card {}. Please use the [spreadsheet]({}).".format(
-                    card_name, url
-                ),
-            )
-
-    @commands.command(name="checkdeck")
-    async def command_checkdeck(
-        self, ctx: commands.Context, member: discord.Member, deck_url: str
-    ):
-        """
-            Check if cards are valid types according to member's pokemons
-        """
-        is_valid = re.search(
-            "(http|ftp|https)://link.clashroyale.com/deck/en\?deck=[0-9;]+", deck_url
-        )
-        if not is_valid:
-            return await embed_helper(ctx, "Deck url is not valid.")
-        deck_cards = re.findall("2[0-9]{7}", deck_url)
-
-        user_pokemon_types = await self.config.user(member).pokemons()
-        await embed_helper(
-            ctx,
-            f"Member {member.mention} has chosen types:\n{humanize_list(user_pokemon_types)}",
-        )
-        if len(user_pokemon_types) != 2:
-            return await embed_helper(
-                ctx, f"{member.mention} has not set their pokemon types"
-            )
-        valid_card_names = []
-        invalid_card_names = []
-        cog = self.bot.get_cog("ClashRoyaleClans")
-        if not cog:
-            return await embed_helper(
-                ctx, "ClashRoyale cog needs to be loaded for this to work."
-            )
-        all_cards = list(await cog.clash.get_all_cards())
-        for card in all_cards:
-            if str(card.id) in deck_cards:
-                for pokemon_type in self.pokemons.keys():
-                    if card.name in self.pokemons[pokemon_type]:
-                        if pokemon_type.split(" ")[0].lower() not in user_pokemon_types:
-                            invalid_card_names.append(card.name)
-                        else:
-                            valid_card_names.append(card.name)
-                            break
-
-        invalid_card_names = [
-            i for i in invalid_card_names if i not in valid_card_names
-        ]
-        if invalid_card_names:
-            return await embed_helper(
-                ctx,
-                (
-                    f"The deck has {len(invalid_card_names)} invalid cards:\n"
-                    f"{humanize_list([(await self.get_card_emoji(c) or c) for c in invalid_card_names])}"
-                ),
-            )
-        else:
-            return await embed_helper(ctx, "All cards are valid.")
-
-    @commands.command(name="changecaptain")
-    async def command_changecaptain(
-        self, ctx: commands.Context, team_name: str, new_captain: discord.Member
-    ):
-        """
-            Change captain to new one
-        """
-        team_found = False
-        teams_data = await self.config.guild(ctx.guild).teams()
-        for team_id in teams_data.keys():
-            if (
-                new_captain.id in teams_data[team_id]["players"]
-                and teams_data[team_id]["name"] != team_name
-            ):
-                return await embed_helper(
-                    ctx,
-                    f"Player {new_captain.mention} is already registered with team {teams_data[team_id]['name']}",
-                )
-            if teams_data[team_id]["name"] == team_name:
-                if ctx.author.id != teams_data[team_id][
-                    "captain_id"
-                ] and not await self.bot.is_admin(ctx.author):
-                    return await embed_helper(
-                        ctx, "Only captains and admins are allowed to change captains."
-                    )
-                if new_captain.id not in teams_data[team_id]["players"]:
-                    return await embed_helper(
-                        ctx,
-                        f"{new_captain.mention} is not a team member for {team_name}",
-                    )
-                if new_captain.id == teams_data[team_id]["captain_id"]:
-                    await ctx.send("You assigning yourself as captain: ")
-                    return await ctx.send(
-                        "https://i.kym-cdn.com/entries/icons/facebook/000/030/329/cover1.jpg"
-                    )
-                teams_data[team_id]["captain_id"] = new_captain.id
-                team_found = True
-        if team_found:
-            await self.config.guild(ctx.guild).teams.set(teams_data)
-        else:
-            await embed_helper(ctx, f"Team {team_name} not found")
-
-        await ctx.tick()
-
-    async def get_card_emoji(self, card_name: str):
-        if not self.constants:
-            return ""
-        card_key = await self.constants.card_to_key(card_name)
-        emoji = ""
-        if card_key:
-            emoji = self.emoji(card_key)
-        if emoji == "":
-            emoji = self.emoji(card_name)
-        return emoji
-
-    def emoji(self, name: str):
-        """Emoji by name."""
-        for emoji in self.bot.emojis:
-            if emoji.name == name.replace(" ", "").replace("-", "").replace(".", ""):
-                return "<:{}:{}>".format(emoji.name, emoji.id)
-        return ""
