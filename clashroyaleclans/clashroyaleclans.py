@@ -1295,7 +1295,7 @@ class ClashRoyaleClans(commands.Cog):
         await ctx.tick()
 
     @clans.command(name="cwthreshold")
-    async def clans_cwthreshold(self, ctx, clankey, value: str):
+    async def clans_cwthreshold(self, ctx, clankey, value: int):
         """ Set fame threshold for clan """
         clan_name = None
         for name, data in self.family_clans.items():
@@ -1313,7 +1313,7 @@ class ClashRoyaleClans(commands.Cog):
         await ctx.tick()
 
     @clans.command(name="wdwins")
-    async def clans_wdwins(self, ctx, clankey, value: str):
+    async def clans_wdwins(self, ctx, clankey, value: int):
         """ Set warday wins requirements for clan """
         clan_name = None
         for name, data in self.family_clans.items():
