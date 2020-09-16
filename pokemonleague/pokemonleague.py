@@ -232,7 +232,7 @@ class PokemonLeague(commands.Cog):
             teams[participant_id]["captain_id"] = ctx.author.id
             teams[participant_id]["players"] = [user1.id, user2.id, ctx.author.id]
             teams[participant_id]["pokemon_choices"] = list(
-                captain_pokemons + user_1_pokemons + user_2_pokemons
+                list(captain_pokemons) + list(user_1_pokemons) + list(user_2_pokemons)
             )
             teams[participant_id]["subs"] = list()
         role = discord.utils.get(ctx.guild.roles, name=name)
@@ -1238,11 +1238,8 @@ class PokemonLeague(commands.Cog):
             ]
         )
         sub_list = " ".join(
-            [
-                ctx.guild.get_member(sub_id).mention
-                for sub_id in subs_id
-            ]
-        )
+            [ctx.guild.get_member(sub_id).mention for sub_id in subs_id]
+        ) or "None"
         embed.add_field(name="Team Players", value=player_list, inline=False)
         embed.add_field(name="Substitute Players", value=sub_list, inline=False)
         pokemons = humanize_list(team["pokemon_choices"])
