@@ -7,7 +7,7 @@ import re
 import string
 from typing import Optional
 
-import challonge
+from .src.challonge.account import Account, ChallongeException
 import discord
 from redbot.core import Config, checks, commands
 from redbot.core.data_manager import bundled_data_path
@@ -88,6 +88,8 @@ class PokemonLeague(commands.Cog):
         self.config.register_guild(**default_guild)
         self.config.register_user(**default_user)
         self.assigned_channel_lock = asyncio.Lock()
+        self.challonge = None
+        self.token_task = self.bot.loop.create_task(self.challongetoken())
 
     async def challongetoken(self):
         """ Set challonge api token """
@@ -98,7 +100,14 @@ class PokemonLeague(commands.Cog):
                 "Use !set api challonge username,YOUR_USERNAME token,YOUR_CHALLONGE_TOKEN"
             )
             raise NoToken
-        challonge.set_credentials(username=token["username"], api_key=token["token"])
+        self.challonge = Account(token["username"], token["token"], timeout=60)
+
+    def cog_unload(self):
+        if self.token_task:
+            self.token_task.cancel()
+        if self.challonge and not self.challonge._session.closed:
+            self.bot.loop.create_task(self.challonge._session.close())
+
 
     # Completed
     @commands.command(name="createbracket")
@@ -114,7 +123,7 @@ class PokemonLeague(commands.Cog):
             url = "".join(
                 random.choice(string.ascii_lowercase + string.digits) for _ in range(12)
             )
-            tournament = challonge.tournaments.create(
+            tournament = await self.challonge.tournaments.create(
                 name=name, url=url, game_id=49390, game_name="Clash Royale"
             )
             tournament_id = tournament["id"]
@@ -152,7 +161,7 @@ class PokemonLeague(commands.Cog):
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
         tournament = await self.config.guild(ctx.guild).tournament_id()
-        start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
+        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
         if start_time is not None:
             return await embed_helper(
                 ctx, "Tournament has already been started. Registrations are closed."
@@ -214,10 +223,10 @@ class PokemonLeague(commands.Cog):
                 )
 
         try:
-            participant = challonge.participants.create(
+            participant = await self.challonge.participants.create(
                 tournament=tournament, name=name
             )
-        except challonge.api.ChallongeException as e:
+        except ChallongeException as e:
             log.exception("Error when registering team", exc_info=e)
             return await ctx.send(
                 "Error when registering team.\nPlease contact the moderators with:`{}`".format(
@@ -278,7 +287,7 @@ class PokemonLeague(commands.Cog):
             return await embed_helper(ctx, "No tournaments running!")
         tournament = await self.config.guild(ctx.guild).tournament_id()
 
-        start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
+        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
         if start_time is not None:
             return await embed_helper(
                 ctx, "Tournament has already been started. Registrations are closed."
@@ -349,7 +358,7 @@ class PokemonLeague(commands.Cog):
             return await embed_helper(ctx, "No tournaments running!")
         tournament = await self.config.guild(ctx.guild).tournament_id()
         tournament_name = await self.config.guild(ctx.guild).tournament_name()
-        start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
+        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
         if start_time is not None:
             return await embed_helper(ctx, "Tournament has already been started!")
         try:
@@ -363,8 +372,8 @@ class PokemonLeague(commands.Cog):
             )
             await embed_helper(ctx, "Error when prepping up the gyms.")
             return
-        challonge.participants.randomize(tournament=tournament)
-        challonge.tournaments.start(tournament=tournament)
+        await self.challonge.participants.randomize(tournament=tournament)
+        await self.challonge.tournaments.start(tournament=tournament)
         await embed_helper(
             ctx,
             "Tournament [{}]({}) has been started.".format(
@@ -385,7 +394,7 @@ class PokemonLeague(commands.Cog):
         tournament = await self.config.guild(ctx.guild).tournament_id()
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
-        start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
+        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
         if start_time is None:
             return await embed_helper(ctx, "Tournament has not been started.")
 
@@ -401,7 +410,7 @@ class PokemonLeague(commands.Cog):
                         ctx, "Only captains and admins are allowed to update wins."
                     )
                 team_found = True
-                matches_list = challonge.matches.index(tournament=tournament)
+                matches_list = await self.challonge.matches.index(tournament=tournament)
                 async for single_match_data in AsyncIter(matches_list):
                     if single_match_data["state"] == "open":
                         if (
@@ -413,7 +422,7 @@ class PokemonLeague(commands.Cog):
                             else:
                                 scores = "0-1"
                             match_id = single_match_data["id"]
-                            challonge.matches.update(
+                            await self.challonge.matches.update(
                                 tournament=tournament,
                                 match_id=match_id,
                                 winner_id=team_id,
@@ -482,7 +491,7 @@ class PokemonLeague(commands.Cog):
                             match_found = True
                 if match_found:  # search for next match
                     new_match_found = False
-                    matches_list = challonge.matches.index(tournament=tournament)
+                    matches_list = await self.challonge.matches.index(tournament=tournament)
                     async for single_match in AsyncIter(matches_list):
                         if single_match["state"] == "open":
                             if (
@@ -723,12 +732,12 @@ class PokemonLeague(commands.Cog):
         tournament = await self.config.guild(ctx.guild).tournament_id()
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
-        start_time = challonge.tournaments.show(tournament=tournament)["started-at"]
+        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
         if start_time is None:
             return await embed_helper(ctx, "Tournament has not been started.")
         channel_id = await self.config.guild(ctx.guild).channel_id()
         channel = ctx.guild.get_channel(channel_id)
-        all_matches = challonge.matches.index(tournament=tournament)
+        all_matches = await self.challonge.matches.index(tournament=tournament)
         async for single_match in AsyncIter(all_matches):
             if single_match["state"] == "open":
                 team_1_id = str(single_match["player1-id"])
@@ -914,7 +923,7 @@ class PokemonLeague(commands.Cog):
         pred = ReactionPredicate.yes_or_no(msg, ctx.author)
         await ctx.bot.wait_for("reaction_add", check=pred)
         if pred.result is True:
-            challonge.api.fetch("DELETE", "tournaments/{}".format(tournament))
+            await self.challonge.tournaments.destroy(tournament)
         await self.config.guild(ctx.guild).channel_id.set(channel_id)
         await ctx.tick()
 
@@ -1305,7 +1314,7 @@ class PokemonLeague(commands.Cog):
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
         tournament_id = await self.config.guild(ctx.guild).tournament_id()
-        start_time = challonge.tournaments.show(tournament=tournament_id)["started-at"]
+        start_time = (await self.challonge.tournaments.show(tournament=tournament_id))["started-at"]
         if start_time is not None:
             return await embed_helper(ctx, "Tournament has already been started!")
         tournament_name = await self.config.guild(ctx.guild).tournament_name()
@@ -1316,8 +1325,8 @@ class PokemonLeague(commands.Cog):
             if team_data["name"] == team_name:
                 team_found = True
                 try:
-                    challonge.participants.destroy(tournament_id, team_id)
-                except challonge.api.ChallongeException as e:
+                    await self.challonge.participants.destroy(tournament_id, team_id)
+                except ChallongeException as e:
                     log.exception(
                         f"Error when removing participant from tournament {tournament_name}",
                         exc_info=e,
