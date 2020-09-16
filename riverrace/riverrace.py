@@ -734,7 +734,7 @@ class RiverRace(commands.Cog):
                         accuracy, battles = await self.get_riverBattles(i['tag'].strip('#'), int(0))
                     dBB, aBB, pvp, duel = await self.seperate(battles)
                     embed.add_field(name= "<:cw2:751746305830682644> __River Stats__ <:cw2:751746305830682644>",
-                                    value= f"**Fame & Repair:{tab}Total:**\n<:fame:685013098540564502> {i['fame']} \u200B <:repair:750646558483284020> {i['repairPoints']}", inline=False)
+                                    value= f"**Fame & Repair:{tab}Total:**\n<:fame:685013098540564502> {i['fame']} \u200B <:repair:750646558483284020> {i['repairPoints']}{tab*3}<:famehammer3:750978996740685835>{i['fame']+i['repairPoints']}", inline=False)
                     if accuracy == True: 
                         
                         for l in duel:
@@ -859,7 +859,7 @@ class RiverRace(commands.Cog):
                         accuracy, battles = await self.get_lastriverBattles(i['tag'].strip('#'), int(0))
                     dBB, aBB, pvp, duel = await self.seperate(battles)
                     embed.add_field(name= "<:cw2:751746305830682644> __River Stats__ <:cw2:751746305830682644>",
-                                    value= f"**Fame & Repair:{tab}Total:**\n<:fame:685013098540564502> {i['fame']} \u200B <:repair:750646558483284020> {i['repairPoints']}", inline=False)
+                                    value= f"**Fame & Repair:{tab}Total:**\n<:fame:685013098540564502> {i['fame']} \u200B <:repair:750646558483284020> {i['repairPoints']}{tab*3}<:famehammer3:750978996740685835>{i['fame']+i['repairPoints']}", inline=False)
                     if accuracy == True: 
                         
                         for l in duel:
