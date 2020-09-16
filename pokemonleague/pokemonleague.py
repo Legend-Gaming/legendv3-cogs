@@ -7,7 +7,6 @@ import re
 import string
 from typing import Optional
 
-from .src.challonge.account import Account, ChallongeException
 import discord
 from redbot.core import Config, checks, commands
 from redbot.core.data_manager import bundled_data_path
@@ -15,6 +14,8 @@ from redbot.core.utils import AsyncIter
 from redbot.core.utils.chat_formatting import humanize_list
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu, start_adding_reactions
 from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
+
+from .src.challonge.account import Account, ChallongeException
 
 """
 Important read below before you read the code: https://api.challonge.com/v1/documents
@@ -108,7 +109,6 @@ class PokemonLeague(commands.Cog):
         if self.challonge and not self.challonge._session.closed:
             self.bot.loop.create_task(self.challonge._session.close())
 
-
     # Completed
     @commands.command(name="createbracket")
     @commands.guild_only()
@@ -123,9 +123,13 @@ class PokemonLeague(commands.Cog):
             url = "".join(
                 random.choice(string.ascii_lowercase + string.digits) for _ in range(12)
             )
-            tournament = await self.challonge.tournaments.create(
-                name=name, url=url, game_id=49390, game_name="Clash Royale"
-            )
+            try:
+                tournament = await self.challonge.tournaments.create(
+                    name=name, url=url, game_id=49390, game_name="Clash Royale"
+                )
+            except ChallongeException as e:
+                log.exception("Error when creating tournament: ", exc_info=e)
+                return await embed_helper(ctx, "Failed to create tournament")
             tournament_id = tournament["id"]
             url = tournament["full-challonge-url"]
             await self.config.guild(ctx.guild).tournament_id.set(tournament_id)
@@ -161,7 +165,13 @@ class PokemonLeague(commands.Cog):
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
         tournament = await self.config.guild(ctx.guild).tournament_id()
-        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
+        try:
+            start_time = (await self.challonge.tournaments.show(tournament=tournament))[
+                "started-at"
+            ]
+        except ChallongeException as e:
+            log.exception("Error when getting tournament info: ", exc_info=e)
+            return await embed_helper(ctx, "Failed to get tournament info.")
         if start_time is not None:
             return await embed_helper(
                 ctx, "Tournament has already been started. Registrations are closed."
@@ -173,14 +183,14 @@ class PokemonLeague(commands.Cog):
                 (
                     "You cannot add yourself more than once. "
                     "Maybe its your evil twin but they'll need to get their own discord."
-                )
+                ),
             )
         if user1 == user2:
             return await embed_helper(
                 ctx,
                 "I am sorry. I see only one of {}. Now go get a third member.".format(
                     user1.mention
-                )
+                ),
             )
         teams = await self.config.guild(ctx.guild).teams()
         captain_pokemons = set(await self.config.user(ctx.author).pokemons())
@@ -211,15 +221,16 @@ class PokemonLeague(commands.Cog):
                 return await embed_helper(
                     ctx, "This name is already taken. Choose a better name."
                 )
-            if (
-                    any([u.id in teams[team_id]["players"] for u in [user1, user2, ctx.author]])
-                    or any([u.id in teams[team_id]["subs"] for u in [user1, user2, ctx.author]])
+            if any(
+                [u.id in teams[team_id]["players"] for u in [user1, user2, ctx.author]]
+            ) or any(
+                [u.id in teams[team_id]["subs"] for u in [user1, user2, ctx.author]]
             ):
                 return await embed_helper(
                     ctx,
                     "A team member is already registered with team {}".format(
                         teams[team_id]["name"]
-                    )
+                    ),
                 )
 
         try:
@@ -250,19 +261,24 @@ class PokemonLeague(commands.Cog):
                 ctx,
                 "There is already a role with name {}. Please contact the moderators for the team roles.".format(
                     name
-                )
+                ),
             )
         else:
             try:
                 role = await ctx.guild.create_role(name=name)
             except discord.Forbidden:
-                await embed_helper(ctx, "Failed to create role. Ask the admins to give bot perms.")
+                await embed_helper(
+                    ctx, "Failed to create role. Ask the admins to give bot perms."
+                )
         try:
             await ctx.author.add_roles(role)
             await user1.add_roles(role)
             await user2.add_roles(role)
         except discord.Forbidden:
-            await embed_helper(ctx, "Failed to add role for one of team members. Please contact moderators.")
+            await embed_helper(
+                ctx,
+                "Failed to add role for one of team members. Please contact moderators.",
+            )
         await embed_helper(ctx, "Team {} successfully registered.".format(name))
         await ctx.tick()
 
@@ -271,10 +287,7 @@ class PokemonLeague(commands.Cog):
     @commands.guild_only()
     @checks.bot_has_permissions(manage_roles=True)
     async def command_registersubs(
-        self,
-        ctx: commands.Context,
-        team_name: str,
-        *substitute_players: discord.Member
+        self, ctx: commands.Context, team_name: str, *substitute_players: discord.Member
     ):
         """
             Register your subtitute players
@@ -287,7 +300,13 @@ class PokemonLeague(commands.Cog):
             return await embed_helper(ctx, "No tournaments running!")
         tournament = await self.config.guild(ctx.guild).tournament_id()
 
-        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
+        try:
+            start_time = (await self.challonge.tournaments.show(tournament=tournament))[
+                "started-at"
+            ]
+        except ChallongeException as e:
+            log.exception("Error when getting tournament info: ", exc_info=e)
+            return await embed_helper(ctx, "Failed to get tournament info.")
         if start_time is not None:
             return await embed_helper(
                 ctx, "Tournament has already been started. Registrations are closed."
@@ -298,7 +317,10 @@ class PokemonLeague(commands.Cog):
         team_id_to_modify = None
 
         if any(
-            [len(set(await self.config.user(p).pokemons())) != 2 for p in substitute_players]
+            [
+                len(set(await self.config.user(p).pokemons())) != 2
+                for p in substitute_players
+            ]
         ):
             return await embed_helper(
                 ctx, "Some members have not set their pokemon types."
@@ -310,12 +332,12 @@ class PokemonLeague(commands.Cog):
             if any([u.id in teams[team_id]["players"] for u in substitute_players]):
                 return await embed_helper(
                     ctx,
-                    f"A member is already registered as a team player with team {teams[team_id]['name']}"
+                    f"A member is already registered as a team player with team {teams[team_id]['name']}",
                 )
-            if any([u.id in teams[team_id]["subs"]for u in substitute_players]):
+            if any([u.id in teams[team_id]["subs"] for u in substitute_players]):
                 return await embed_helper(
                     ctx,
-                    f"A member is already registered as a substitute player with team {teams[team_id]['name']}"
+                    f"A member is already registered as a substitute player with team {teams[team_id]['name']}",
                 )
 
             if teams[team_id]["name"] == team_name:
@@ -334,16 +356,21 @@ class PokemonLeague(commands.Cog):
             return await embed_helper(
                 ctx,
                 f"There is no role with name {team_name}. "
-                "Please contact the moderators for the team roles."
-                )
+                "Please contact the moderators for the team roles.",
+            )
         async with self.config.guild(ctx.guild).teams() as teams:
             for substitute_player in substitute_players:
                 teams[team_id_to_modify]["subs"].append(substitute_player.id)
                 try:
                     await substitute_player.add_roles(role)
                 except:
-                    await embed_helper(ctx, f"Failed to add role for {substitute_player}")
-        await embed_helper(ctx, f"Registered {humanize_list([p.mention for p in substitute_players])} as subs")
+                    await embed_helper(
+                        ctx, f"Failed to add role for {substitute_player}"
+                    )
+        await embed_helper(
+            ctx,
+            f"Registered {humanize_list([p.mention for p in substitute_players])} as subs",
+        )
 
     @commands.command(name="startbracket")
     @commands.guild_only()
@@ -358,7 +385,13 @@ class PokemonLeague(commands.Cog):
             return await embed_helper(ctx, "No tournaments running!")
         tournament = await self.config.guild(ctx.guild).tournament_id()
         tournament_name = await self.config.guild(ctx.guild).tournament_name()
-        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
+        try:
+            start_time = (await self.challonge.tournaments.show(tournament=tournament))[
+                "started-at"
+            ]
+        except ChallongeException as e:
+            log.exception("Error when getting tournament info: ", exc_info=e)
+            return await embed_helper(ctx, "Failed to get tournament info.")
         if start_time is not None:
             return await embed_helper(ctx, "Tournament has already been started!")
         try:
@@ -372,8 +405,12 @@ class PokemonLeague(commands.Cog):
             )
             await embed_helper(ctx, "Error when prepping up the gyms.")
             return
-        await self.challonge.participants.randomize(tournament=tournament)
-        await self.challonge.tournaments.start(tournament=tournament)
+        try:
+            await self.challonge.participants.randomize(tournament=tournament)
+            await self.challonge.tournaments.start(tournament=tournament)
+        except ChallongeException as e:
+            log.exception("Error when starting tournament: ", exc_info=e)
+            return await embed_helper(ctx, "Failed to start tournament.")
         await embed_helper(
             ctx,
             "Tournament [{}]({}) has been started.".format(
@@ -394,7 +431,13 @@ class PokemonLeague(commands.Cog):
         tournament = await self.config.guild(ctx.guild).tournament_id()
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
-        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
+        try:
+            start_time = (await self.challonge.tournaments.show(tournament=tournament))[
+                "started-at"
+            ]
+        except ChallongeException as e:
+            log.exception("Error when getting tournament info: ", exc_info=e)
+            return await embed_helper(ctx, "Failed to get tournament info.")
         if start_time is None:
             return await embed_helper(ctx, "Tournament has not been started.")
 
@@ -410,7 +453,13 @@ class PokemonLeague(commands.Cog):
                         ctx, "Only captains and admins are allowed to update wins."
                     )
                 team_found = True
-                matches_list = await self.challonge.matches.index(tournament=tournament)
+                try:
+                    matches_list = await self.challonge.matches.index(
+                        tournament=tournament
+                    )
+                except ChallongeException as e:
+                    log.exception("Error when getting match info: ", exc_info=e)
+                    return await embed_helper(ctx, "Failed to get match info.")
                 async for single_match_data in AsyncIter(matches_list):
                     if single_match_data["state"] == "open":
                         if (
@@ -422,12 +471,18 @@ class PokemonLeague(commands.Cog):
                             else:
                                 scores = "0-1"
                             match_id = single_match_data["id"]
-                            await self.challonge.matches.update(
-                                tournament=tournament,
-                                match_id=match_id,
-                                winner_id=team_id,
-                                scores_csv=scores,
-                            )
+                            try:
+                                await self.challonge.matches.update(
+                                    tournament=tournament,
+                                    match_id=match_id,
+                                    winner_id=team_id,
+                                    scores_csv=scores,
+                                )
+                            except ChallongeException as e:
+                                log.exception("Error when update score: ", exc_info=e)
+                                return await embed_helper(
+                                    ctx, "Failed to update score."
+                                )
 
                             async with self.assigned_channel_lock:
                                 # Revoke perms for players
@@ -491,7 +546,13 @@ class PokemonLeague(commands.Cog):
                             match_found = True
                 if match_found:  # search for next match
                     new_match_found = False
-                    matches_list = await self.challonge.matches.index(tournament=tournament)
+                    try:
+                        matches_list = await self.challonge.matches.index(
+                            tournament=tournament
+                        )
+                    except ChallongeException as e:
+                        log.exception("Error when getting match info: ", exc_info=e)
+                        return await embed_helper(ctx, "Failed to get match info.")
                     async for single_match in AsyncIter(matches_list):
                         if single_match["state"] == "open":
                             if (
@@ -648,7 +709,9 @@ class PokemonLeague(commands.Cog):
                                     return await channel.send(
                                         content=f"{team_1_captain.mention} {team_2_captain.mention}",
                                         embed=embed,
-                                        allowed_mentions=discord.AllowedMentions(users=False),
+                                        allowed_mentions=discord.AllowedMentions(
+                                            users=False
+                                        ),
                                     )
                                 else:
                                     await embed_helper(
@@ -694,10 +757,9 @@ class PokemonLeague(commands.Cog):
                 )
             if teams_data[team_id]["name"] == team_name:
                 team_found = True
-                if (
-                        ctx.author.id != teams_data[team_id]["captain_id"]
-                        and not await self.bot.is_admin(ctx.author)
-                ):
+                if ctx.author.id != teams_data[team_id][
+                    "captain_id"
+                ] and not await self.bot.is_admin(ctx.author):
                     return await embed_helper(
                         ctx, "Only captains and admins are allowed to change captains."
                     )
@@ -732,12 +794,22 @@ class PokemonLeague(commands.Cog):
         tournament = await self.config.guild(ctx.guild).tournament_id()
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
-        start_time = (await self.challonge.tournaments.show(tournament=tournament))["started-at"]
+        try:
+            start_time = (await self.challonge.tournaments.show(tournament=tournament))[
+                "started-at"
+            ]
+        except ChallongeException as e:
+            log.exception("Error when getting tournament info: ", exc_info=e)
+            return await embed_helper(ctx, "Failed to get tournament info.")
         if start_time is None:
             return await embed_helper(ctx, "Tournament has not been started.")
         channel_id = await self.config.guild(ctx.guild).channel_id()
         channel = ctx.guild.get_channel(channel_id)
-        all_matches = await self.challonge.matches.index(tournament=tournament)
+        try:
+            all_matches = await self.challonge.matches.index(tournament=tournament)
+        except ChallongeException as e:
+            log.exception("Error when getting match info: ", exc_info=e)
+            return await embed_helper(ctx, "Failed to get match info.")
         async for single_match in AsyncIter(all_matches):
             if single_match["state"] == "open":
                 team_1_id = str(single_match["player1-id"])
@@ -762,23 +834,35 @@ class PokemonLeague(commands.Cog):
                             for player_id in teams[str(team_1_id)]["players"]:
                                 player = ctx.guild.get_member(player_id)
                                 if player:
-                                    badge_role = discord.utils.get(ctx.guild.roles, name=gym["badge"])
+                                    badge_role = discord.utils.get(
+                                        ctx.guild.roles, name=gym["badge"]
+                                    )
                                     if badge_role:
                                         player.add_roles(badge_role)
                                     else:
-                                        await embed_helper(ctx, f"Role {gym['badge']} not found")
+                                        await embed_helper(
+                                            ctx, f"Role {gym['badge']} not found"
+                                        )
                                 else:
-                                    await embed_helper(ctx, f"Player {player_id} not found")
+                                    await embed_helper(
+                                        ctx, f"Player {player_id} not found"
+                                    )
                             for player_id in teams[str(team_2_id)]["players"]:
                                 player = ctx.guild.get_member(player_id)
                                 if player:
-                                    badge_role = discord.utils.get(ctx.guild.roles, name=gym["badge"])
+                                    badge_role = discord.utils.get(
+                                        ctx.guild.roles, name=gym["badge"]
+                                    )
                                     if badge_role:
                                         player.add_roles(badge_role)
                                     else:
-                                        await embed_helper(ctx, f"Role {gym['badge']} not found")
+                                        await embed_helper(
+                                            ctx, f"Role {gym['badge']} not found"
+                                        )
                                 else:
-                                    await embed_helper(ctx, f"Player {player_id} not found")
+                                    await embed_helper(
+                                        ctx, f"Player {player_id} not found"
+                                    )
                         if gym["level"] == (single_match["round"] - 1):
                             current_gym = gym
                             break
@@ -923,7 +1007,11 @@ class PokemonLeague(commands.Cog):
         pred = ReactionPredicate.yes_or_no(msg, ctx.author)
         await ctx.bot.wait_for("reaction_add", check=pred)
         if pred.result is True:
-            await self.challonge.tournaments.destroy(tournament)
+            try:
+                await self.challonge.tournaments.destroy(tournament)
+            except ChallongeException as e:
+                log.exception("Error when deleting tournament: ", exc_info=e)
+                return await embed_helper(ctx, "Failed to delete tournament.")
         await self.config.guild(ctx.guild).channel_id.set(channel_id)
         await ctx.tick()
 
@@ -943,7 +1031,7 @@ class PokemonLeague(commands.Cog):
                 (
                     "There is a tournament running in the server! "
                     "You cannot delete channels without finishing the tournament."
-                )
+                ),
             )
         await ctx.send(
             (
@@ -956,13 +1044,17 @@ class PokemonLeague(commands.Cog):
         if pred.result is False:
             return await ctx.send("You have chosen not to delete the channels.")
         for channel in ctx.guild.text_channels:
-                if "badge" in channel.name:
-                    try:
-                        await channel.delete()
-                    except discord.Forbidden:
-                        return await embed_helper(ctx, f"No permission to delete channel {channel.name}.")
-                    except discord.HTTPException:
-                        return await embed_helper(ctx, f"Error when deleting channel {channel.name}.")
+            if "badge" in channel.name:
+                try:
+                    await channel.delete()
+                except discord.Forbidden:
+                    return await embed_helper(
+                        ctx, f"No permission to delete channel {channel.name}."
+                    )
+                except discord.HTTPException:
+                    return await embed_helper(
+                        ctx, f"Error when deleting channel {channel.name}."
+                    )
         await ctx.tick()
 
     # Completed
@@ -998,9 +1090,14 @@ class PokemonLeague(commands.Cog):
                         try:
                             await member.remove_roles(role)
                         except discord.Forbidden:
-                            return await embed_helper(ctx, f"No permission to remove roles for {member.mention}")
+                            return await embed_helper(
+                                ctx,
+                                f"No permission to remove roles for {member.mention}",
+                            )
                         except discord.HTTPException:
-                            return await embed_helper(ctx, f"Error when removing roles for {member.mention}")
+                            return await embed_helper(
+                                ctx, f"Error when removing roles for {member.mention}"
+                            )
         await ctx.tick()
 
     # Completed
@@ -1053,9 +1150,13 @@ class PokemonLeague(commands.Cog):
                 try:
                     await ctx.author.remove_roles(poke_role)
                 except discord.Forbidden:
-                    return await embed_helper(ctx, f"No permission to remove roles for {ctx.author.mention}")
+                    return await embed_helper(
+                        ctx, f"No permission to remove roles for {ctx.author.mention}"
+                    )
                 except discord.HTTPException:
-                    return await embed_helper(ctx, "Error when removing roles for {ctx.author.mention}.")
+                    return await embed_helper(
+                        ctx, "Error when removing roles for {ctx.author.mention}."
+                    )
 
         poke1_role = discord.utils.get(
             ctx.guild.roles,
@@ -1065,9 +1166,13 @@ class PokemonLeague(commands.Cog):
             try:
                 await ctx.author.add_roles(poke1_role)
             except discord.Forbidden:
-                return await embed_helper(ctx, f"No permission to remove roles for {ctx.author.mention}")
+                return await embed_helper(
+                    ctx, f"No permission to remove roles for {ctx.author.mention}"
+                )
             except discord.HTTPException:
-                return await embed_helper(ctx, "Error when removing roles for {ctx.author.mention}.")
+                return await embed_helper(
+                    ctx, "Error when removing roles for {ctx.author.mention}."
+                )
 
         poke2_role = discord.utils.get(
             ctx.guild.roles,
@@ -1077,9 +1182,13 @@ class PokemonLeague(commands.Cog):
             try:
                 await ctx.author.add_roles(poke2_role)
             except discord.Forbidden:
-                return await embed_helper(ctx, f"No permission to remove roles for {ctx.author.mention}")
+                return await embed_helper(
+                    ctx, f"No permission to remove roles for {ctx.author.mention}"
+                )
             except discord.HTTPException:
-                return await embed_helper(ctx, "Error when removing roles for {ctx.author.mention}.")
+                return await embed_helper(
+                    ctx, "Error when removing roles for {ctx.author.mention}."
+                )
 
         await ctx.tick()
 
@@ -1164,7 +1273,7 @@ class PokemonLeague(commands.Cog):
                     ctx,
                     "Cannot find card {}. Please use the [spreadsheet]({}).".format(
                         card_name, url
-                    )
+                    ),
                 )
 
     # Completed
@@ -1223,7 +1332,7 @@ class PokemonLeague(commands.Cog):
                 (
                     f"The deck has {len(invalid_card_names)} invalid cards:\n"
                     f"{humanize_list([(await self.get_card_emoji(c) or c) for c in invalid_card_names])}"
-                )
+                ),
             )
         else:
             return await embed_helper(ctx, "All cards are valid.")
@@ -1241,14 +1350,12 @@ class PokemonLeague(commands.Cog):
         captain = ctx.guild.get_member(captain_id)
         embed.add_field(name="Captain", value=captain.mention, inline=False)
         player_list = " ".join(
-            [
-                ctx.guild.get_member(player_id).mention
-                for player_id in players_id
-            ]
+            [ctx.guild.get_member(player_id).mention for player_id in players_id]
         )
-        sub_list = " ".join(
-            [ctx.guild.get_member(sub_id).mention for sub_id in subs_id]
-        ) or "None"
+        sub_list = (
+            " ".join([ctx.guild.get_member(sub_id).mention for sub_id in subs_id])
+            or "None"
+        )
         embed.add_field(name="Team Players", value=player_list, inline=False)
         embed.add_field(name="Substitute Players", value=sub_list, inline=False)
         pokemons = humanize_list(team["pokemon_choices"])
@@ -1314,7 +1421,13 @@ class PokemonLeague(commands.Cog):
         if url is None:
             return await embed_helper(ctx, "No tournaments running!")
         tournament_id = await self.config.guild(ctx.guild).tournament_id()
-        start_time = (await self.challonge.tournaments.show(tournament=tournament_id))["started-at"]
+        try:
+            start_time = (
+                await self.challonge.tournaments.show(tournament=tournament_id)
+            )["started-at"]
+        except ChallongeException as e:
+            log.exception("Error when getting tournament info: ", exc_info=e)
+            return await embed_helper(ctx, "Failed to get tournament info.")
         if start_time is not None:
             return await embed_helper(ctx, "Tournament has already been started!")
         tournament_name = await self.config.guild(ctx.guild).tournament_name()
@@ -1344,7 +1457,7 @@ class PokemonLeague(commands.Cog):
                     ctx,
                     "Team {} has been removed from {}".format(
                         team_name, tournament_name
-                    )
+                    ),
                 )
         if not team_found:
             await embed_helper(ctx, "Team {} not found".format(team_name))
@@ -1353,7 +1466,13 @@ class PokemonLeague(commands.Cog):
     @commands.guild_only()
     @checks.admin_or_permissions()
     @checks.bot_has_permissions(manage_roles=True)
-    async def command_substituteplayer(self, ctx: commands.Context, team_name: str, team_player: discord.Member, substitute_player: discord.Member):
+    async def command_substituteplayer(
+        self,
+        ctx: commands.Context,
+        team_name: str,
+        team_player: discord.Member,
+        substitute_player: discord.Member,
+    ):
         """
             Replace team member with substitute player
         """
@@ -1366,13 +1485,22 @@ class PokemonLeague(commands.Cog):
             if team_data["name"] == team_name:
                 team_found = True
                 if team_player not in team_data["players"]:
-                    return await embed_helper(ctx, f"{team_player} is not a member of team {team_name}")
+                    return await embed_helper(
+                        ctx, f"{team_player} is not a member of team {team_name}"
+                    )
                 if substitute_player not in team_data["subs"]:
-                    return await embed_helper(ctx, f"{substitute_player} is not a substitute of team {team_name}")
+                    return await embed_helper(
+                        ctx,
+                        f"{substitute_player} is not a substitute of team {team_name}",
+                    )
                 if team_player == team_data["captain_id"]:
                     return await embed_helper(ctx, "You cannot switch out the captain")
-                teams[team_id]["subs"] = [i for i in team_data["subs"] if i != substitute_player.id] + [team_player.id]
-                teams[team_id]["players"] = [i for i in team_data["players"] if i != team_player.id] + [substitute_player.id]
+                teams[team_id]["subs"] = [
+                    i for i in team_data["subs"] if i != substitute_player.id
+                ] + [team_player.id]
+                teams[team_id]["players"] = [
+                    i for i in team_data["players"] if i != team_player.id
+                ] + [substitute_player.id]
                 break
         if team_found:
             await self.config.guild(ctx.guild).teams.set(teams)
@@ -1411,7 +1539,9 @@ class PokemonLeague(commands.Cog):
 
         overwrites = {
             ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-            ctx.guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True),
+            ctx.guild.me: discord.PermissionOverwrite(
+                read_messages=True, send_messages=True
+            ),
         }
 
         everyone_role = ctx.author.roles[0]
