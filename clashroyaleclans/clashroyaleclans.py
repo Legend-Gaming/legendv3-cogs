@@ -72,6 +72,7 @@ class ClashRoyaleClans(commands.Cog):
             },
             "global_channel_id": 374596069989810178,
             "new_recruits_channel_id": 375839851955748874,
+            "player_info_legend": True,
         }
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
@@ -221,7 +222,7 @@ class ClashRoyaleClans(commands.Cog):
                     title = ""
                 if str(clan.get("type")) != "inviteOnly":
                     title += f"[{str(clan.get('type')).title()}] "
-                title += f"{clan['name']}({clan['tag']}) "
+                title += f"{clan['name']} ({clan['tag']}) "
                 if req_pb > 0:
                     title += f"PB: {str(req_pb)}+  "
                 for league in req_cwr:
@@ -295,35 +296,42 @@ class ClashRoyaleClans(commands.Cog):
                 )
             )
             await ctx.send(embed=embed)
-            await ctx.send(
-                embed=discord.Embed(
+                  
+            if member is not None:
+                show_playerinfo = await self.config.guild(ctx.guild).player_info_legend()
+                if not show_playerinfo:
+                    return await ctx.send(
+                        embed=discord.Embed(
+                            color=0xFAA61A, 
+                            description=":warning: **YOU WILL BE REJECTED IF YOU JOIN ANY CLAN WITHOUT APPROVAL**"
+                        )
+                    )
+                return await ctx.send(embed=discord.Embed(
                     color=0xFAA61A, 
-                    description=":warning: **YOU WILL BE REJECTED IF YOU JOIN ANY CLAN WITHOUT APPROVAL**"
+                    description=
+                    (
+                        "Hello **{}**, above are all the clans "
+                        "you are allowed to join, based on your statistics. "
+                        "Which clan would you like to join? \n\n"
+                        "**Name:** {} (#{})\n**Trophies:** {}/{}\n"
+                        "**CW Readiness:** {}\n"
+                        "**Max Challenge Wins:** {}\n"
+                        "**Clan:** {}\n\n"
+                        ":warning: **YOU WILL BE REJECTED "
+                        "IF YOU JOIN ANY CLAN WITHOUT "
+                        "APPROVAL**".format(
+                            ign,
+                            ign,
+                            player_tag,
+                            player_trophies,
+                            player_pb,
+                            await self.discord_helper.get_best_league(player_cards),
+                            player_maxwins,
+                            player_clanname,
+                        )
+                    )
+                    )
                 )
-            )
-            # if member is not None:
-                # return await ctx.send(
-                    # (
-                        # "Hello **{}**, above are all the clans "
-                        # "you are allowed to join, based on your statistics. "
-                        # "Which clan would you like to join? \n\n"
-                        # "**Name:** {} (#{})\n**Trophies:** {}/{}\n"
-                        # "**CW Readiness:** {}\n"
-                        # "**Max Challenge Wins:** {}\n"
-                        # "**Clan:** {}\n\n"
-                        # ":warning: **YOU WILL BE REJECTED "
-                        # "IF YOU JOIN ANY CLAN WITHOUT "
-                        # "APPROVAL**".format(
-                            # ign,
-                            # ign,
-                            # player_tag,
-                            # player_trophies,
-                            # player_pb,
-                            # await self.discord_helper.get_best_league(player_cards),
-                            # player_maxwins,
-                            # player_clanname,
-                        # )
-                    # )
                 # )
 
     @tasks.loop(seconds=30)
@@ -1390,6 +1398,12 @@ class ClashRoyaleClans(commands.Cog):
     async def crclansset_newrecruits(self, ctx, channel: discord.TextChannel):
         """ Set channel used to inform staff about new recruits """
         await self.config.guild(ctx.guild).new_recruits_channel_id.set(channel.id)
+        await ctx.tick()
+    
+    @crclansset.command(name="playerinfo")
+    async def crclansset_playerinfo(self, ctx, value: bool):
+        """ Set if player info is shown in output of leend """
+        await self.config.guild(ctx.guild).player_info_legend.set(value)
         await ctx.tick()
 
 
