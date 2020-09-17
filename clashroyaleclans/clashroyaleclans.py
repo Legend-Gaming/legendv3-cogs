@@ -56,8 +56,9 @@ class ClashRoyaleClans(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        self.tags = self.bot.get_cog("ClashRoyaleTools").tags
-        self.constants = self.bot.get_cog("ClashRoyaleTools").constants
+        crtools_cog = self.bot.get_cog("ClashRoyaleTools")
+        self.tags = getattr(crtools_cog, "tags", None)
+        self.constants = getattr(crtools_cog, "constants", "None")
 
         self.config = Config.get_conf(self, identifier=2286464642345664456)
         default_global = {"clans": list()}
@@ -166,6 +167,8 @@ class ClashRoyaleClans(commands.Cog):
 
                     ign = player_data.name
                 # REMINDER: Order is important. RequestError is base exception class.
+                except AttributeError:
+                    return await ctx.send("Cannot connect to database. Please notify the devs.")
                 except clashroyale.NotFoundError:
                     return await ctx.send("Player tag is invalid.")
                 except clashroyale.RequestError:
@@ -452,6 +455,8 @@ class ClashRoyaleClans(commands.Cog):
             else:
                 player_clantag = player_data.clan.tag.strip("#")
         # REMINDER: Order is important. RequestError is base exception class.
+        except AttributeError:
+            return await ctx.send("Cannot connect to database. Please notify the devs.")
         except clashroyale.NotFoundError:
             return await ctx.send("Player tag is invalid.")
         except clashroyale.RequestError:
@@ -642,7 +647,10 @@ class ClashRoyaleClans(commands.Cog):
         #     return await ctx.send("Error, " + member.mention + " is not a new member.")
 
         is_clan_member = False
-        player_tags = self.tags.getAllTags(member.id)
+        try:
+            player_tags = self.tags.getAllTags(member.id)
+        except AttributeError:
+            return await ctx.send("Cannot connect to database. Please notify the devs.")
         clans_joined = []
         clan_roles = []
         discord_invites = []
@@ -810,7 +818,10 @@ class ClashRoyaleClans(commands.Cog):
         ]
         await self.discord_helper._remove_roles(member, all_clan_roles)
         # If tag is not saved or connecion to CR server is not available use current name to determine ign
-        tag = self.tags.getTag(member.id)
+        try:
+            tag = self.tags.getTag(member.id)
+        except AttributeError:
+            return await ctx.send("Cannot connect to database. Please notify the devs.")
         if tag is None:
             new_nickname = (member.display_name.split("|")[0]).strip()
         try:
@@ -851,6 +862,8 @@ class ClashRoyaleClans(commands.Cog):
                 player_data = await self.clash.get_player(player_tag)
                 leagues = await self.discord_helper.clanwar_readiness(player_data.cards)
             # REMINDER: Order is important. RequestError is base exception class.
+            except AttributeError:
+                return await ctx.send("Cannot connect to database. Please notify the devs.")
             except clashroyale.NotFoundError:
                 return await ctx.send("Player tag is invalid.")
             except clashroyale.RequestError:
@@ -1020,6 +1033,8 @@ class ClashRoyaleClans(commands.Cog):
 
                 player_ign = player_data.name
             # REMINDER: Order is important. RequestError is base exception class.
+            except AttributeError:
+                return await ctx.send("Cannot connect to database. Please notify the devs.")
             except clashroyale.NotFoundError:
                 return await ctx.send("Player tag is invalid.")
             except clashroyale.RequestError:
