@@ -296,30 +296,30 @@ class ClashRoyaleClans(commands.Cog):
             )
             await ctx.send(embed=embed)
 
-            if member is not None:
-                return await ctx.send(
-                    (
-                        "Hello **{}**, above are all the clans "
-                        "you are allowed to join, based on your statistics. "
-                        "Which clan would you like to join? \n\n"
-                        "**Name:** {} (#{})\n**Trophies:** {}/{}\n"
-                        "**CW Readiness:** {}\n"
-                        "**Max Challenge Wins:** {}\n"
-                        "**Clan:** {}\n\n"
-                        ":warning: **YOU WILL BE REJECTED "
-                        "IF YOU JOIN ANY CLAN WITHOUT "
-                        "APPROVAL**".format(
-                            ign,
-                            ign,
-                            player_tag,
-                            player_trophies,
-                            player_pb,
-                            await self.discord_helper.get_best_league(player_cards),
-                            player_maxwins,
-                            player_clanname,
-                        )
-                    )
-                )
+            # if member is not None:
+                # return await ctx.send(
+                    # (
+                        # "Hello **{}**, above are all the clans "
+                        # "you are allowed to join, based on your statistics. "
+                        # "Which clan would you like to join? \n\n"
+                        # "**Name:** {} (#{})\n**Trophies:** {}/{}\n"
+                        # "**CW Readiness:** {}\n"
+                        # "**Max Challenge Wins:** {}\n"
+                        # "**Clan:** {}\n\n"
+                        # ":warning: **YOU WILL BE REJECTED "
+                        # "IF YOU JOIN ANY CLAN WITHOUT "
+                        # "APPROVAL**".format(
+                            # ign,
+                            # ign,
+                            # player_tag,
+                            # player_trophies,
+                            # player_pb,
+                            # await self.discord_helper.get_best_league(player_cards),
+                            # player_maxwins,
+                            # player_clanname,
+                        # )
+                    # )
+                # )
 
     @tasks.loop(seconds=30)
     async def refresh_data(self):
