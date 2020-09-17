@@ -295,7 +295,12 @@ class ClashRoyaleClans(commands.Cog):
                 )
             )
             await ctx.send(embed=embed)
-
+            await ctx.send(
+                embed=discord.Embed(
+                    color=0xFAA61A, 
+                    description=":warning: **YOU WILL BE REJECTED IF YOU JOIN ANY CLAN WITHOUT APPROVAL**"
+                )
+            )
             # if member is not None:
                 # return await ctx.send(
                     # (
