@@ -101,6 +101,21 @@ class PokemonLeague(commands.Cog):
         self.assigned_channel_lock = asyncio.Lock()
         self.challonge = None
         self.token_task = self.bot.loop.create_task(self.challongetoken())
+        self.clash = None
+        self.crtoken_task = self.bot.loop.create_task(self.crtoken())
+
+    async def crtoken(self):
+        # Initialize clashroyale API
+        token = await self.bot.get_shared_api_tokens("clashroyale")
+        if token.get("token") is None:
+            log.error(
+                "CR Token is not SET. "
+                "Use [p]set api clashroyale token,YOUR_TOKEN to set it"
+            )
+        else:
+            self.clash = clashroyale.official_api.Client(
+                token=token["token"], is_async=True, url="https://proxy.royaleapi.dev/v1"
+            )
 
     async def challongetoken(self):
         """Set challonge api token."""
@@ -119,6 +134,11 @@ class PokemonLeague(commands.Cog):
             self.token_task.cancel()
         if self.challonge and not self.challonge._session.closed:
             self.bot.loop.create_task(self.challonge._session.close())
+        
+        if self.crtoken_task:
+            self.crtoken_task.cancel()
+        if self.clash:
+            self.bot.loop.create_task(self.clash.close())
 
     # Completed
     @commands.command(name="createbracket")
@@ -724,7 +744,7 @@ class PokemonLeague(commands.Cog):
                                         content=f"{team_1_captain.mention}{team_2_captain.mention}",
                                         embed=embed,
                                         allowed_mentions=discord.AllowedMentions(
-                                            users=False
+                                            users=True
                                         ),
                                     )
                                 else:
@@ -968,7 +988,7 @@ class PokemonLeague(commands.Cog):
                         return await channel.send(
                             content=f"{team_1_captain.mention} {team_2_captain.mention}",
                             embed=embed,
-                            allowed_mentions=discord.AllowedMentions(users=False),
+                            allowed_mentions=discord.AllowedMentions(users=True),
                         )
                     else:
                         await embed_helper(
@@ -1303,13 +1323,13 @@ class PokemonLeague(commands.Cog):
         )
         valid_card_names = []
         invalid_card_names = []
-        cog = self.bot.get_cog("ClashRoyaleClans")
-        if not cog:
+        # cog = self.bot.get_cog("ClashRoyaleClans")
+        if not self.clash:
             return await embed_helper(
-                ctx, "ClashRoyale cog needs to be loaded for this to work."
+                ctx, "Not connected to clash royale servers."
             )
         try:
-            all_cards = list(await cog.clash.get_all_cards())
+            all_cards = list(await self.clash.get_all_cards())
         except clashroyale.RequestError:
             return await embed_helper(ctx, "Cannot reach clashroyale servers!")
         for card in all_cards:
@@ -1325,9 +1345,11 @@ class PokemonLeague(commands.Cog):
         # Account for card having two types.
         # If a card is both bug and steel type and user has chosen
         # bug type but not steel, it will be in both valid and invalid card list
+        invalid_card_names = list(set(invalid_card_names))
         invalid_card_names = [
             i for i in invalid_card_names if i not in valid_card_names
         ]
+        
         if invalid_card_names:
             return await embed_helper(
                 ctx,
