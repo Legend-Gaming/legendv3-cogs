@@ -40,7 +40,6 @@ class Account:
 
     def __del__(self):
         self._loop.create_task(self._session.close())
-        self._session.close()
 
     @property
     def tournaments(self):
