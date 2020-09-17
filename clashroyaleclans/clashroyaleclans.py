@@ -538,7 +538,7 @@ class ClashRoyaleClans(commands.Cog):
                         False,
                     )
 
-            self.remove_from_waiting(clan_name, member)
+            await self.remove_from_waiting(clan_name, member)
             if is_in_clan:
                 warning = (
                     "\n\n:warning: **YOU WILL BE REJECTED "
