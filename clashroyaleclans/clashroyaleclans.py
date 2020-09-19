@@ -648,7 +648,7 @@ class ClashRoyaleClans(commands.Cog):
                         is_clan_member = True
                         clans_joined.append(name)
                         clan_roles.append(data["clanrole"])
-                        clan_nicknames.append(data["nickname"])
+                        clan_nicknames.append(data["name"])
                         if data.get("invite"):
                             discord_invites.append(data["invite"])
                 # Set ign to first available name
