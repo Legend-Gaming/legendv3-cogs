@@ -667,7 +667,7 @@ class ClashRoyaleClans(commands.Cog):
         output_msg = ""
         if is_clan_member:
             newclanname = " | ".join(clan_nicknames)
-            newname += " | TL " + newclanname
+            newname += " | " + newclanname
 
             try:
                 await member.edit(nick=newname)
