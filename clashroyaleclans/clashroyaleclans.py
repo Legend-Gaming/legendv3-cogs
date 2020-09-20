@@ -710,7 +710,7 @@ class ClashRoyaleClans(commands.Cog):
             if recruitment_channel:
                 await recruitment_channel.send(
                     "**{}** recruited **{} (#{})** to {}".format(
-                        ctx.author.display_name, ign, tag, roleName.name
+                        ctx.author.display_name, ign, tag, roleName.mention
                     ),
                     allowed_mentions=discord.AllowedMentions(users=True, roles=True),
                 )
