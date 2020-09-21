@@ -142,6 +142,7 @@ class ClashRoyaleClans(commands.Cog):
                 "silver": {"percent": 0},
                 "bronze": {"percent": 0},
             }
+            player_wd_wins = 0
             if member is not None:
                 try:
                     player_tag = self.tags.getTag(member.id, account)
@@ -169,7 +170,9 @@ class ClashRoyaleClans(commands.Cog):
                     ign = player_data.name
                 # REMINDER: Order is important. RequestError is base exception class.
                 except AttributeError:
-                    return await ctx.send("Cannot connect to database. Please notify the devs.")
+                    return await ctx.send(
+                        "Cannot connect to database. Please notify the devs."
+                    )
                 except clashroyale.NotFoundError:
                     return await ctx.send("Player tag is invalid.")
                 except clashroyale.RequestError:
@@ -251,7 +254,7 @@ class ClashRoyaleClans(commands.Cog):
                     self.discord_helper.getLeagueEmoji(clan["clan_war_trophies"]),
                     clan["clan_war_trophies"],
                     self.discord_helper.emoji("crtrophy"),
-                    clan["clan_score"]
+                    clan["clan_score"],
                 )
 
                 if (
@@ -296,40 +299,42 @@ class ClashRoyaleClans(commands.Cog):
                 )
             )
             await ctx.send(embed=embed)
-                  
+
             if member is not None:
-                show_playerinfo = await self.config.guild(ctx.guild).player_info_legend()
+                show_playerinfo = await self.config.guild(
+                    ctx.guild
+                ).player_info_legend()
                 if not show_playerinfo:
                     return await ctx.send(
                         embed=discord.Embed(
-                            color=0xFAA61A, 
-                            description=":warning: **YOU WILL BE REJECTED IF YOU JOIN ANY CLAN WITHOUT APPROVAL**"
+                            color=0xFAA61A,
+                            description=":warning: **YOU WILL BE REJECTED IF YOU JOIN ANY CLAN WITHOUT APPROVAL**",
                         )
                     )
-                return await ctx.send(embed=discord.Embed(
-                    color=0xFAA61A, 
-                    description=
-                    (
-                        "Hello **{}**, above are all the clans "
-                        "you are allowed to join, based on your statistics. "
-                        "Which clan would you like to join? \n\n"
-                        "**Name:** {} (#{})\n**Trophies:** {}/{}\n"
-                        "**CW Readiness:** {}\n"
-                        "**Max Challenge Wins:** {}\n"
-                        "**Clan:** {}\n\n"
-                        ":warning: **YOU WILL BE REJECTED "
-                        "IF YOU JOIN ANY CLAN WITHOUT "
-                        "APPROVAL**".format(
-                            ign,
-                            ign,
-                            player_tag,
-                            player_trophies,
-                            player_pb,
-                            await self.discord_helper.get_best_league(player_cards),
-                            player_maxwins,
-                            player_clanname,
-                        )
-                    )
+                return await ctx.send(
+                    embed=discord.Embed(
+                        color=0xFAA61A,
+                        description=(
+                            "Hello **{}**, above are all the clans "
+                            "you are allowed to join, based on your statistics. "
+                            "Which clan would you like to join? \n\n"
+                            "**Name:** {} (#{})\n**Trophies:** {}/{}\n"
+                            "**CW Readiness:** {}\n"
+                            "**Max Challenge Wins:** {}\n"
+                            "**Clan:** {}\n\n"
+                            ":warning: **YOU WILL BE REJECTED "
+                            "IF YOU JOIN ANY CLAN WITHOUT "
+                            "APPROVAL**".format(
+                                ign,
+                                ign,
+                                player_tag,
+                                player_trophies,
+                                player_pb,
+                                await self.discord_helper.get_best_league(player_cards),
+                                player_maxwins,
+                                player_clanname,
+                            )
+                        ),
                     )
                 )
                 # )
@@ -432,12 +437,12 @@ class ClashRoyaleClans(commands.Cog):
                 ),
                 False,
             )
-
+        clan_info = {}
         # Get requirements for clan to approve
         for name, data in self.family_clans.items():
             if data.get("nickname").lower() == clankey.lower():
                 clan_info = data
-        clan_name = clan_info.get("name")
+        clan_name: str = clan_info.get("name")
         clan_tag = clan_info.get("tag")
         clan_role = clan_info.get("clanrole")
         clan_pb = clan_info["requirements"].get("personalbest")
@@ -647,7 +652,6 @@ class ClashRoyaleClans(commands.Cog):
             Setup nickname, and roles for a new member
         """
         guild = ctx.guild
-        author = ctx.author
 
         # if not (await self.bot.is_mod(ctx.author)):
         #     return await ctx.send(
@@ -723,7 +727,7 @@ class ClashRoyaleClans(commands.Cog):
 
             clan_roles.append("Member")
             try:
-                await self.discord_helper._add_roles(member, clan_roles)
+                await self.discord_helper._add_roles(member, clan_roles, reason = "used newmember")
                 output_msg += f"**{humanize_list(clan_roles)}** roles added."
             except discord.Forbidden:
                 await ctx.send(
@@ -746,7 +750,7 @@ class ClashRoyaleClans(commands.Cog):
                 await simple_embed(ctx, output_msg, True)
 
             # TODO: Add welcome message to global chat
-            await self.discord_helper._remove_roles(member, ["Guest"])
+            await self.discord_helper._remove_roles(member, ["Guest"], reason="used newmwmber")
 
             roleName = discord.utils.get(guild.roles, name=clan_roles[0])
             recruitment_channel = self.bot.get_channel(
@@ -829,8 +833,8 @@ class ClashRoyaleClans(commands.Cog):
         all_clan_roles += [
             "Member",
         ]
-        await self.discord_helper._remove_roles(member, all_clan_roles)
-        # If tag is not saved or connecion to CR server is not available use current name to determine ign
+        await self.discord_helper._remove_roles(member, all_clan_roles, reason="used inactive")
+        # If tag is not saved or connection to CR server is not available use current name to determine ign
         try:
             tag = self.tags.getTag(member.id)
         except AttributeError:
@@ -876,7 +880,9 @@ class ClashRoyaleClans(commands.Cog):
                 leagues = await self.discord_helper.clanwar_readiness(player_data.cards)
             # REMINDER: Order is important. RequestError is base exception class.
             except AttributeError:
-                return await ctx.send("Cannot connect to database. Please notify the devs.")
+                return await ctx.send(
+                    "Cannot connect to database. Please notify the devs."
+                )
             except clashroyale.NotFoundError:
                 return await ctx.send("Player tag is invalid.")
             except clashroyale.RequestError:
@@ -992,7 +998,7 @@ class ClashRoyaleClans(commands.Cog):
             cmd = self.bot.get_command(command)
             if not cmd:
                 return await ctx.send(
-                    f"{command} is not currently availiable in the bot"
+                    f"{command} is not currently available in the bot"
                 )
 
             await ctx.invoke(cmd)
@@ -1047,7 +1053,9 @@ class ClashRoyaleClans(commands.Cog):
                 player_ign = player_data.name
             # REMINDER: Order is important. RequestError is base exception class.
             except AttributeError:
-                return await ctx.send("Cannot connect to database. Please notify the devs.")
+                return await ctx.send(
+                    "Cannot connect to database. Please notify the devs."
+                )
             except clashroyale.NotFoundError:
                 return await ctx.send("Player tag is invalid.")
             except clashroyale.RequestError:
@@ -1101,7 +1109,7 @@ class ClashRoyaleClans(commands.Cog):
                 await simple_embed(ctx, "Cannot find a role named waiting.")
             try:
                 if waiting_role:
-                    await member.add_roles(waiting_role)
+                    await member.add_roles(waiting_role, reason="added to waiting list")
             except discord.Forbidden:
                 raise
             except discord.HTTPException:
@@ -1210,9 +1218,11 @@ class ClashRoyaleClans(commands.Cog):
                 await simple_embed(ctx, "Cannot find a role named waiting.")
             try:
                 if waiting_role:
-                    await member.remove_roles(waiting_role)
+                    await member.remove_roles(waiting_role, reason="removing from waitlist")
             except discord.Forbidden:
-                return simple_embed(ctx, "No permission to remove roles for this user.")
+                return await simple_embed(
+                    ctx, "No permission to remove roles for this user."
+                )
             except discord.HTTPException:
                 raise
         await ctx.tick()
@@ -1372,13 +1382,13 @@ class ClashRoyaleClans(commands.Cog):
 
     @crclansset_clanmention.command(name="nm")
     async def crclanset_clanmention_nm(self, ctx, value: bool):
-        """ Set whether clan will be mentioned on sucessful newmember """
+        """ Set whether clan will be mentioned on successful newmember """
         await self.config.guild(ctx.guild).mentions.on_nm.set(value)
         await ctx.tick()
 
     @crclansset_clanmention.command(name="waiting")
     async def crclanset_clanmention_waiting(self, ctx, value: bool):
-        """ Set whether clan will be mentioned on sucessful addition to waiting list """
+        """ Set whether clan will be mentioned on successful addition to waiting list """
         await self.config.guild(ctx.guild).mentions.on_waitlist_add.set(value)
         await ctx.tick()
 
@@ -1399,10 +1409,10 @@ class ClashRoyaleClans(commands.Cog):
         """ Set channel used to inform staff about new recruits """
         await self.config.guild(ctx.guild).new_recruits_channel_id.set(channel.id)
         await ctx.tick()
-    
+
     @crclansset.command(name="playerinfo")
     async def crclansset_playerinfo(self, ctx, value: bool):
-        """ Set if player info is shown in output of leend """
+        """ Set if player info is shown in output of legend """
         await self.config.guild(ctx.guild).player_info_legend.set(value)
         await ctx.tick()
 
@@ -1419,7 +1429,7 @@ class Helper:
         return len(role.members)
 
     @staticmethod
-    async def _add_roles(member: discord.Member, role_names: List[str]):
+    async def _add_roles(member: discord.Member, role_names: List[str], reason=""):
         """Add roles"""
         roles = [
             discord.utils.get(member.guild.roles, name=role_name)
@@ -1428,14 +1438,14 @@ class Helper:
         if any([x is None for x in roles]):
             raise InvalidRole
         try:
-            await member.add_roles(*roles)
+            await member.add_roles(*roles, reason="From clashroyaleclans: " + reason )
         except discord.Forbidden:
             raise
         except discord.HTTPException:
             raise
 
     @staticmethod
-    async def _remove_roles(member: discord.Member, role_names: List[str]):
+    async def _remove_roles(member: discord.Member, role_names: List[str], reason = ""):
         """Remove roles"""
         roles = [
             discord.utils.get(member.guild.roles, name=role_name)
@@ -1443,7 +1453,7 @@ class Helper:
         ]
         roles = [r for r in roles if r is not None]
         try:
-            await member.remove_roles(*roles)
+            await member.remove_roles(*roles, reason="From clashroyaleclans: " + reason)
         except Exception:
             pass
 
