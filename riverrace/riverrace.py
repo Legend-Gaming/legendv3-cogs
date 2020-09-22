@@ -279,7 +279,7 @@ class RiverRace(commands.Cog):
         url = f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace"
 
         race_data = json.loads(((requests.get(url, headers = headers)).content).decode("utf-8"))["clans"]
-        pages = []
+#        pages = []
         
         for clan in race_data:
             if clan['tag'] == f'#{tag}':
@@ -305,7 +305,7 @@ class RiverRace(commands.Cog):
                 e_noboth.add_field(name=f"{i['name']} ({i['tag']})",
                                 value=f"<:famehammer3:750978996740685835> {i['famerepair']}",
                                 inline=True)
-            pages.append(e_noboth)
+            await ctx.send(embed=e_noboth)
             
         elif len(p_noboth) > 20:
             e_noboth = discord.Embed(title = f"**No Fame or Repair**", color = 0xFAA61A)
@@ -326,8 +326,8 @@ class RiverRace(commands.Cog):
                                     value=f"<:famehammer3:750978996740685835> {i['famerepair']}",
                                     inline=True)
                     
-            pages.append(e_noboth)
-            pages.append(e_noboth2)
+            await ctx.send(embed=e_noboth)
+            await ctx.send(embed=e_noboth2)
         
         
         if 0 < len(p_noT) < 20:
@@ -338,7 +338,7 @@ class RiverRace(commands.Cog):
                 e_noT.add_field(name=f"{i['name']} ({i['tag']})",
                                 value=f"<:famehammer3:750978996740685835> {i['famerepair']}",
                                 inline=True)
-            pages.append(e_noT)
+            await ctx.send(embed=e_noT)
                 
         elif len(p_noT) > 20:
             e_noT = discord.Embed(title = f"**Under Threshold**", color=0xff4d00)
@@ -358,8 +358,8 @@ class RiverRace(commands.Cog):
                                     value=f"<:famehammer3:750978996740685835> {i['famerepair']}",
                                     inline=True)
                     
-            pages.append(e_noT)
-            pages.append(e_noT2)
+            await ctx.send(embed=e_noT)
+            await ctx.send(embed=e_noT2)
         
         
         if 0 < len(p_yesT) < 20:
@@ -371,7 +371,7 @@ class RiverRace(commands.Cog):
                                 value=f"<:famehammer3:750978996740685835> {i['famerepair']}",
                                 inline=True)
                 
-            pages.append(e_yesT)
+            await ctx.send(embed=e_yesT)
             
             
         elif len(p_yesT) > 20:
@@ -391,10 +391,10 @@ class RiverRace(commands.Cog):
                     e_yesT2.add_field(name=f"{i['name']} ({i['tag']})",
                                     value=f"<:famehammer3:750978996740685835> {i['famerepair']}",
                                     inline=True)
-            pages.append(e_yesT)
-            pages.append(e_yesT2)
+            await ctx.send(embed=e_yesT)
+            await ctx.send(embed=e_yesT2)
 
-        return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=60)
+#        return await menu(ctx, pages, DEFAULT_CONTROLS, timeout=60)
 
     @commands.command(name="wardata", aliases=['wd'])
     @checks.admin_or_permissions()
