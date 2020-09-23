@@ -354,8 +354,8 @@ class ClashRoyaleClans(commands.Cog):
                 # REMINDER: Order is important. RequestError is base exception class.
                 except clashroyale.NotFoundError:
                     log.critical("Invalid clan tag.")
-                except clashroyale.RequestError:
-                    log.error("Error: Cannot reach ClashRoyale Server.")
+                except clashroyale.RequestError as err:
+                    log.error("Error: Cannot reach ClashRoyale Server. {}".format(err))
             all_clan_data = sorted(
                 all_clan_data,
                 key=lambda x: (
