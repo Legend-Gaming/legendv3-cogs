@@ -337,6 +337,11 @@ class ClashRoyaleClans(commands.Cog):
     async def clanaudit(self, ctx, nickname: str):
         async with ctx.channel.typing():
             clan_info = self.get_clan_by_nickname(nickname)
+            if clan_info is None:
+                embed=discord.Embed(title="Unknown nickname", description="You entered a nickname not found found in clans.json", color=0xff0000)
+                await ctx.channel.send(embed=embed)
+                return
+
             clan_role = clan_info["clanrole"]
             clan_tag = clan_info["tag"]
 
