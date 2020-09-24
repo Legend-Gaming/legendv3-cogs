@@ -379,7 +379,7 @@ class ClashRoyaleClans(commands.Cog):
                 unknown_members_str = 'None'
                 unknown_count = 0
             else:
-                unknown_members.sort()
+                unknown_members.sort(key=str.lower)
                 unknown_members_str = "\n".join(unknown_members)
                 unknown_count = len(unknown_members_str)
 
@@ -387,7 +387,7 @@ class ClashRoyaleClans(commands.Cog):
                 orphan_members_str = 'None'
                 orphan_count = 0
             else:
-                orphan_members.sort()
+                orphan_members.sort(key=str.lower)
                 orphan_members_str = "\n".join(orphan_members)
                 orphan_count = len(orphan_members)
 
@@ -395,7 +395,7 @@ class ClashRoyaleClans(commands.Cog):
                 absent_names_str = 'None'
                 absent_count = 0
             else:
-                absent_names.sort()
+                absent_names.sort(key=str.lower)
                 absent_names_str = "\n".join(absent_names)
                 absent_names_str = absent_names_str[:1024] # max length allowed for discord
                 absent_count = len(absent_names)
