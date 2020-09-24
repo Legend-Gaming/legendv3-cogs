@@ -359,7 +359,7 @@ class ClashRoyaleClans(commands.Cog):
             for member in role.members:
                 member_tags = self.tags.quickGetAllTags(member.id)
                 if len(member_tags) == 0:
-                    unknown_members.add(member.mention)
+                    unknown_members.append(member.mention)
 
                 print(f"{member.display_name} found tags: {member_tags}")
                 found = False
