@@ -419,7 +419,7 @@ class ClashRoyaleClans(commands.Cog):
             else:
                 unknown_members.sort(key=str.lower)
                 unknown_members_str = "\n".join(unknown_members)
-                unknown_count = len(unknown_members_str)
+                unknown_count = len(unknown_members)
 
             if len(orphan_members) == 0:
                 orphan_members_str = 'None'
