@@ -210,7 +210,7 @@
 	},
 	"LP2 Chimera": {
 		"name": "LP2 Chimera",
-		"tag": "PO9GPU",
+		"tag": "P09GPU",
 		"nickname": "LP2C",
 		"clanrole": "LP2 Chimera",
 		"requirements": {
