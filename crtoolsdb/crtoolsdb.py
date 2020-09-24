@@ -184,6 +184,16 @@ KEY `idx_tag` (`tag`)
         cursor.execute(query)
         return len(cursor.fetchall())
 
+    def quickGetAllTags(self, userID):
+        tags = []
+
+        query = f"SELECT tag FROM tags WHERE user_id = {userID}"
+        cursor = self.db.cursor()
+        cursor.execute(query)
+        for row in cursor.fetchall():
+            tags.append(row[0])
+        return tags
+
     def getAllTags(self, userID):
         """Returns a list of all tags from the given userID"""
         tags = []
