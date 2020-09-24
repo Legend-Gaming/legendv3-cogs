@@ -351,11 +351,13 @@ class ClashRoyaleTools(commands.Cog):
 
 
     def cog_unload(self):
+        print('Unloaded CR-Tools... NOTE MANY DEPENDANCIES WILL BREAK INCLUDING TRADING, CLASHROYALESTATS AND CLASHROYALECLANS')
         if self.token_task:
             self.token_task.cancel()
-        self.bot.loop.create_task(self.cr.close())
-        print('Unloaded CR-Tools... NOTE MANY DEPENDANCIES WILL BREAK INCLUDING TRADING, CLASHROYALESTATS AND CLASHROYALECLANS')
-        self.tags.db.close()
+        if getattr(self, cr, None):
+            self.bot.loop.create_task(self.cr.close())
+        if getattr(self, tags, None):
+            self.tags.db.close()
 
     @commands.group(name='crtools')
     async def _crtools(self, ctx):
@@ -364,6 +366,9 @@ class ClashRoyaleTools(commands.Cog):
     @_crtools.command(name="save")
     async def savetagcr(self, ctx, tag: str, user: discord.User = None):
         """Save your CR Tag"""
+        tag = self.tags.formatTag(tag)
+        if not self.tags.verifyTag(tag):
+            return await ctx.send("Invalid Tag. Please try again.")
 
         # Trying to save tag for someone else
         if user is not None and user != ctx.author:
