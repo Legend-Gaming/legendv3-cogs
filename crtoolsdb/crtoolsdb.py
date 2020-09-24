@@ -354,9 +354,9 @@ class ClashRoyaleTools(commands.Cog):
         print('Unloaded CR-Tools... NOTE MANY DEPENDANCIES WILL BREAK INCLUDING TRADING, CLASHROYALESTATS AND CLASHROYALECLANS')
         if self.token_task:
             self.token_task.cancel()
-        if getattr(self, cr, None):
+        if getattr(self, 'cr', None):
             self.bot.loop.create_task(self.cr.close())
-        if getattr(self, tags, None):
+        if getattr(self, 'tags', None):
             self.tags.db.close()
 
     @commands.group(name='crtools')
