@@ -118,6 +118,22 @@ class Tags:
             database=database
         )
 
+    def setupDB(self):
+        cursor = self.db.cursor()
+
+        query = f"""CREATE TABLE IF NOT EXISTS `tags` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`user_id` bigint(20) NOT NULL,
+`tag` varchar(15) NOT NULL,
+`account` int(32) NOT NULL,
+PRIMARY KEY (`id`),
+KEY `idx_user_id` (`user_id`),
+KEY `idx_tag` (`tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""
+        cursor.execute(query)
+        print("Attempting to create the tags table if it does not exist.")
+        return
+
     @staticmethod
     def verifyTag(tag):
         """Check if a player's tag is valid
@@ -167,6 +183,16 @@ class Tags:
         query = f"SELECT id from tags WHERE user_id = {userID}"
         cursor.execute(query)
         return len(cursor.fetchall())
+
+    def quickGetAllTags(self, userID):
+        tags = []
+
+        query = f"SELECT tag FROM tags WHERE user_id = {userID}"
+        cursor = self.db.cursor()
+        cursor.execute(query)
+        for row in cursor.fetchall():
+            tags.append(row[0])
+        return tags
 
     def getAllTags(self, userID):
         """Returns a list of all tags from the given userID"""
@@ -307,6 +333,7 @@ class ClashRoyaleTools(commands.Cog):
         database = await self.bot.get_shared_api_tokens("database")
         try:
             self.tags = Tags(database['host'], database['user'], database['password'], database['database'])
+            self.tags.setupDB()
         except Exception as e:
             print("Database Credentials are not set or something went wrong Exception below. "
                   "Set up a mysql server and enter credentials with the command"
