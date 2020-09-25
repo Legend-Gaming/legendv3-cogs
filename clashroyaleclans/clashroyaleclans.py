@@ -994,7 +994,7 @@ class ClashRoyaleClans(commands.Cog):
             else:
                 try:
                     player_data = await self.clash.get_player(player_tags[0])
-                    ign = player_data.name
+                    ign = player_data.name + ' | Guest'
                     await member.edit(nick=ign)
                 except discord.HTTPException:
                     await simple_embed(
