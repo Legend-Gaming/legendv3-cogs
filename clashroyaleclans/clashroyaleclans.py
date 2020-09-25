@@ -385,11 +385,9 @@ class ClashRoyaleClans(commands.Cog):
 
             # List of all clan member tags from ClashRoyalAPI
             clan_member_by_name_by_tags = await self.get_clan_members(clan_tag)
-            print("Clan Member Tags: {}".format(clan_member_by_name_by_tags))
 
             # Obtain all members with the clanrole
             role = discord.utils.get(ctx.guild.roles, name=clan_role)
-            print(f"Members w/ {clan_role} role: {role.members}")
 
             unknown_members = [] # People w/ role and no tags
             orphan_members = [] # People w/ role and have a tag and can't be found in the ClashRoyalAPI
@@ -397,17 +395,15 @@ class ClashRoyaleClans(commands.Cog):
             for member in role.members:
                 member_tags = self.tags.quickGetAllTags(member.id)
                 if len(member_tags) == 0:
-                    unknown_members.append(member.mention)
+                    unknown_members.append(f"{member.mention}({member.name})")
 
-                print(f"{member.display_name} found tags: {member_tags}")
                 found = False
                 for tag in member_tags:
                     if tag in clan_member_by_name_by_tags:
                         found = True
                         break
                 if not found:
-                    orphan_members.append(member.mention)
-                    print(f"{member} was not found in the clan: {clan_info['name']}.")
+                    orphan_members.append(f"{member.mention}({member.name})")
 
             for tag,name in clan_member_by_name_by_tags.items():
                 if len(self.tags.getUser(tag)) == 0:
