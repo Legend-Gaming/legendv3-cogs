@@ -5,7 +5,7 @@ import math
 import random
 import re
 import string
-from typing import Optional
+from typing import Dict, Optional
 
 import clashroyale
 import discord
@@ -114,7 +114,9 @@ class PokemonLeague(commands.Cog):
             )
         else:
             self.clash = clashroyale.official_api.Client(
-                token=token["token"], is_async=True, url="https://proxy.royaleapi.dev/v1"
+                token=token["token"],
+                is_async=True,
+                url="https://proxy.royaleapi.dev/v1",
             )
 
     async def challongetoken(self):
@@ -134,7 +136,7 @@ class PokemonLeague(commands.Cog):
             self.token_task.cancel()
         if self.challonge and not self.challonge._session.closed:
             self.bot.loop.create_task(self.challonge._session.close())
-        
+
         if self.crtoken_task:
             self.crtoken_task.cancel()
         if self.clash:
@@ -1325,9 +1327,7 @@ class PokemonLeague(commands.Cog):
         invalid_card_names = []
         # cog = self.bot.get_cog("ClashRoyaleClans")
         if not self.clash:
-            return await embed_helper(
-                ctx, "Not connected to clash royale servers."
-            )
+            return await embed_helper(ctx, "Not connected to clash royale servers.")
         try:
             all_cards = list(await self.clash.get_all_cards())
         except clashroyale.RequestError:
@@ -1349,7 +1349,7 @@ class PokemonLeague(commands.Cog):
         invalid_card_names = [
             i for i in invalid_card_names if i not in valid_card_names
         ]
-        
+
         if invalid_card_names:
             return await embed_helper(
                 ctx,
@@ -1569,7 +1569,7 @@ class PokemonLeague(commands.Cog):
 
         everyone_role = ctx.author.roles[0]
 
-        channels_created = {}
+        channels_created: Dict[str, int] = {}
 
         for pokemon_type in pokemon_types:
             role_name = pokemon_type + " Player"
