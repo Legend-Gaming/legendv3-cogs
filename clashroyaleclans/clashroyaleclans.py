@@ -395,7 +395,7 @@ class ClashRoyaleClans(commands.Cog):
             for member in role.members:
                 member_tags = self.tags.quickGetAllTags(member.id)
                 if len(member_tags) == 0:
-                    unknown_members.append(f"{member.mention}({member.name})")
+                    unknown_members.append(f"{member.name}")
 
                 found = False
                 for tag in member_tags:
@@ -403,11 +403,11 @@ class ClashRoyaleClans(commands.Cog):
                         found = True
                         break
                 if not found:
-                    orphan_members.append(f"{member.mention}({member.name})")
+                    orphan_members.append(f"{member.name}")
 
             for tag,name in clan_member_by_name_by_tags.items():
                 if len(self.tags.getUser(tag)) == 0:
-                    absent_names.append(f"{name}")
+                    absent_names.append(f"{name} (#{tag})")
 
             if len(unknown_members) == 0:
                 unknown_members_str = 'None'
@@ -434,7 +434,7 @@ class ClashRoyaleClans(commands.Cog):
                 absent_names_str = absent_names_str[:1024] # max length allowed for discord
                 absent_count = len(absent_names)
 
-            embed=discord.Embed(title=f"Clan Audit: {clan_info['name']}", color=0x00ff00)
+            embed=discord.Embed(title=f"Clan Audit: {clan_info['name']}", color=discord.Colour.blue())
             embed.add_field(name=f"({unknown_count}) Players with **{clan_role}** role, but have **NO** tags saved", value=unknown_members_str, inline=False)
             embed.add_field(name=f"({orphan_count}) Players with **{clan_role}** role, but have **NOT** joined the clan", value=orphan_members_str, inline=False)
             embed.add_field(name=f"({absent_count}) Players in **{clan_info['name']}**, but have **NOT** joined discord", value=absent_names_str, inline=False)
