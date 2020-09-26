@@ -117,6 +117,7 @@ class Tags:
             password=password,
             database=database
         )
+        self.db.autocommit = True
 
     def setupDB(self):
         cursor = self.db.cursor()
@@ -225,7 +226,6 @@ KEY `idx_tag` (`tag`)
 
         query = f"INSERT INTO tags (user_id, tag, account) VALUES ({userID}, '{tag}', {account})"
         cursor.execute(query)
-        self.db.commit()
 
         return account
 
@@ -262,8 +262,6 @@ KEY `idx_tag` (`tag`)
             query = f"UPDATE tags SET account = {item} WHERE user_id = {userID} AND account = {item + 1}"
             cursor.execute(query)
 
-        self.db.commit()
-
     def switchPlace(self, userID, account1, account2):
         """Switch the place of account 1 with 2"""
 
@@ -280,8 +278,6 @@ KEY `idx_tag` (`tag`)
         cursor.execute(querya)
         cursor.execute(queryb)
         cursor.execute(queryc)
-
-        self.db.commit()
 
     def getUser(self, tag):
         """Get all users that have this tag, returns dict in list
@@ -310,7 +306,6 @@ KEY `idx_tag` (`tag`)
         cursor = self.db.cursor()
         query = f"UPDATE tags SET user_id = {newUserID} WHERE user_id = {oldUserID}"
         cursor.execute(query)
-        self.db.commit()
 
 
 class ClashRoyaleTools(commands.Cog):
