@@ -130,22 +130,22 @@ class Tags:
         cursor = self.getCursor()
 
         query = f"""CREATE TABLE IF NOT EXISTS `tags` (
-`id` int(11) NOT NULL AUTO_INCREMENT,
-`user_id` bigint(20) NOT NULL,
-`tag` varchar(15) NOT NULL,
-`account` int(32) NOT NULL,
-PRIMARY KEY (`id`),
-KEY `idx_user_id` (`user_id`),
-KEY `idx_tag` (`tag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `user_id` bigint(20) NOT NULL,
+            `tag` varchar(15) NOT NULL,
+            `account` int(32) NOT NULL,
+            PRIMARY KEY (`id`),
+            KEY `idx_user_id` (`user_id`),
+            KEY `idx_tag` (`tag`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""
         cursor.execute(query)
-        print("Attempting to create the tags table if it does not exist.")
         return
 
     def getCursor(self):
         try:
             self.db.ping(reconnect=True, attempts=3, delay=1)
         except mysql.connector.Error as err:
+            self.db.close()
             self.setupConnection()
         return self.db.cursor()
 
