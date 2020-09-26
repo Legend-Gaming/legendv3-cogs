@@ -111,16 +111,23 @@ class Tags:
 
     def __init__(self, host, user, password, database):
         # hard coding because it's only us using this rn, future can use shared api key
+        self.host = host
+        self.user = user
+        self.password = password
+        self.database = database
+        self.setupConnection()
+
+    def setupConnection(self):
         self.db = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
+            host=self.host,
+            user=self.user,
+            password=self.password,
+            database=self.database
         )
         self.db.autocommit = True
 
     def setupDB(self):
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
 
         query = f"""CREATE TABLE IF NOT EXISTS `tags` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -134,6 +141,14 @@ KEY `idx_tag` (`tag`)
         cursor.execute(query)
         print("Attempting to create the tags table if it does not exist.")
         return
+
+    def getCursor(self):
+        try:
+            self.db.ping(reconnect=True, attempts=3, delay=1)
+        except mysql.connector.Error as err:
+            self.setupConnection()
+        return self.db.cursor()
+
 
     @staticmethod
     def verifyTag(tag):
@@ -162,7 +177,7 @@ KEY `idx_tag` (`tag`)
 
         If the account does not exist / not saved it returns None
         """
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
 
         if self.accountCount(userID) < account or account < 1:
             return None
@@ -180,7 +195,7 @@ KEY `idx_tag` (`tag`)
         1 - Main Account Saved
         2+ - Main Account Saved + Some amount of alts (-1 to get the amount)
         """
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
         query = f"SELECT id from tags WHERE user_id = {userID}"
         cursor.execute(query)
         return len(cursor.fetchall())
@@ -189,7 +204,7 @@ KEY `idx_tag` (`tag`)
         tags = []
 
         query = f"SELECT tag FROM tags WHERE user_id = {userID}"
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
         cursor.execute(query)
         for row in cursor.fetchall():
             tags.append(row[0])
@@ -208,7 +223,7 @@ KEY `idx_tag` (`tag`)
 
         Alt's are auto indexed
         """
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
 
         count = self.accountCount(userID)
 
@@ -231,7 +246,7 @@ KEY `idx_tag` (`tag`)
 
     def unlinkTag(self, userID, tag=None, account=None):
         """You can choose to use tag or account but not both or none"""
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
 
         if (tag is None and account is None) or (tag is not None and account is not None):
             raise TypeError
@@ -265,7 +280,7 @@ KEY `idx_tag` (`tag`)
     def switchPlace(self, userID, account1, account2):
         """Switch the place of account 1 with 2"""
 
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
 
         count = self.accountCount(userID)
 
@@ -287,7 +302,7 @@ KEY `idx_tag` (`tag`)
         ]
         """
 
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
 
         tag = self.formatTag(tag=tag)
         if not self.verifyTag(tag):
@@ -303,7 +318,7 @@ KEY `idx_tag` (`tag`)
         if self.accountCount(newUserID) != 0:
             raise MainAlreadySaved
 
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
         query = f"UPDATE tags SET user_id = {newUserID} WHERE user_id = {oldUserID}"
         cursor.execute(query)
 
