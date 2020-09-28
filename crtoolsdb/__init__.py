@@ -1,5 +1,6 @@
-from .crtoolsdb import ClashRoyaleTools
 from redbot.core import data_manager
+
+from .crtoolsdb import ClashRoyaleTools
 
 
 async def setup(bot):
