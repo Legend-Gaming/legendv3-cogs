@@ -453,10 +453,21 @@ class ClashRoyaleClans(commands.Cog):
 
     async def get_clan_members(self, clan_tag: str):
         members_names_by_tag = {}
-        clan_members = await self.clash.get_clan_members(clan_tag)
-        async for member in clan_members:
+
+        clan_data = await self.get_clandata_by_tag(clan_tag)
+        for member in clan_data["member_list"]:
             members_names_by_tag[member["tag"].strip('#')] = member["name"]
         return members_names_by_tag
+
+    async def get_clandata_by_tag(self, clan_tag):
+        if clan_tag[0] != '#':
+            clan_tag = "#" + clan_tag
+
+        clans = await self.config.clans()
+        for clan in clans:
+            if clan["tag"] == clan_tag:
+                return clan
+        return None
 
     @commands.command(name="refresh")
     @checks.mod_or_permissions()
