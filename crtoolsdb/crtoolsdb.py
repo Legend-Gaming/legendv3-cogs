@@ -210,6 +210,19 @@ class Tags:
         cursor.execute(query)
         return len(cursor.fetchall())
 
+    def getTagsForUsers(self, userIDs):
+        tagsByUser = {}
+
+        userString = ",".join([str(userID) for userID in userIDs])
+        query = f"SELECT user_id, tag FROM tags WHERE user_id IN ({userString})"
+
+        cursor = self.getCursor()
+        cursor.execute(query)
+        for row in cursor.fetchall():
+            tagsByUser.setdefault(row[0], [])
+            tagsByUser[row[0]].append(row[1])
+        return tagsByUser
+
     def quickGetAllTags(self, userID):
         tags = []
 
