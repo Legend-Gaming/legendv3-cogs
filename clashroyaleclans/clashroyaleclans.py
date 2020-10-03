@@ -411,7 +411,7 @@ class ClashRoyaleClans(commands.Cog):
                     if tag in clan_member_by_name_by_tags:
                         found = True
                         processed_tags.append(tag)
-                        break
+
                 if not found:
                     orphan_members.append(f"{member.name}")
 
