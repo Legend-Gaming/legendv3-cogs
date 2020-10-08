@@ -33,20 +33,18 @@ import os
 import random
 import re
 import string
-from typing import Dict, List, Optional
 from concurrent.futures import ThreadPoolExecutor
+from typing import Dict, List, Optional
 
 import aiohttp
 import discord
 import yaml
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
+from PIL import Image, ImageDraw, ImageFont
 from redbot.core import Config, checks, commands
-from redbot.core.utils.chat_formatting import pagify
 from redbot.core.data_manager import bundled_data_path, cog_data_path
-from redbot.core.utils.predicates import MessagePredicate
+from redbot.core.utils.chat_formatting import pagify
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
+from redbot.core.utils.predicates import MessagePredicate
 
 credits = "Bot by Legend Gaming"
 credits_icon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
@@ -55,17 +53,12 @@ log = logging.getLogger("red.cogs.deck")
 SETTINGS_PATH: str = ""
 AKA_PATH: str = ""
 CARDS_JSON_PATH: str = ""
-max_deck_per_user: int = 5
+max_deck_per_user: int = 10
 
-PAGINATION_TIMEOUT = 20.0
+PAGINATION_TIMEOUT = 120
 HELP_URL = "https://github.com/smlbiobot/SML-Cogs/wiki/Deck#usage"
 CARDS_JSON_URL = "https://royaleapi.github.io/cr-api-data/json/cards.json"
 
-numbs = {
-    "next": "➡",
-    "back": "⬅",
-    "exit": "❌"
-}
 
 async def simple_embed(
     ctx: commands.Context,
@@ -83,8 +76,7 @@ async def simple_embed(
     embed = discord.Embed(description=message, color=colour)
     embed.set_footer(text=credits, icon_url=credits_icon)
     return await ctx.send(
-        embed=embed,
-        allowed_mentions=discord.AllowedMentions(**mentions)
+        embed=embed, allowed_mentions=discord.AllowedMentions(**mentions)
     )
 
 
@@ -98,8 +90,8 @@ class BotEmoji:
         """Emoji by name."""
         for emoji in self.bot.get_all_emojis():
             if emoji.name == name:
-                return '<:{}:{}>'.format(emoji.name, emoji.id)
-        return ''
+                return "<:{}:{}>".format(emoji.name, emoji.id)
+        return ""
 
 
 class Deck(commands.Cog):
@@ -108,30 +100,25 @@ class Deck(commands.Cog):
     def __init__(self, bot):
         """Init."""
         self.bot = bot
-        self.settings = Config.get_conf(self, identifier=2390872398545, force_registration=True)
+        self.settings = Config.get_conf(
+            self, identifier=2390872398545, force_registration=True
+        )
         default_global = {
-            "image_server": dict(
-                guild_id=None,
-                channel_id=None,
-            ),
+            "image_server": dict(guild_id=None, channel_id=None,),
         }
         default_guild = {
             "decklink": "embed",
             "auto_deck_link": False,
-            "image_server": dict(
-                channel_id=None,
-            ),
+            "image_server": dict(channel_id=None,),
         }
-        default_member = {
-            "decks": {}
-        }
+        default_member = {"decks": {}}
         self.settings.register_global(**default_global)
         self.settings.register_guild(**default_guild)
         self.settings.register_member(**default_member)
 
         CARDS_JSON_PATH = str(bundled_data_path(self) / "cards.json")
         with open(CARDS_JSON_PATH) as file:
-            self.cards = dict(json.load(file))['card_data']
+            self.cards = dict(json.load(file))["card_data"]
 
         AKA_PATH = str(bundled_data_path(self) / "cards_aka.yaml")
         # init card data
@@ -143,7 +130,7 @@ class Deck(commands.Cog):
         for k, v in aka.items():
             for value in v:
                 self.cards_abbrev[value] = k
-            self.cards_abbrev[k.replace('-', '')] = k
+            self.cards_abbrev[k.replace("-", "")] = k
 
         self.card_w = 302
         self.card_h = 363
@@ -172,7 +159,7 @@ class Deck(commands.Cog):
         """Load self._cards_json"""
         if self._cards_json is None:
             with open(CARDS_JSON_PATH) as f:
-                self._cards_json = dict(json.load(f))['card_data']
+                self._cards_json = dict(json.load(f))["card_data"]
         return self._cards_json
 
     @commands.group()
@@ -196,30 +183,31 @@ class Deck(commands.Cog):
         if use is None:
             await ctx.send_help()
             return
-        if use is not None and use.lower() not in ['embed', 'link']:
-            await ctx.send("Value of use is not valid. Possible values are embed, link and none.")
+        if use is not None and use.lower() not in ["embed", "link"]:
+            await ctx.send(
+                "Value of use is not valid. Possible values are embed, link and none."
+            )
             return
         await self.settings.guild(ctx.guild).decklink.set(use.lower())
         await simple_embed(ctx, "Settings saved.")
 
     @deckset.command(name="imageserver")
     @checks.is_owner()
-    async def deckset_imageserver(self, ctx: commands.Context, channel: Optional[discord.TextChannel] = None):
+    async def deckset_imageserver(
+        self, ctx: commands.Context, channel: Optional[discord.TextChannel] = None
+    ):
         """Set where to send images"""
         if channel is None:
             channel = ctx.channel
-        image_server = dict(
-            channel_id = channel.id
-        )
+        image_server = dict(channel_id=channel.id)
         await self.settings.guild(ctx.guild).image_server.set(image_server)
         await simple_embed(
             ctx,
             "Images will be uploaded to:\n"
             "Server: {} ({})\n"
             "Channel: {} ({})".format(
-                ctx.guild.name, ctx.guild.id,
-                channel.name, channel.id
-            )
+                ctx.guild.name, ctx.guild.id, channel.name, channel.id
+            ),
         )
 
     @deckset.command(name="autodecklink")
@@ -227,14 +215,16 @@ class Deck(commands.Cog):
     async def deckset_autodecklink(self, ctx: commands.Context):
         """Toggle auto transform on server."""
         guild = ctx.guild
-        auto_deck_link = (await self.settings.guild(guild).all()).get('auto_deck_link', False)
+        auto_deck_link = (await self.settings.guild(guild).all()).get(
+            "auto_deck_link", False
+        )
         auto_deck_link = not auto_deck_link
         await self.settings.guild(guild).auto_deck_link.set(auto_deck_link)
         await simple_embed(ctx, "Auto deck link: {}".format(auto_deck_link))
 
     async def decklink_settings(self, guild: discord.Guild):
         """embed, link, none. Default: embed"""
-        default = 'embed'
+        default = "embed"
         decklink = await self.settings.guild(guild).decklink()
         return decklink or default
 
@@ -250,15 +240,15 @@ class Deck(commands.Cog):
         card7=None,
         card8=None,
         deck_name: Optional[str] = None,
-        author: Optional[discord.Member] = None
-        ):
+        author: Optional[discord.Member] = None,
+    ):
         """Abstract command to run deck_get for other modules."""
         params = {}
         for i in range(1, 9):
-            key = 'card' + str(i)
+            key = "card" + str(i)
             params[key] = locals()[key]
-        params['deck_name'] = deck_name
-        params['author'] = author
+        params["deck_name"] = deck_name
+        params["author"] = author
         await ctx.invoke(self.bot.get_command("deck get"), **params)
 
     async def card_id_to_key(self, card_id) -> Optional[str]:
@@ -279,15 +269,21 @@ class Deck(commands.Cog):
         """Convert decklink to cards."""
         card_keys = None
         # search for Clash Royale decks
-        m_crlink = re.search(r'(http|ftp|https)://link.clashroyale.com/deck/..\?deck=[\d\;]+', url)
+        m_crlink = re.search(
+            r"(http|ftp|https)://link.clashroyale.com/deck/..\?deck=[\d\;]+", url
+        )
 
         # search for royaleapi deck stats link
-        m_rapilink = re.match(r'(https|http)://royaleapi.com/decks/stats/([a-z,-]+)/?', url)
-        m_rapilink_section = re.match(r'(https|http)://royaleapi.com/decks/stats/([a-z,-]+)/.+', url)
+        m_rapilink = re.match(
+            r"(https|http)://royaleapi.com/decks/stats/([a-z,-]+)/?", url
+        )
+        m_rapilink_section = re.match(
+            r"(https|http)://royaleapi.com/decks/stats/([a-z,-]+)/.+", url
+        )
 
         if m_crlink:
             url = m_crlink.group()
-            decklinks = re.findall(r'2\d{7}', url)
+            decklinks = re.findall(r"2\d{7}", url)
             card_keys = []
             for decklink in decklinks:
                 card_key = await self.card_id_to_key(decklink)
@@ -295,10 +291,10 @@ class Deck(commands.Cog):
                     card_keys.append(card_key)
         elif m_rapilink and not m_rapilink_section:
             s = m_rapilink.group(2)
-            card_keys = s.split(',')
+            card_keys = s.split(",")
         return card_keys
 
-    @commands.group(name="deck")
+    @commands.group(name="deck", autohelp=False)
     async def deck(self, ctx: commands.Context):
         """Clash Royale deck builder.
 
@@ -315,7 +311,8 @@ class Deck(commands.Cog):
             await ctx.send_help()
 
     @deck.command(name="get")
-    async def deck_get(self,
+    async def deck_get(
+        self,
         ctx: commands.Context,
         card1=None,
         card2=None,
@@ -326,7 +323,8 @@ class Deck(commands.Cog):
         card7=None,
         card8=None,
         deck_name: str = None,
-        author: discord.Member = None):
+        author: discord.Member = None,
+    ):
         """Display a deck with cards.
 
         Enter 8 cards followed by a name.
@@ -337,7 +335,7 @@ class Deck(commands.Cog):
         For the full list of acceptable card names, type !deck cards
         """
         if deck_name is None:
-            deck_name = 'Deck'
+            deck_name = "Deck"
         if author is None:
             author = ctx.author
 
@@ -352,7 +350,7 @@ class Deck(commands.Cog):
         else:
             await self.deck_upload(ctx, member_deck, deck_name, author)
 
-    @deck.command(name="getlink", aliases=['gl'])
+    @deck.command(name="getlink", aliases=["gl"])
     async def deck_getlink(self, ctx: commands.Context, *, url):
         """Get a deck using the decklink."""
         card_keys = await self.decklink_to_cards(url)
@@ -364,7 +362,7 @@ class Deck(commands.Cog):
             return
         params = {}
         for i in range(1, 9):
-            params['card' + str(i)] = card_keys[i-1]
+            params["card" + str(i)] = card_keys[i - 1]
         await ctx.invoke(self.bot.get_command("deck get"), **params)
         try:
             await ctx.message.delete()
@@ -372,10 +370,19 @@ class Deck(commands.Cog):
             pass
 
     @deck.command(name="add")
-    async def deck_add(self, ctx: commands.Context,
-                       card1=None, card2=None, card3=None, card4=None,
-                       card5=None, card6=None, card7=None, card8=None,
-                       deck_name=None):
+    async def deck_add(
+        self,
+        ctx: commands.Context,
+        card1=None,
+        card2=None,
+        card3=None,
+        card4=None,
+        card5=None,
+        card6=None,
+        card7=None,
+        card8=None,
+        deck_name=None,
+    ):
         """Add a deck to a personal decklist.
 
         Example:
@@ -395,15 +402,18 @@ class Deck(commands.Cog):
         elif len(set(member_deck)) < len(member_deck):
             await simple_embed(ctx, "Please enter 8 unique cards.")
         else:
-            await self.deck_upload(ctx, member_deck, deck_name)
+            await self.deck_upload(ctx, member_deck, deck_name, author)
             if self.deck_is_valid:
-                await simple_embed(ctx, "Deck added.")
                 async with self.settings.member(author).decks() as member_decks:
                     if deck_name is None:
-                        deck_name = 'Deck ' + str(len(member_decks)) + str(random.choice(range(1000)))
+                        deck_name = (
+                            "Deck "
+                            + str(len(member_decks))
+                            + str(random.choice(range(1000)))
+                        )
                     member_decks[str(datetime.datetime.utcnow())] = {
                         "Deck": member_deck,
-                        "DeckName": deck_name
+                        "DeckName": deck_name,
                     }
                     timestamp = member_decks.keys()
                     timestamp = sorted(timestamp)
@@ -411,8 +421,9 @@ class Deck(commands.Cog):
                     while len(member_decks) > max_deck_per_user:
                         t = timestamp.pop(0)
                         member_decks.pop(t, None)
+                    await simple_embed(ctx, "Deck added.")
 
-    @deck.command(name="addlink", aliases=['al', 'import', 'i'])
+    @deck.command(name="addlink", aliases=["al", "import", "i"])
     async def deck_addlink(self, ctx: commands.Context, *, url):
         """Add a deck using the decklink."""
         card_keys = await self.decklink_to_cards(url)
@@ -424,7 +435,7 @@ class Deck(commands.Cog):
             return
         params = {}
         for i in range(1, 9):
-            params['card' + str(i)] = card_keys[i-1]
+            params["card" + str(i)] = card_keys[i - 1]
         await ctx.invoke(self.bot.get_command("deck add"), **params)
         try:
             await ctx.message.delete()
@@ -441,18 +452,30 @@ class Deck(commands.Cog):
         decks = await self.settings.member(member).decks()
         deck_id = 1
         for time_stamp, deck in decks.items():
+            url = await self.decklink_url(deck["Deck"], war=False)
             await self.upload_deck_image(
-                ctx, deck["Deck"], deck["DeckName"], member,
-                description="**{}**. {}".format(deck_id, deck["DeckName"]))
-            await self.decklink(ctx, deck["Deck"])
+                ctx,
+                deck["Deck"],
+                deck["DeckName"],
+                member,
+                description="**{}**. {}".format(deck_id, deck["DeckName"]),
+                title="Copy deck",
+                url=url,
+            )
+            # await self.decklink(ctx, deck["Deck"])
             deck_id += 1
 
         if not len(decks):
             if member_is_author:
-                await simple_embed(ctx, "You don’t have any decks stored.\n"
-                                   "Type `!deck add` to add some.")
+                await simple_embed(
+                    ctx,
+                    "You don’t have any decks stored.\n"
+                    "Type `!deck add` to add some.",
+                )
             else:
-                await simple_embed(ctx, "{} hasn’t added any decks yet.".format(member.display_name))
+                await simple_embed(
+                    ctx, "{} hasn’t added any decks yet.".format(member.display_name)
+                )
 
     @deck.command(name="longlist")
     async def deck_longlist(self, ctx: commands.Context, member: discord.Member = None):
@@ -465,23 +488,32 @@ class Deck(commands.Cog):
         decks = await self.settings.member(member).decks()
         if not len(decks):
             if member_is_author:
-                await simple_embed(ctx, "You don’t have any decks stored.\n"
-                                   "Type `!deck add` to add some.")
+                await simple_embed(
+                    ctx,
+                    "You don’t have any decks stored.\n"
+                    "Type `!deck add` to add some.",
+                )
             else:
-                await simple_embed(ctx, "{} hasn’t added any decks yet.".format(member.display_name))
+                await simple_embed(
+                    ctx, "{} hasn’t added any decks yet.".format(member.display_name)
+                )
             return
 
         deck_id = 1
         results_max = 3
         for k, deck in decks.items():
             await self.upload_deck_image(
-                ctx, deck["Deck"], deck["DeckName"], member,
-                description="**{}**. {}".format(deck_id, deck["DeckName"]))
+                ctx,
+                deck["Deck"],
+                deck["DeckName"],
+                member,
+                description="**{}**. {}".format(deck_id, deck["DeckName"]),
+            )
             deck_id += 1
 
             if (deck_id - 1) % results_max == 0:
                 if deck_id < len(decks):
-                    await ctx.send('Would you like to see the next results?')
+                    await ctx.send("Would you like to see the next results?")
                     pred = MessagePredicate.yes_or_no(ctx)
                     await self.bot.wait_for("message", check=pred)
                     answer = pred.result
@@ -490,7 +522,12 @@ class Deck(commands.Cog):
                         return
 
     @deck.command(name="show")
-    async def deck_show(self, ctx: commands.Context, deck_id: int, member: Optional[discord.Member] = None):
+    async def deck_show(
+        self,
+        ctx: commands.Context,
+        deck_id: int,
+        member: Optional[discord.Member] = None,
+    ):
         """Show the deck of a user by id. With link to copy."""
         if not member:
             member = ctx.author
@@ -499,30 +536,37 @@ class Deck(commands.Cog):
         if not decks:
             await simple_embed(ctx, "You have not added any decks.")
             return
+        if len(decks) > deck_id + 1:
+            await simple_embed(ctx, "This deck does not exist.")
+            return
         for i, deck in enumerate(decks.values()):
             if i == deck_id:
-                await self.deck_upload(ctx, deck["Deck"],
-                                        deck["DeckName"], member)
+                await self.deck_upload(ctx, deck["Deck"], deck["DeckName"], member)
                 # generate link
                 await self.decklink(ctx, deck["Deck"])
 
     async def decklink(self, ctx: commands.Context, deck_cards):
         """Show deck link depending on settings."""
         decklink_setting = await self.decklink_settings(ctx.guild)
-        if decklink_setting == 'embed':
+        if decklink_setting == "embed":
             em = await self.decklink_embed(deck_cards)
             await ctx.send(embed=em)
-        elif decklink_setting == 'link':
+        elif decklink_setting == "link":
             url = await self.decklink_url(deck_cards)
-            await ctx.send('<{}>'.format(url))
+            await ctx.send("<{}>".format(url))
 
     async def decklink_embed(self, deck_cards, war=False):
         """Decklink embed."""
         url = await self.decklink_url(deck_cards, war=war)
         if war:
-            em = discord.Embed(title='Copy deck to war deck', url=url)
+            em = discord.Embed(
+                title="Copy deck to war deck", url=url, timestamp=dt.datetime.utcnow(),
+            )
         else:
-            em = discord.Embed(title='Copy deck', url=url)
+            em = discord.Embed(
+                title="Copy deck", url=url, timestamp=dt.datetime.utcnow(),
+            )
+        em.set_footer(text=credits, icon_url=credits_icon)
         return em
 
     async def decklink_url(self, deck_cards, war=False):
@@ -533,9 +577,9 @@ class Deck(commands.Cog):
             id = await self.card_key_to_id(card)
             if id is not None:
                 ids.append(await self.card_key_to_id(card))
-        url = 'https://link.clashroyale.com/deck/en?deck=' + ';'.join(ids)
+        url = "https://link.clashroyale.com/deck/en?deck=" + ";".join(ids)
         if war:
-            url += '&war=1'
+            url += "&war=1"
         return url
 
     @deck.command(name="cards")
@@ -554,10 +598,13 @@ class Deck(commands.Cog):
             elixir = card["elixir"]
             out.append(
                 "**{}** ({}, {} elixir): {}".format(
-                    name, rarity, elixir, ", ".join(names)))
+                    name, rarity, elixir, ", ".join(names)
+                )
+            )
         pages = []
         for page in pagify("\n".join(out), shorten_by=24):
-            embed = discord.Embed(description=page)
+            embed = discord.Embed(description=page, timestamp=dt.datetime.utcnow(),)
+            embed.set_footer(text=credits, icon_url=credits_icon)
             pages.append(embed)
         await menu(ctx, pages, DEFAULT_CONTROLS, timeout=PAGINATION_TIMEOUT)
 
@@ -585,15 +632,16 @@ class Deck(commands.Cog):
                     cards = member_deck["Deck"]
                     # await self.bot.say(set(params))
                     if set(params) < set(cards):
-                        found_decks.append({
-                            "UTC": k,
-                            "Deck": member_deck["Deck"],
-                            "DeckName": member_deck["DeckName"],
-                            "Member": member,
-                            "MemberDisplayName": member_display_name
-                        })
-        found_decks = sorted(
-            found_decks, key=lambda x: x["UTC"], reverse=True)
+                        found_decks.append(
+                            {
+                                "UTC": k,
+                                "Deck": member_deck["Deck"],
+                                "DeckName": member_deck["DeckName"],
+                                "Member": member,
+                                "MemberDisplayName": member_display_name,
+                            }
+                        )
+        found_decks = sorted(found_decks, key=lambda x: x["UTC"], reverse=True)
 
         await ctx.send("Found {} decks".format(len(found_decks)))
         if len(found_decks):
@@ -602,12 +650,15 @@ class Deck(commands.Cog):
             for deck in found_decks:
                 timestamp = deck["UTC"][:19]
                 description = "**{}. {}** by {} — {}".format(
-                    deck_id, deck["DeckName"],
-                    deck["MemberDisplayName"],
-                    timestamp)
+                    deck_id, deck["DeckName"], deck["MemberDisplayName"], timestamp
+                )
                 await self.upload_deck_image(
-                    ctx, deck["Deck"], deck["DeckName"], deck["Member"],
-                    description=description)
+                    ctx,
+                    deck["Deck"],
+                    deck["DeckName"],
+                    deck["Member"],
+                    description=description,
+                )
                 deck_id += 1
                 if (deck_id - 1) % results_max == 0:
                     if deck_id < len(found_decks):
@@ -668,10 +719,12 @@ class Deck(commands.Cog):
         """Complete help and tutorial."""
         await simple_embed(
             ctx,
-            "Please visit [this link]({}) for an illustrated guide.".format(HELP_URL)
+            "Please visit [this link]({}) for an illustrated guide.".format(HELP_URL),
         )
 
-    async def deck_upload(self, ctx: commands.Context, member_deck, deck_name: str, member=None):
+    async def deck_upload(
+        self, ctx: commands.Context, member_deck, deck_name: str, member=None
+    ):
         """Upload deck to Discord."""
         author = ctx.message.author
         if member is None:
@@ -683,8 +736,9 @@ class Deck(commands.Cog):
             await ctx.send(
                 "You have entered {} card{}. "
                 "Please enter exactly 8 cards.".format(
-                    len(member_deck),
-                    's' if len(member_deck) > 1 else ''))
+                    len(member_deck), "s" if len(member_deck) > 1 else ""
+                )
+            )
             await ctx.send_help()
             deck_is_valid = False
 
@@ -701,17 +755,17 @@ class Deck(commands.Cog):
                 channel=ctx.message.channel,
                 card_keys=member_deck,
                 deck_name=deck_name,
-                deck_author=member.display_name
+                deck_author=member.display_name,
             )
         self.deck_is_valid = deck_is_valid
 
-    async def upload_deck_image(self, ctx: commands.Context, deck, deck_name, author, description=""):
+    async def upload_deck_image(
+        self, ctx: commands.Context, deck, deck_name, author, **embed_params
+    ):
         """Upload deck image to the server."""
 
         deck_image = await self.bot.loop.run_in_executor(
-            None,
-            self.get_deck_image,
-            deck, deck_name, author
+            None, self.get_deck_image, deck, deck_name, author
         )
 
         # construct a filename using first three letters of each card
@@ -722,18 +776,22 @@ class Deck(commands.Cog):
         with io.BytesIO() as f:
             deck_image.save(f, "PNG")
             f.seek(0)
-            message = await ctx.message.channel.send(file=discord.File(f, filename=filename),
-                content=description
+            timestamp = embed_params.pop("timestamp", dt.datetime.utcnow())
+            embed = discord.Embed(timestamp=timestamp, **embed_params,)
+            embed.set_image(url="attachment://{}".format(filename))
+            embed.set_footer(text=credits, icon_url=credits_icon)
+            message = await ctx.message.channel.send(
+                file=discord.File(f, filename=filename), embed=embed
             )
 
         return message
 
-    async def upload_deck_image_to(self, channel, deck, deck_name, author, description=""):
+    async def upload_deck_image_to(
+        self, channel, deck, deck_name, author, **embed_params
+    ):
         """Upload deck image to destination."""
         deck_image = await self.bot.loop.run_in_executor(
-            None,
-            self.get_deck_image,
-            deck, deck_name, author
+            None, self.get_deck_image, deck, deck_name, author
         )
 
         # construct a filename using first three letters of each card
@@ -744,8 +802,12 @@ class Deck(commands.Cog):
         with io.BytesIO() as f:
             deck_image.save(f, "PNG")
             f.seek(0)
-            message = await channel.send(file=discord.File(f, filename=filename),
-                content=description
+            timestamp = embed_params.pop("timestamp", dt.datetime.utcnow())
+            embed = discord.Embed(timestamp=timestamp, **embed_params)
+            embed.set_image(url="attachment://{}".format(filename))
+            embed.set_footer(text=credits, icon_url=credits_icon)
+            message = await channel.send(
+                file=discord.File(f, filename=filename), embed=embed
             )
             # message = await self.bot.send_file(
             #     , f,
@@ -753,7 +815,7 @@ class Deck(commands.Cog):
 
         return message
 
-    def get_deck_elxiir(self, card_keys):
+    def get_deck_elxir(self, card_keys):
         # elixir
         total_elixir = 0
         # total card exclude mirror (0-elixir cards)
@@ -785,7 +847,9 @@ class Deck(commands.Cog):
         bg_image = Image.open(str(bundled_data_path(self) / "img" / "deck-bg-b.png"))
         size = bg_image.size
 
-        font_file_regular = str(bundled_data_path(self) / "fonts" / "OpenSans-Regular.ttf")
+        font_file_regular = str(
+            bundled_data_path(self) / "fonts" / "OpenSans-Regular.ttf"
+        )
         font_file_bold = str(bundled_data_path(self) / "fonts/OpenSans-Bold.ttf")
 
         image = Image.new("RGBA", size)
@@ -796,14 +860,18 @@ class Deck(commands.Cog):
 
         # cards
         for i, card in enumerate(deck):
-            card_image_file = str(bundled_data_path(self) / "img" / "cards" / "{}.png".format(card))
+            card_image_file = str(
+                bundled_data_path(self) / "img" / "cards" / "{}.png".format(card)
+            )
             card_image = Image.open(card_image_file)
             # size = (card_w, card_h)
             # card_image.thumbnail(size)
-            box = (card_x + card_w * i,
-                   card_y,
-                   card_x + card_w * (i + 1),
-                   card_h + card_y)
+            box = (
+                card_x + card_w * i,
+                card_y,
+                card_x + card_w * (i + 1),
+                card_h + card_y,
+            )
             image.paste(card_image, box, card_image)
 
         # # elixir
@@ -819,11 +887,11 @@ class Deck(commands.Cog):
         #
         # average_elixir = "{:.3f}".format(total_elixir / card_count)
 
-        average_elixir = self.get_deck_elxiir(deck)
+        average_elixir = self.get_deck_elxir(deck)
 
         # text
         # Take out hyphnens and capitlize the name of each card
-        card_names = [string.capwords(c.replace('-', ' ')) for c in deck]
+        card_names = [string.capwords(c.replace("-", " ")) for c in deck]
 
         txt = Image.new("RGBA", size)
         txt_name = Image.new("RGBA", (txt_x_cards - 30, size[1]))
@@ -833,8 +901,8 @@ class Deck(commands.Cog):
         d = ImageDraw.Draw(txt)
         d_name = ImageDraw.Draw(txt_name)
 
-        line1 = ', '.join(card_names[:4])
-        line2 = ', '.join(card_names[4:])
+        line1 = ", ".join(card_names[:4])
+        line2 = ", ".join(card_names[4:])
         # card_text = '\n'.join([line0, line1])
 
         if deck_author:
@@ -850,23 +918,41 @@ class Deck(commands.Cog):
         # deck_author_name = deck_author.name if deck_author else ""
 
         d_name.text(
-            (txt_x_name, txt_y_line1), deck_name, font=font_bold,
-            fill=(0xff, 0xff, 0xff, 255))
+            (txt_x_name, txt_y_line1),
+            deck_name,
+            font=font_bold,
+            fill=(0xFF, 0xFF, 0xFF, 255),
+        )
         d_name.text(
-            (txt_x_name, txt_y_line2), deck_author_name, font=font_regular,
-            fill=(0xff, 0xff, 0xff, 255))
+            (txt_x_name, txt_y_line2),
+            deck_author_name,
+            font=font_regular,
+            fill=(0xFF, 0xFF, 0xFF, 255),
+        )
         d.text(
-            (txt_x_cards, txt_y_line1), line1, font=font_regular,
-            fill=(0xff, 0xff, 0xff, 255))
+            (txt_x_cards, txt_y_line1),
+            line1,
+            font=font_regular,
+            fill=(0xFF, 0xFF, 0xFF, 255),
+        )
         d.text(
-            (txt_x_cards, txt_y_line2), line2, font=font_regular,
-            fill=(0xff, 0xff, 0xff, 255))
+            (txt_x_cards, txt_y_line2),
+            line2,
+            font=font_regular,
+            fill=(0xFF, 0xFF, 0xFF, 255),
+        )
         d.text(
-            (txt_x_elixir, txt_y_line1), "Avg elixir", font=font_bold,
-            fill=(0xff, 0xff, 0xff, 200))
+            (txt_x_elixir, txt_y_line1),
+            "Avg elixir",
+            font=font_bold,
+            fill=(0xFF, 0xFF, 0xFF, 200),
+        )
         d.text(
-            (txt_x_elixir, txt_y_line2), average_elixir, font=font_bold,
-            fill=(0xff, 0xff, 0xff, 255))
+            (txt_x_elixir, txt_y_line2),
+            average_elixir,
+            font=font_bold,
+            fill=(0xFF, 0xFF, 0xFF, 255),
+        )
 
         image.paste(txt, (0, 0), txt)
         image.paste(txt_name, (0, 0), txt_name)
@@ -880,7 +966,7 @@ class Deck(commands.Cog):
 
     def normalize_deck_data(self, deck):
         """Return a deck list with normalized names."""
-        deck = [c.lower() if c is not None else '' for c in deck]
+        deck = [c.lower() if c is not None else "" for c in deck]
         # replace abbreviations
         for i, card in enumerate(deck):
             if card in self.cards_abbrev.keys():
@@ -903,9 +989,7 @@ class Deck(commands.Cog):
                     return
 
                 await self.post_deck(
-                    channel=msg.channel,
-                    card_keys=card_keys,
-                    deck_author=msg.author
+                    channel=msg.channel, card_keys=card_keys, deck_author=msg.author
                 )
 
                 try:
@@ -913,8 +997,19 @@ class Deck(commands.Cog):
                 except discord.DiscordException:
                     pass
 
-    async def post_deck(self, channel=None, title=None, description=None, timestamp=None, card_keys=None,
-                        deck_name=None, deck_author=None, color=None, player_tag=None, link=None):
+    async def post_deck(
+        self,
+        channel=None,
+        title=None,
+        description=None,
+        timestamp=None,
+        card_keys=None,
+        deck_name=None,
+        deck_author=None,
+        color=None,
+        player_tag=None,
+        link=None,
+    ):
         """Post a deck to destination channel.
 
         If image server is set, post as an embed.
@@ -924,14 +1019,28 @@ class Deck(commands.Cog):
 
         # if image server is set, upload as embed
         has_image_server = False
-        img_channel_id = (await self.settings.guild(channel.guild).image_server()).get("channel_id", None)
+        img_channel_id = (await self.settings.guild(channel.guild).image_server()).get(
+            "channel_id", None
+        )
         if img_channel_id:
             img_channel = self.bot.get_channel(img_channel_id)
             if img_channel:
-                img_msg = await self.upload_deck_image_to(img_channel, card_keys, deck_name,
-                                                          deck_author or self.bot.name)
-
-                img_url = img_msg.attachments[0].url
+                url = await self.decklink_url(card_keys, war=False)
+                img_msg = await self.upload_deck_image_to(
+                    img_channel,
+                    card_keys,
+                    deck_name,
+                    deck_author or self.bot.name,
+                    title="Copy deck",
+                    url=url,
+                )
+                if len(img_msg.attachments) != 0:
+                    img_url = img_msg.attachments[0].url
+                elif len(img_msg.embeds) != 0:
+                    img_url = img_msg.embeds[0].image.url
+                else:
+                    await channel.send("Cannot get url for deck.")
+                    return
                 if link is not None:
                     url = link
                 else:
@@ -943,32 +1052,41 @@ class Deck(commands.Cog):
                     url=url,
                     timestamp=timestamp or dt.datetime.utcnow(),
                 )
+                em.set_footer(text=credits, icon_url=credits_icon)
 
                 link_values = [
                     "[Deck Stats]({})".format(
-                        'https://royaleapi.com/decks/stats/{}'.format(','.join(card_keys))
+                        "https://royaleapi.com/decks/stats/{}".format(
+                            ",".join(card_keys)
+                        )
                     ),
-                    "[Copy]({})".format(
-                        await self.decklink_url(card_keys)
-                    ),
+                    "[Copy]({})".format(await self.decklink_url(card_keys)),
                 ]
 
                 if player_tag is not None:
                     link_values.append(
                         "[Battle Log]({})".format(
-                            'https://royaleapi.com/player/{}/battles'.format(player_tag)
+                            "https://royaleapi.com/player/{}/battles".format(player_tag)
                         )
                     )
 
                 em.add_field(
-                    name="Avg Elixir: {}".format(self.get_deck_elxiir(card_keys)),
-                    value=" • ".join(link_values)
+                    name="Avg Elixir: {}".format(self.get_deck_elxir(card_keys)),
+                    value=" • ".join(link_values),
                 )
                 em.set_image(url=img_url)
                 msg = await channel.send(embed=em)
                 has_image_server = True
 
         if not has_image_server:
-            msg = await self.upload_deck_image_to(channel, card_keys, "Deck", deck_author or self.bot.name)
-            await channel.send(embed=await self.decklink_embed(card_keys))
+            url = await self.decklink_url(card_keys, war=False)
+            msg = await self.upload_deck_image_to(
+                channel,
+                card_keys,
+                "Deck",
+                deck_author or self.bot.name,
+                title="Copy deck",
+                url=url,
+            )
+
         return msg
