@@ -671,29 +671,27 @@ class Deck(commands.Cog):
                             return
 
     @deck.command(name="rename")
-    async def deck_rename(self, ctx: commands.Context, deck_id: int, new_name: str):
+    async def deck_rename(self, ctx: commands.Context, deck_id: int, *, new_name: str):
         """Rename a deck based on deck id.
 
         Syntax: !deck rename [deck_id] [new_name]
         where deck_id is the number associated with the deck when you run !deck list
         """
         author = ctx.message.author
-
-        member_decks = await self.settings.member(author).decks()
-        # check member has data
-        if not len(member_decks):
-            await simple_embed(ctx, "You have not added any decks.")
-        else:
-            deck_id = int(deck_id) - 1
+        deck_id = int(deck_id) - 1
+        async with self.settings.member(author).decks() as member_decks:
+            # check member has data
+            if not len(member_decks):
+                await simple_embed(ctx, "You have not added any decks.")
+                return
             if deck_id >= len(member_decks):
                 await simple_embed(ctx, "The deck id you have entered is invalid.")
-            else:
-                for i, deck in enumerate(member_decks.values()):
-                    if deck_id == i:
-                        # await self.bot.say(deck["DeckName"])
-                        deck["DeckName"] = new_name
-                        await simple_embed(ctx, "Deck renamed to {}.".format(new_name))
-                        await self.deck_upload(ctx, deck["Deck"], new_name, author)
+                return
+            for i, deck in enumerate(member_decks.values()):
+                if deck_id == i:
+                    deck["DeckName"] = new_name
+            await simple_embed(ctx, "Deck renamed to {}.".format(new_name))
+            await self.deck_upload(ctx, deck["Deck"], new_name, author)
 
     @deck.command(name="remove")
     async def deck_remove(self, ctx: commands.Context, deck_id: int):
@@ -908,8 +906,8 @@ class Deck(commands.Cog):
         if deck_author:
             if isinstance(deck_author, str):
                 deck_author_name = deck_author
-            elif hasattr(deck_author, "name"):
-                deck_author_name = deck_author.name
+            elif hasattr(deck_author, "display_name"):
+                deck_author_name = deck_author.display_name
             else:
                 deck_author_name = ""
         else:
