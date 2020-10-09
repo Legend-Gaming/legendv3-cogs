@@ -842,7 +842,9 @@ class Deck(commands.Cog):
         txt_x_cards = 503
         txt_x_elixir = 1872
 
-        bg_image = Image.open(str(bundled_data_path(self) / "img" / "deck-bg-b-legend-logo.png"))
+        bg_image = Image.open(
+            str(bundled_data_path(self) / "img" / "deck-bg-b-legend-logo.png")
+        )
         size = bg_image.size
 
         font_file_regular = str(
