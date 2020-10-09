@@ -974,9 +974,9 @@ class Deck(commands.Cog):
         return deck
 
     @commands.Cog.listener()
-    async def on_message_without_command(self, msg):
+    async def on_message_without_command(self, msg: discord.Message):
         """Listen for decklinks, auto create useful image."""
-        if msg.guild is None or message.author.bot:
+        if msg.guild is None or msg.author.bot:
             return
 
         try:
