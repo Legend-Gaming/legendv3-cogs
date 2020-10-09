@@ -972,10 +972,11 @@ class Deck(commands.Cog):
         return deck
 
     @commands.Cog.listener()
-    async def on_message(self, msg):
+    async def on_message_without_command(self, msg):
         """Listen for decklinks, auto create useful image."""
-        if msg.guild is None:
+        if msg.guild is None or message.author.bot:
             return
+
         try:
             auto_deck_link = await self.settings.guild(msg.guild).auto_deck_link()
         except KeyError:
