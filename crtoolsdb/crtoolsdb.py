@@ -126,6 +126,7 @@ class Tags:
             user=self.user,
             password=self.password,
             database=self.database,
+            connection_timeout=5,
         )
         self.db.autocommit = True
 
