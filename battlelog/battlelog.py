@@ -13,7 +13,7 @@ import re
 import string
 from concurrent.futures import ThreadPoolExecutor
 from logging import debug
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Literal
 
 import aiohttp
 import clashroyale
@@ -31,6 +31,8 @@ from redbot.core.utils import AsyncIter
 from redbot.core.utils.chat_formatting import pagify
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu, start_adding_reactions
 from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
+
+RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 credits = "Bot by Legend Gaming"
 credits_icon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
@@ -175,6 +177,9 @@ class BattleLog(commands.Cog):
             self.token_task.cancel()
         if self.clash:
             self.bot.loop.create_task(self.clash.close())
+
+    async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
+        super().red_delete_data_for_user(requester=requester, user_id=user_id)
 
     @commands.command(name="battlelog")
     @checks.is_owner()
