@@ -23,14 +23,14 @@ red_crown = red_crown.resize((red_crown.width * 2, red_crown.height * 2,))
 
 for score in scores:
     image = image_original.copy()
-    image.paste(blue_crown, (0, crown_y_offset, ))
+    image.paste(blue_crown, (0, crown_y_offset,))
 
-    txt = Image.new("RGBA", image.size, (255,255,255,0))
+    txt = Image.new("RGBA", image.size, (255, 255, 255, 0))
     d = ImageDraw.Draw(txt)
     d.text((blue_crown.width, 0), score, font=font_regular, fill=font_color)
     image = Image.alpha_composite(image, txt)
 
-    image.paste(red_crown, (red_crown_x_offset, crown_y_offset, ))
+    image.paste(red_crown, (red_crown_x_offset, crown_y_offset,))
 
     # image.show()
     image.save(f"{score}.png")
