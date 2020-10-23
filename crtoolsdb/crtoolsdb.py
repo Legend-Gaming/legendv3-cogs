@@ -31,6 +31,10 @@ class InvalidArgument(Exception):
     pass
 
 
+class NoConnection(Exception):
+    pass
+
+
 class Constants:
     """constants Management
 
@@ -126,7 +130,10 @@ class Tags:
             user=self.user,
             password=self.password,
             database=self.database,
+            connection_timeout=5,
         )
+        if not self.db:
+            raise NoConnection
         self.db.autocommit = True
 
     def setupDB(self):

@@ -13,6 +13,7 @@ import discord
 from discord.ext import tasks
 from redbot.core import Config, checks, commands
 from redbot.core.data_manager import bundled_data_path, cog_data_path
+from redbot.core.utils import AsyncIter
 from redbot.core.utils.chat_formatting import humanize_list, pagify
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu, start_adding_reactions
 from redbot.core.utils.predicates import MessagePredicate
@@ -376,7 +377,11 @@ class ClashRoyaleClans(commands.Cog):
         async with ctx.channel.typing():
             clan_info = self.get_clan_by_nickname(nickname)
             if clan_info is None:
-                embed=discord.Embed(title="Unknown nickname", description="You entered a nickname not found found in clans.json", color=0xff0000)
+                embed = discord.Embed(
+                    title="Unknown nickname",
+                    description="You entered a nickname not found found in clans.json",
+                    color=0xFF0000,
+                )
                 await ctx.channel.send(embed=embed)
                 return
 
@@ -389,10 +394,14 @@ class ClashRoyaleClans(commands.Cog):
             # Obtain all members with the clanrole
             role = discord.utils.get(ctx.guild.roles, name=clan_role)
 
-            unknown_members = [] # People w/ role and no tags
-            orphan_members = [] # People w/ role and have a tag and can't be found in the ClashRoyalAPI
-            absent_names = [] # Tags (URLS?) of people who aren't in Discord
-            for member in role.members:
+            unknown_members = []  # People w/ role and no tags
+            orphan_members = (
+                []
+            )  # People w/ role and have a tag and can't be found in the ClashRoyalAPI
+            absent_names = []  # Tags (URLS?) of people who aren't in Discord
+            processed_tags = []
+
+            async for member in AsyncIter(role.members):
                 member_tags = self.tags.quickGetAllTags(member.id)
                 if len(member_tags) == 0:
                     unknown_members.append(f"{member.name}")
@@ -401,16 +410,19 @@ class ClashRoyaleClans(commands.Cog):
                 for tag in member_tags:
                     if tag in clan_member_by_name_by_tags:
                         found = True
-                        break
+                        processed_tags.append(tag)
+
                 if not found:
                     orphan_members.append(f"{member.name}")
 
-            for tag,name in clan_member_by_name_by_tags.items():
-                if len(self.tags.getUser(tag)) == 0:
-                    absent_names.append(f"{name} (#{tag})")
+            absent_names = [
+                f"{name} (#{tag})"
+                for tag, name in clan_member_by_name_by_tags.items()
+                if tag not in processed_tags
+            ]
 
             if len(unknown_members) == 0:
-                unknown_members_str = 'None'
+                unknown_members_str = "None"
                 unknown_count = 0
             else:
                 unknown_members.sort(key=str.lower)
@@ -418,7 +430,7 @@ class ClashRoyaleClans(commands.Cog):
                 unknown_count = len(unknown_members)
 
             if len(orphan_members) == 0:
-                orphan_members_str = 'None'
+                orphan_members_str = "None"
                 orphan_count = 0
             else:
                 orphan_members.sort(key=str.lower)
@@ -426,24 +438,39 @@ class ClashRoyaleClans(commands.Cog):
                 orphan_count = len(orphan_members)
 
             if len(absent_names) == 0:
-                absent_names_str = 'None'
+                absent_names_str = "None"
                 absent_count = 0
             else:
                 absent_names.sort(key=str.lower)
                 absent_names_str = "\n".join(absent_names)
-                absent_names_str = absent_names_str[:1024] # max length allowed for discord
+                absent_names_str = absent_names_str[
+                    :1024
+                ]  # max length allowed for discord
                 absent_count = len(absent_names)
 
-            embed=discord.Embed(title=f"Clan Audit: {clan_info['name']}", color=discord.Colour.blue())
-            embed.add_field(name=f"({unknown_count}) Players with **{clan_role}** role, but have **NO** tags saved", value=unknown_members_str, inline=False)
-            embed.add_field(name=f"({orphan_count}) Players with **{clan_role}** role, but have **NOT** joined the clan", value=orphan_members_str, inline=False)
-            embed.add_field(name=f"({absent_count}) Players in **{clan_info['name']}**, but have **NOT** joined discord", value=absent_names_str, inline=False)
+            embed = discord.Embed(
+                title=f"Clan Audit: {clan_info['name']}", color=discord.Colour.blue()
+            )
+            embed.add_field(
+                name=f"({unknown_count}) Players with **{clan_role}** role, but have **NO** tags saved",
+                value=unknown_members_str,
+                inline=False,
+            )
+            embed.add_field(
+                name=f"({orphan_count}) Players with **{clan_role}** role, but have **NOT** joined the clan",
+                value=orphan_members_str,
+                inline=False,
+            )
+            embed.add_field(
+                name=f"({absent_count}) Players in **{clan_info['name']}**, but have **NOT** joined discord",
+                value=absent_names_str,
+                inline=False,
+            )
 
             await ctx.channel.send(
                 embed=embed,
-                allowed_mentions=discord.AllowedMentions(
-                    users=True, roles=True
-                ))
+                allowed_mentions=discord.AllowedMentions(users=True, roles=True),
+            )
 
     def get_clan_by_nickname(self, nickname: str):
         for name, data in self.family_clans.items():
@@ -453,10 +480,21 @@ class ClashRoyaleClans(commands.Cog):
 
     async def get_clan_members(self, clan_tag: str):
         members_names_by_tag = {}
-        clan_members = await self.clash.get_clan_members(clan_tag)
-        async for member in clan_members:
-            members_names_by_tag[member["tag"].strip('#')] = member["name"]
+
+        clan_data = await self.get_clandata_by_tag(clan_tag)
+        for member in clan_data["member_list"]:
+            members_names_by_tag[member["tag"].strip("#")] = member["name"]
         return members_names_by_tag
+
+    async def get_clandata_by_tag(self, clan_tag):
+        if clan_tag[0] != "#":
+            clan_tag = "#" + clan_tag
+
+        clans = await self.config.clans()
+        for clan in clans:
+            if clan["tag"] == clan_tag:
+                return clan
+        return None
 
     @commands.command(name="refresh")
     @checks.mod_or_permissions()
@@ -814,7 +852,9 @@ class ClashRoyaleClans(commands.Cog):
 
             clan_roles.append("Member")
             try:
-                await self.discord_helper._add_roles(member, clan_roles, reason = "used newmember")
+                await self.discord_helper._add_roles(
+                    member, clan_roles, reason="used newmember"
+                )
                 output_msg += f"**{humanize_list(clan_roles)}** roles added."
             except discord.Forbidden:
                 await ctx.send(
@@ -837,7 +877,9 @@ class ClashRoyaleClans(commands.Cog):
                 await simple_embed(ctx, output_msg, True)
 
             # TODO: Add welcome message to global chat
-            await self.discord_helper._remove_roles(member, ["Guest"], reason="used newmwmber")
+            await self.discord_helper._remove_roles(
+                member, ["Guest"], reason="used newmwmber"
+            )
 
             roleName = discord.utils.get(guild.roles, name=clan_roles[0])
             recruitment_channel = self.bot.get_channel(
@@ -912,7 +954,7 @@ class ClashRoyaleClans(commands.Cog):
             message = ctx.message
             message.content = ctx.prefix + "newmember {}".format(member.mention)
             await self.bot.process_commands(message)
-                            
+
     @commands.command(name="nick")
     @checks.mod()
     async def _clan_server_setup(self, ctx, member: discord.Member):
@@ -921,10 +963,10 @@ class ClashRoyaleClans(commands.Cog):
         """
         guild = ctx.guild
         legend_servers = {
-            757553323602608128 : ['RY9QJU2' , 'Rising'],
-            741928176779001948 : ['9P2PQULQ', 'Empire'],
-            424929926844776462 : ['80CC8', 'Squad'],
-            712090493399334913 : ['PRCRJYCR', 'Dragons Eight III'],
+            757553323602608128: ["RY9QJU2", "Rising"],
+            741928176779001948: ["9P2PQULQ", "Empire"],
+            424929926844776462: ["80CC8", "Squad"],
+            712090493399334913: ["PRCRJYCR", "Dragons Eight III"],
         }
         if guild.id not in legend_servers:
             return await ctx.send("Command cannot be used in this server")
@@ -938,7 +980,7 @@ class ClashRoyaleClans(commands.Cog):
         discord_invites = []
         clan_nicknames = []
         ign = ""
-        output_msg = ''
+        output_msg = ""
 
         if len(player_tags) == 0:
             return await ctx.send(
@@ -956,20 +998,24 @@ class ClashRoyaleClans(commands.Cog):
                     player_clan_tag = player_data.clan.tag.strip("#")
 
                 if player_clan_tag == legend_servers[guild.id][0]:
-                    
+
                     ign = player_data.name
                     try:
                         await member.edit(nick=ign)
                     except discord.HTTPException:
                         await simple_embed(
-                            ctx, "I don't have permission to change nick for this user.", False
+                            ctx,
+                            "I don't have permission to change nick for this user.",
+                            False,
                         )
                     else:
                         output_msg += "Nickname changed to **{}**\n".format(ign)
 
                     clan_roles.append(legend_servers[guild.id][1])
                     try:
-                        await self.discord_helper._add_roles(member, clan_roles, reason = "used nick")
+                        await self.discord_helper._add_roles(
+                            member, clan_roles, reason="used nick"
+                        )
                         output_msg += f"**{humanize_list(clan_roles)}** role added."
                     except discord.Forbidden:
                         await ctx.send(
@@ -994,18 +1040,22 @@ class ClashRoyaleClans(commands.Cog):
             else:
                 try:
                     player_data = await self.clash.get_player(player_tags[0])
-                    ign = player_data.name + ' | Guest'
+                    ign = player_data.name + " | Guest"
                     await member.edit(nick=ign)
                 except discord.HTTPException:
                     await simple_embed(
-                        ctx, "I don't have permission to change nick for this user.", False
+                        ctx,
+                        "I don't have permission to change nick for this user.",
+                        False,
                     )
                 else:
                     output_msg += "Nickname changed to **{}**\n".format(ign)
 
-                clan_roles.append('Guest')
+                clan_roles.append("Guest")
                 try:
-                    await self.discord_helper._add_roles(member, clan_roles, reason = "used nick")
+                    await self.discord_helper._add_roles(
+                        member, clan_roles, reason="used nick"
+                    )
                     output_msg += f"**{humanize_list(clan_roles)}** role added. \n*If you are a part of {legend_servers[guild.id][1]}, please save the tag of your account in {legend_servers[guild.id][1]} too.*"
                 except discord.Forbidden:
                     await ctx.send(
@@ -1029,7 +1079,7 @@ class ClashRoyaleClans(commands.Cog):
         except clashroyale.RequestError:
             return await simple_embed(
                 ctx, "Error: cannot reach Clash Royale Servers. Please try again later."
-            )                            
+            )
 
     @commands.command(name="inactive")
     async def command_inactive(self, ctx, member: discord.Member):
@@ -1038,7 +1088,9 @@ class ClashRoyaleClans(commands.Cog):
         all_clan_roles += [
             "Member",
         ]
-        await self.discord_helper._remove_roles(member, all_clan_roles, reason="used inactive")
+        await self.discord_helper._remove_roles(
+            member, all_clan_roles, reason="used inactive"
+        )
         # If tag is not saved or connection to CR server is not available use current name to determine ign
         try:
             tag = self.tags.getTag(member.id)
@@ -1423,7 +1475,9 @@ class ClashRoyaleClans(commands.Cog):
                 await simple_embed(ctx, "Cannot find a role named waiting.")
             try:
                 if waiting_role:
-                    await member.remove_roles(waiting_role, reason="removing from waitlist")
+                    await member.remove_roles(
+                        waiting_role, reason="removing from waitlist"
+                    )
             except discord.Forbidden:
                 return await simple_embed(
                     ctx, "No permission to remove roles for this user."
@@ -1643,14 +1697,14 @@ class Helper:
         if any([x is None for x in roles]):
             raise InvalidRole
         try:
-            await member.add_roles(*roles, reason="From clashroyaleclans: " + reason )
+            await member.add_roles(*roles, reason="From clashroyaleclans: " + reason)
         except discord.Forbidden:
             raise
         except discord.HTTPException:
             raise
 
     @staticmethod
-    async def _remove_roles(member: discord.Member, role_names: List[str], reason = ""):
+    async def _remove_roles(member: discord.Member, role_names: List[str], reason=""):
         """Remove roles"""
         roles = [
             discord.utils.get(member.guild.roles, name=role_name)
