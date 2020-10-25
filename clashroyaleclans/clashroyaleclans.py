@@ -84,8 +84,7 @@ class ClashRoyaleClans(commands.Cog):
                 try:
                     clan_tag = data["tag"]
                     clan_data = await self.clash.get_clan(clan_tag)
-                    all_clan_data[name] = (dict(clan_data)
-                    )
+                    all_clan_data[name] = dict(clan_data)
                 # REMINDER: Order is important. RequestError is base exception class.
                 except clashroyale.NotFoundError:
                     log.critical("Invalid clan tag.")
@@ -99,7 +98,9 @@ class ClashRoyaleClans(commands.Cog):
             log.error("Encountered exception {} when refreshing clan data.".format(e))
             raise
 
-    async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
+    async def red_delete_data_for_user(
+        self, *, requester: RequestType, user_id: int
+    ) -> None:
         # TODO: Replace this with the proper end user data removal handling.
         super().red_delete_data_for_user(requester=requester, user_id=user_id)
 
@@ -122,17 +123,28 @@ class ClashRoyaleClans(commands.Cog):
                     self.last_error_time = time.time()
             return
 
-        new_data = deepcopy(await self.config.clans())
+        new_data = dict(deepcopy(await self.config.clans()))
+        type(new_data)
+        new_data = {
+            k: v
+            for k, v in sorted(
+                new_data.items(),
+                key=lambda x: (
+                    x[1]["clan_war_trophies"],
+                    x[1]["required_trophies"],
+                    x[1]["clan_score"],
+                ),
+                reverse=True,
+            )
+        }
 
         if len(new_data) == 0:
             log.error("Clans data is empty.")
             return
-
         if store_log:
             if len(old_data) == 0:
-                await self.config.clans.set(list(new_data))
+                await self.config.clans.set(dict(new_data))
                 return
-
             for key, data in new_data.items():
                 old_clan_data = {}
                 new_clan_data = {}
@@ -147,21 +159,24 @@ class ClashRoyaleClans(commands.Cog):
                     )
                     players_left_clan = set(total - set(new_clan_data.keys()))
                     players_joined_clan = set(total - set(old_clan_data.keys()))
-
         await self.config.clans.set(new_data)
         self.last_error_time = None
         self.last_updated = datetime.now()
         self.last_updated_preety = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         self.loop_count += 1
 
-    def resolve_static_clankey(self, clankey):
+    def get_static_clankey(self, clankey):
         for key, data in self.static_clandata.items():
-            if data['tag'] == clankey or data['name'] == clankey or data['nickname'] == clankey:
+            if (
+                data["tag"].lower() == clankey.lower()
+                or data["name"].lower() == clankey.lower()
+                or data["nickname"].lower() == clankey.lower()
+            ):
                 return key
         return None
 
-    def static_clandata(self, clankey: str, req_data: str = None):
-        key = self.resolve_static_clankey(clankey)
+    def get_static_clandata(self, clankey: str, req_data: str = None):
+        key = self.get_static_clankey(clankey)
         if key:
             if req_data:
                 return self.static_clandata[key][req_data]
@@ -178,7 +193,10 @@ class ClashRoyaleClans(commands.Cog):
         """Return clan data"""
         return await self.config.clans()
 
-    async def clan_data_by_key(self, clankey: str, req_data: str = None):
+    async def get_all_static_clan_data(self):
+        return self.static_clandata
+
+    async def clan_data(self, clankey: str, req_data: str = None):
         """Return clan array"""
         all_clans = await self.config.clans()
         key = self.get_static_clankey(clankey)
@@ -189,11 +207,13 @@ class ClashRoyaleClans(commands.Cog):
                 return all_clans[key]
         return None
 
-    async def clan_member_data(self, clankey: str, memberkey: str, req_data: str = None):
+    async def clan_member_data(
+        self, clankey: str, memberkey: str, req_data: str = None
+    ):
         """Return clan member's dict"""
-        data = await self.clan_data_by_key(clankey, "member_list")
+        data = await self.clan_data(clankey, "member_list")
         for member in data:
-            if member['tag'] == memberkey or member['name'] == memberkey:
+            if member["tag"] == memberkey or member["name"] == memberkey:
                 if req_data:
                     return member[req_data]
                 else:
@@ -211,11 +231,11 @@ class ClashRoyaleClans(commands.Cog):
     async def clan_members_tags(self, clankey):
         """Get keys of all the clan members"""
         data = await self.clan_data_by_key(clankey, "member_list")
-        return [member['tag'] for member in data]
+        return [member["tag"] for member in data]
 
     def clan_names(self):
         """Get name of all the clans"""
-        return [clan['name'] for clan in self.static_clandata.values()]
+        return [clan["name"] for clan in self.static_clandata.values()]
 
     def clan_tags(self):
         """Get tags of all the clans"""
@@ -229,18 +249,18 @@ class ClashRoyaleClans(commands.Cog):
 
     def verify_clan_membership(self, clantag):
         """Check if a clan is part of the family"""
-        return (any((data['tag'] == clantag for data in self.static_clandata.values())))
+        return any((data["tag"] == clantag for data in self.static_clandata.values()))
 
     def clan_key_from_tag(self, clantag):
         """Get a clan key from a clan tag."""
         for key, data in self.static_clandata.items():
-            if data['tag'] == clantag:
+            if data["tag"] == clantag:
                 return key
         return None
 
     def waiting(self, clankey):
-        data = self.static_clandata(clankey)
-        return data['waiting']
+        data = self.get_static_clandata(clankey)
+        return data["waiting"]
 
     def num_waiting(self, clankey):
         """Get a clan's wating list length from a clan key."""
@@ -249,15 +269,19 @@ class ClashRoyaleClans(commands.Cog):
     async def clan_cwr(self, clankey, league):
         """Get a clan's CWR"""
         for name, data in self.static_clandata.items():
-            if data['tag'] == clankey or data['name'] == clankey or data['nickname'] == clankey:
-                return data['cwr'][league]
+            if (
+                data["tag"] == clankey
+                or data["name"] == clankey
+                or data["nickname"] == clankey
+            ):
+                return data["cwr"][league]
         return 0
 
     async def add_waiting_member(self, clankey, memberID):
         """Add a user to a clan's waiting list"""
         if memberID not in self.waiting(clankey):
-            clankey = self.resolve_static_clankey(clankey)
-            self.static_clandata[clankey]['waiting'].append(memberID)
+            clankey = self.get_static_clankey(clankey)
+            self.static_clandata[clankey]["waiting"].append(memberID)
             await self.save_clan_data()
             return True
         else:
@@ -266,8 +290,8 @@ class ClashRoyaleClans(commands.Cog):
     async def remove_waiting_member(self, clankey, memberID):
         """Remove a user to a clan's waiting list"""
         if memberID in self.waiting(clankey):
-            clankey = self.resolve_static_clankey(clankey)
-            self.static_clandata[clankey]['waiting'].append(memberID)
+            clankey = self.get_static_clankey(clankey)
+            self.static_clandata[clankey]["waiting"].remove(memberID)
             await self.save_clan_data()
             return True
         else:
@@ -286,30 +310,27 @@ class ClashRoyaleClans(commands.Cog):
 
     async def set_clan_pb(self, clankey, trophies):
         """Set a clan's PB Trohies"""
-        clankey = self.resolve_static_clankey(clankey)
-        self.static_clandata[clankey]['requirements']['personalbest'] = trophies
+        clankey = self.get_static_clankey(clankey)
+        self.static_clandata[clankey]["requirements"]["personalbest"] = trophies
         await self.save_clan_data()
 
     async def set_cwr(self, clankey, league, cwr):
         """Set a clan's CWR"""
-        clankey = self.resolve_static_clankey(clankey)
-        self.static_clandata[clankey]['requirements']['cwr'][league] = cwr
+        clankey = self.get_static_clankey(clankey)
+        self.static_clandata[clankey]["requirements"]["cwr"][league] = cwr
         await self.save_clan_data()
 
     async def set_bonus(self, clankey, bonus):
         """Set a clan's Bonus Statement"""
-        clankey = self.resolve_static_clankey(clankey)
-        self.static_clandata[clankey]['requirements']['bonustitle'] = bonus
+        clankey = self.get_static_clankey(clankey)
+        self.static_clandata[clankey]["requirements"]["bonustitle"] = bonus
         await self.save_clan_data()
 
     async def toggle_private(self, clankey):
         """Toggle Private approval of new recruits"""
-        clankey = self.resolve_static_clankey(clankey)
-        self.static_clandata[clankey]['requirements']['approval'] = not self.static_clandata[clankey]['requirements']['approval']
+        clankey = self.get_static_clankey(clankey)
+        self.static_clandata[clankey]["requirements"][
+            "approval"
+        ] = not self.static_clandata[clankey]["requirements"]["approval"]
         await self.save_clan_data()
-        return self.static_clandata[clankey]['requirements']['approval']
-
-
-
-
-
+        return self.static_clandata[clankey]["requirements"]["approval"]
