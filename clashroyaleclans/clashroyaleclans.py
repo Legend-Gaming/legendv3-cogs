@@ -1,21 +1,19 @@
-
 import asyncio
-from copy import deepcopy
-from datetime import datetime
 import json
 import logging
-from time import time, sleep
+from copy import deepcopy
+from datetime import datetime
+from time import sleep, time
 from typing import Literal
 
 import clashroyale
 import discord
+from crtoolsdb.crtoolsdb import Constants
 from discord.ext import tasks
 from redbot.core import commands
 from redbot.core.bot import Red
-from redbot.core.data_manager import cog_data_path
 from redbot.core.config import Config
-
-from crtoolsdb.crtoolsdb import Constants
+from redbot.core.data_manager import cog_data_path
 
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
@@ -30,6 +28,7 @@ class ClashRoyaleClans(commands.Cog):
     """
     Keep track of clashroyaleclans
     """
+
     def __init__(self, bot: Red) -> None:
         self.bot = bot
 
@@ -42,9 +41,7 @@ class ClashRoyaleClans(commands.Cog):
             "keep_memberlog": False,
         }
         self.config = Config.get_conf(
-            self,
-            identifier=2286464642345664456,
-            force_registration=True,
+            self, identifier=2286464642345664457, force_registration=True,
         )
         self.config.register_global(**default_global)
 
