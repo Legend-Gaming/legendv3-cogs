@@ -2,7 +2,7 @@
     "name": "ClashRoyaleClans",
     "short": "Keep track of clashroyaleclans",
     "description": "This cog helps in maintaining clashroyale clans by storing their info obtained from official CR api. It acts as a base cog for other cogs such as recruitment, battlelog and more. ",
-    "end_user_data_statement": "This cog stores clash-royale data inclulding user name, tag and current clan if user has joined any of family clans.",
+    "end_user_data_statement": "This cog stores in-game player stats: tags, name, clan, and scores.",
     "install_msg": "Thanks for installing the repository! Join our server for support: https://discord.gg/ZFW7g58",
     "author": [
         "Generaleoley FyN8 GR8 Kingslayer VanHorn Nevus"
