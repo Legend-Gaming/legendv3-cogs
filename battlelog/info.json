@@ -1,0 +1,25 @@
+{
+    "name": "BattleLog",
+    "short": "Clash Royale Battle Log Viewer",
+    "description": "See your clash royale battles",
+    "end_user_data_statement": "This cog uses tag stored from clashroyaleclans cog. It does not persistantly store any data about users.",
+    "install_msg": "Thanks for installing. If you need help, please create new issue on our Github repo: https://github.com/Legend-Gaming/legendv3-cogs",
+    "author": [
+        "Nevus"
+    ],
+    "required_cogs": {},
+    "requirements": ["Pillow", "pyyaml", "psutil", "pympler", "clashroyale"],
+    "tags": [
+        "clashroyale",
+        "cr",
+        "deck",
+        "decks",
+        "gaming",
+        "games",
+        "search"
+    ],
+    "min_bot_version": "3.3.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}
