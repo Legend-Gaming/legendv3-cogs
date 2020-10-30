@@ -24,7 +24,7 @@ from redbot.core.utils.predicates import MessagePredicate
 
 from crtoolsdb.crtoolsdb import Constants
 from .helper import InvalidRole, Helper
-from clashroyaleclans import ClashRoyaleClans2
+from clashroyaleclansv2 import ClashRoyaleClans2
 from crtoolsdb import ClashRoyaleTools
 
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
