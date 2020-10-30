@@ -24,7 +24,7 @@ class NoToken(Exception):
     pass
 
 
-class ClashRoyaleClans(commands.Cog):
+class ClashRoyaleClans2(commands.Cog):
     """
     Keep track of clashroyaleclans
     """
@@ -104,7 +104,7 @@ class ClashRoyaleClans(commands.Cog):
     @tasks.loop(seconds=30)
     async def get_clandata(self):
         """Check current data against data stored in config."""
-        if self is not self.bot.get_cog("ClashRoyaleClans"):
+        if self is not self.bot.get_cog("ClashRoyaleClans2"):
             return
         old_data = list()
         store_log = await self.config.keep_memberlog()
