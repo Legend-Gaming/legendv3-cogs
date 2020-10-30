@@ -1,0 +1,26 @@
+{
+    "name": "Recruitment",
+    "short": "Recruitment helper for clash royale",
+    "description": "This cog helps in recruitment for clash royale families by handling requirement check, approvals, recruit codes and assigning roles after being accepted.",
+    "end_user_data_statement": "This cog stores clash-royale data such as in-game username, id and other stats.",
+    "install_msg": "Thanks for installing the repository! Join our server for support: https://discord.gg/ZFW7g58",
+    "author": [
+        "Nevus",
+        "Generaleoley",
+        "FyN8",
+        "GR8",
+        "Kingslayer",
+        ""
+    ],
+    "required_cogs": {},
+    "requirements": [],
+    "tags": [
+        "tag1",
+        "tag2",
+        "tag3"
+    ],
+    "min_bot_version": "3.3.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}

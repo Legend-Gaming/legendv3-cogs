@@ -190,11 +190,11 @@ class ClashRoyaleClans2(commands.Cog):
         """Return clan data"""
         return await self.config.clans()
 
-    async def get_all_static_clan_data(self):
+    def get_all_static_clan_data(self):
         return self.static_clandata
 
     async def clan_data(self, clankey: str, req_data: str = None):
-        """Return clan array"""
+        """Return clan info stored in config"""
         all_clans = await self.config.clans()
         key = self.get_static_clankey(clankey)
         if key:
