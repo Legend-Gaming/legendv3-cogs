@@ -370,14 +370,7 @@ class Recruitment(commands.Cog):
         total_waiting = 0
         all_clans = await self.crclans_cog.all_clans_data()
         use_hyperlink = await self.config.guild(ctx.guild).hyperlink_crclans()
-        description = (
-            CRClansDescription.format(
-            len(all_clans),
-            total_members,
-            (len(all_clans) * 50) - total_members,
-            total_waiting,
-            )
-        )
+        description_clan = ""
         for clankey, clan in all_clans.items():
             if player_tag is None or await self.check_member_eligibility(clankey, player=player):
                 found_clan = True
@@ -392,9 +385,17 @@ class Recruitment(commands.Cog):
                 title = await self.crclans_title(ctx, req_fields)
                 desc = await self.crclans_description(ctx, req_fields)
                 if use_hyperlink:
-                    description += f"**{title}**\n{desc}\n"
+                    description_clan += f"**{title}**\n{desc}\n"
                 else:
                     embed.add_field(name=title, value=desc, inline=False)
+        description = (
+            CRClansDescription.format(
+            len(all_clans),
+            total_members,
+            (len(all_clans) * 50) - total_members,
+            total_waiting,
+            )
+        ) + description_clan
         if not found_clan:
             embed.add_field(
                 name="uh oh!",
