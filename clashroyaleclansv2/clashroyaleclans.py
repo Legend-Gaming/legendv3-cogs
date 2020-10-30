@@ -44,10 +44,13 @@ class ClashRoyaleClans2(commands.Cog):
             self, identifier=2286464642345664457, force_registration=True,
         )
         self.config.register_global(**default_global)
-
-        self.claninfo_path = str(cog_data_path(self) / "clans.json")
-        with open(self.claninfo_path) as file:
-            self.static_clandata = dict(json.load(file))
+        
+        try:
+            self.claninfo_path = str(cog_data_path(self) / "clans.json")
+            with open(self.claninfo_path) as file:
+                self.static_clandata = dict(json.load(file))
+        except:
+            self.static_clandata = {}
 
         self.claninfo_lock = asyncio.Lock()
 

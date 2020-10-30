@@ -78,10 +78,14 @@ class ClashRoyaleClans(commands.Cog):
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
         self.discord_helper = Helper(bot)
-
-        self.claninfo_path = str(cog_data_path(self) / "clans.json")
-        with open(self.claninfo_path) as file:
-            self.family_clans = dict(json.load(file))
+        
+        try:
+            self.claninfo_path = str(cog_data_path(self) / "clans.json")
+            with open(self.claninfo_path) as file:
+                self.family_clans = dict(json.load(file))
+        except:
+            self.family_clans = {}
+            
 
         self.greetings_path = str(bundled_data_path(self) / "welcome_messages.json")
         with open(self.greetings_path) as file:
