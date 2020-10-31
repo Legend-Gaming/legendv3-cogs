@@ -4,7 +4,7 @@ import logging
 from copy import deepcopy
 from datetime import datetime
 from time import sleep, time
-from typing import Literal
+from typing import Literal, Dict
 
 import clashroyale
 import discord
@@ -14,10 +14,13 @@ from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
 from redbot.core.data_manager import cog_data_path
+from redbot.core.utils import AsyncIter
+from redbot.core.utils.chat_formatting import pagify
+from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
-log = logging.getLogger("red.cogs.clashroyaleclans")
+log = logging.getLogger("red.cogs.clashroyaleclansv2")
 
 
 class NoToken(Exception):
@@ -44,7 +47,7 @@ class ClashRoyaleClans2(commands.Cog):
             self, identifier=2286464642345664457, force_registration=True,
         )
         self.config.register_global(**default_global)
-        
+
         try:
             self.claninfo_path = str(cog_data_path(self) / "clans.json")
             with open(self.claninfo_path) as file:
@@ -334,3 +337,111 @@ class ClashRoyaleClans2(commands.Cog):
         ] = not self.static_clandata[clankey]["requirements"]["approval"]
         await self.save_clan_data()
         return self.static_clandata[clankey]["requirements"]["approval"]
+
+    @commands.command(name="clanaudit")
+    async def clanaudit(self, ctx, nickname: str):
+        async with ctx.channel.typing():
+            clan_info = await self.clan_data(nickname)
+            if clan_info is None:
+                embed = discord.Embed(
+                    title="Unknown nickname",
+                    description="You entered a nickname not found found in clans.json",
+                    color=0xFF0000,
+                )
+                await ctx.channel.send(embed=embed)
+                return
+
+            clan_role = self.get_static_clandata(nickname, "clanrole")
+            # List of all clan member tags from ClashRoyalAPI
+            clan_member_by_name_by_tags = await self.clan_members_by_tag(nickname)
+            # Obtain all members with the clanrole
+            role = discord.utils.get(ctx.guild.roles, name=clan_role)
+
+            unknown_members = []  # People w/ role and no tags
+            orphan_members = (
+                []
+            )  # People w/ role and have a tag and can't be found in the ClashRoyalAPI
+            absent_names = []  # Tags (URLS?) of people who aren't in Discord
+            processed_tags = []
+
+            # Send people with roles to either unknown_members or orphan_members if required
+            async for member in AsyncIter(role.members):
+                member_tags = self.tags.quickGetAllTags(member.id)
+                if len(member_tags) == 0:
+                    unknown_members.append(f"{member.name}")
+                found = False
+                for tag in member_tags:
+                    if tag in clan_member_by_name_by_tags.keys():
+                        found = True
+                        processed_tags.append(tag)
+                if not found:
+                    orphan_members.append(f"{member.name}")
+            # Get people not in discord but are in clan
+            absent_names = [
+                f"{name} (#{tag})"
+                for tag, name in clan_member_by_name_by_tags.items()
+                if tag not in processed_tags
+            ]
+
+            if len(unknown_members) == 0:
+                unknown_members_str = "None"
+                unknown_count = 0
+            else:
+                unknown_members.sort(key=str.lower)
+                unknown_members_str = "\n".join(unknown_members)
+                unknown_count = len(unknown_members)
+
+            if len(orphan_members) == 0:
+                orphan_members_str = "None"
+                orphan_count = 0
+            else:
+                orphan_members.sort(key=str.lower)
+                orphan_members_str = "\n".join(orphan_members)
+                orphan_count = len(orphan_members)
+
+            if len(absent_names) == 0:
+                absent_names_str = "None"
+                absent_count = 0
+            else:
+                absent_names.sort(key=str.lower)
+                absent_names_str = "\n".join(absent_names)
+                absent_count = len(absent_names)
+
+            embed = discord.Embed(
+                title=f"Clan Audit: {clan_info['name']}", color=discord.Colour.blue()
+            )
+
+            embed.add_field(
+                name=f"({unknown_count}) Players with **{clan_role}** role, but have **NO** tags saved",
+                value=unknown_members_str,
+                inline=False,
+            )
+            embed.add_field(
+                name=f"({orphan_count}) Players with **{clan_role}** role, but have **NOT** joined the clan",
+                value=orphan_members_str,
+                inline=False,
+            )
+
+            pages = []
+            absent_members_title = f"({absent_count}) Players in **{clan_info['name']}**, but have **NOT** joined discord"
+            absent_members_value = "None"
+            for index, page in enumerate(pagify(absent_names_str, page_length=1024)):
+                if index == 0:
+                    absent_members_value = page
+                em = discord.Embed(title=absent_members_title, description=page)
+                pages.append(em)
+            embed.add_field(
+                name=absent_members_title,
+                value=absent_members_value,
+                inline=False,
+            )
+            pages[0] = embed
+            await menu(ctx, pages, controls=DEFAULT_CONTROLS)
+
+    async def clan_members_by_tag(self, nickname: str) -> Dict[str, str]:
+        members_names_by_tag = {}
+        clan_data = await self.clan_data(nickname, "member_list")
+        for member in clan_data:
+            members_names_by_tag[member["tag"].strip("#")] = member["name"]
+        return members_names_by_tag
+

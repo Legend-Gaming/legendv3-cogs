@@ -63,41 +63,15 @@ class ClashRoyaleClans(commands.Cog):
 
         self.config = Config.get_conf(self, identifier=2286464642345664456)
         default_global = {"clans": list()}
-        default_guild = {
-            "mentions": {
-                "on_show_clan": {"users": True, "roles": True},
-                "on_approve": {"users": True, "roles": True},
-                "on_nm": True,
-                "on_newrecruit": True,
-                "on_waitlist_add": True,
-            },
-            "global_channel_id": 374596069989810178,
-            "new_recruits_channel_id": 375839851955748874,
-            "player_info_legend": True,
-        }
         self.config.register_global(**default_global)
-        self.config.register_guild(**default_guild)
         self.discord_helper = Helper(bot)
-        
+
         try:
             self.claninfo_path = str(cog_data_path(self) / "clans.json")
             with open(self.claninfo_path) as file:
                 self.family_clans = dict(json.load(file))
         except:
             self.family_clans = {}
-            
-
-        self.greetings_path = str(bundled_data_path(self) / "welcome_messages.json")
-        with open(self.greetings_path) as file:
-            self.greetings = list((json.load(file)).get("GREETING"))
-
-        self.rules_path = str(bundled_data_path(self) / "rules.txt")
-        with open(self.rules_path) as file:
-            self.rules_text = file.read()
-
-        self.esports_path = str(bundled_data_path(self) / "esports.txt")
-        with open(self.esports_path) as file:
-            self.esports_text = file.read()
 
         self.claninfo_lock = asyncio.Lock()
 
@@ -157,130 +131,6 @@ class ClashRoyaleClans(commands.Cog):
         except Exception as e:
             log.error("Encountered exception {} when refreshing clan data.".format(e))
         self.last_updated = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-
-    @commands.command(name="clanaudit")
-    async def clanaudit(self, ctx, nickname: str):
-        async with ctx.channel.typing():
-            clan_info = self.get_clan_by_nickname(nickname)
-            if clan_info is None:
-                embed = discord.Embed(
-                    title="Unknown nickname",
-                    description="You entered a nickname not found found in clans.json",
-                    color=0xFF0000,
-                )
-                await ctx.channel.send(embed=embed)
-                return
-
-            clan_role = clan_info["clanrole"]
-            clan_tag = clan_info["tag"]
-
-            # List of all clan member tags from ClashRoyalAPI
-            clan_member_by_name_by_tags = await self.get_clan_members(clan_tag)
-
-            # Obtain all members with the clanrole
-            role = discord.utils.get(ctx.guild.roles, name=clan_role)
-
-            unknown_members = []  # People w/ role and no tags
-            orphan_members = (
-                []
-            )  # People w/ role and have a tag and can't be found in the ClashRoyalAPI
-            absent_names = []  # Tags (URLS?) of people who aren't in Discord
-            processed_tags = []
-
-            async for member in AsyncIter(role.members):
-                member_tags = self.tags.quickGetAllTags(member.id)
-                if len(member_tags) == 0:
-                    unknown_members.append(f"{member.name}")
-
-                found = False
-                for tag in member_tags:
-                    if tag in clan_member_by_name_by_tags:
-                        found = True
-                        processed_tags.append(tag)
-
-                if not found:
-                    orphan_members.append(f"{member.name}")
-
-            absent_names = [
-                f"{name} (#{tag})"
-                for tag, name in clan_member_by_name_by_tags.items()
-                if tag not in processed_tags
-            ]
-
-            if len(unknown_members) == 0:
-                unknown_members_str = "None"
-                unknown_count = 0
-            else:
-                unknown_members.sort(key=str.lower)
-                unknown_members_str = "\n".join(unknown_members)
-                unknown_count = len(unknown_members)
-
-            if len(orphan_members) == 0:
-                orphan_members_str = "None"
-                orphan_count = 0
-            else:
-                orphan_members.sort(key=str.lower)
-                orphan_members_str = "\n".join(orphan_members)
-                orphan_count = len(orphan_members)
-
-            if len(absent_names) == 0:
-                absent_names_str = "None"
-                absent_count = 0
-            else:
-                absent_names.sort(key=str.lower)
-                absent_names_str = "\n".join(absent_names)
-                absent_names_str = absent_names_str[
-                    :1024
-                ]  # max length allowed for discord
-                absent_count = len(absent_names)
-
-            embed = discord.Embed(
-                title=f"Clan Audit: {clan_info['name']}", color=discord.Colour.blue()
-            )
-            embed.add_field(
-                name=f"({unknown_count}) Players with **{clan_role}** role, but have **NO** tags saved",
-                value=unknown_members_str,
-                inline=False,
-            )
-            embed.add_field(
-                name=f"({orphan_count}) Players with **{clan_role}** role, but have **NOT** joined the clan",
-                value=orphan_members_str,
-                inline=False,
-            )
-            embed.add_field(
-                name=f"({absent_count}) Players in **{clan_info['name']}**, but have **NOT** joined discord",
-                value=absent_names_str,
-                inline=False,
-            )
-
-            await ctx.channel.send(
-                embed=embed,
-                allowed_mentions=discord.AllowedMentions(users=True, roles=True),
-            )
-
-    def get_clan_by_nickname(self, nickname: str):
-        for name, data in self.family_clans.items():
-            if data.get("nickname").lower() == nickname:
-                return data
-        return None
-
-    async def get_clan_members(self, clan_tag: str):
-        members_names_by_tag = {}
-
-        clan_data = await self.get_clandata_by_tag(clan_tag)
-        for member in clan_data["member_list"]:
-            members_names_by_tag[member["tag"].strip("#")] = member["name"]
-        return members_names_by_tag
-
-    async def get_clandata_by_tag(self, clan_tag):
-        if clan_tag[0] != "#":
-            clan_tag = "#" + clan_tag
-
-        clans = await self.config.clans()
-        for clan in clans:
-            if clan["tag"] == clan_tag:
-                return clan
-        return None
 
     @commands.command(name="nick")
     @checks.mod()
