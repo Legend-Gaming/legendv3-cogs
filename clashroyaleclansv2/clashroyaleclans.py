@@ -145,24 +145,9 @@ class ClashRoyaleClans2(commands.Cog):
         if len(new_data) == 0:
             log.error("Clans data is empty.")
             return
-        if store_log:
-            if len(old_data) == 0:
-                await self.config.clans.set(dict(new_data))
-                return
-            for key, data in new_data.items():
-                old_clan_data = {}
-                new_clan_data = {}
-                for member_data in old_data[key]["member_list"]:
-                    old_clan_data[member_data["tag"]] = member_data["name"]
-                for member_data in data["member_list"]:
-                    new_clan_data[member_data["tag"]] = member_data["name"]
+        if dispatch_clandata_update:
+            self.bot.dispatch("on_clandata_update", old_data, new_data)
 
-                if len(old_clan_data) > 0:
-                    total = set(list(new_clan_data.keys())).union(
-                        set(list(old_clan_data.keys()))
-                    )
-                    players_left_clan = set(total - set(new_clan_data.keys()))
-                    players_joined_clan = set(total - set(old_clan_data.keys()))
         await self.config.clans.set(new_data)
         self.last_error_time = None
         self.last_updated = datetime.now()
