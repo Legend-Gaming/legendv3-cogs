@@ -42,6 +42,7 @@ class ClashRoyaleClans2(commands.Cog):
         default_global = {
             "clans": dict(),
             "keep_memberlog": False,
+            "dispatch_event": True,
         }
         self.config = Config.get_conf(
             self, identifier=2286464642345664457, force_registration=True,
@@ -112,9 +113,9 @@ class ClashRoyaleClans2(commands.Cog):
         """Check current data against data stored in config."""
         if self is not self.bot.get_cog("ClashRoyaleClans2"):
             return
-        old_data = list()
-        store_log = await self.config.keep_memberlog()
-        if store_log:
+        old_data = dict()
+        dispatch_clandata_update = await self.config.dispatch_event()
+        if dispatch_clandata_update:
             old_data = deepcopy(await self.config.clans())
 
         try:
@@ -126,7 +127,7 @@ class ClashRoyaleClans2(commands.Cog):
                     self.last_error_time = time.time()
             return
 
-        new_data = dict(deepcopy(await self.config.clans()))
+        new_data = deepcopy(await self.config.clans())
         type(new_data)
         new_data = {
             k: v
