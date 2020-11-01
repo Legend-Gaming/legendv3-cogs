@@ -34,6 +34,10 @@ class ClanLog(commands.Cog):
 
     @commands.Cog.listener(name="on_clandata_update")
     async def on_clandata_update(self, old_data, new_data):
+        def get_role_hierarchy(role):
+            hierarchy = {"member": 1, "elder": 2, "coLeader": 3, "leader": 4}
+            return hierarchy[role.lower()]
+
         log_channel_id = await self.config.global_log_channel()
         log_channel = self.bot.get_channel(log_channel_id)
         if log_channel is None:
@@ -53,7 +57,6 @@ class ClanLog(commands.Cog):
             if clan_log_channel:
                 clan_log_channel = self.bot.get_channel(clan_log_channel)
 
-            # Process members data
             old_members_data = {}
             new_members_data = {}
             # When a clan is added
@@ -61,10 +64,35 @@ class ClanLog(commands.Cog):
                 log.error(f"Clan {key} not found in old_data.")
                 continue
             for member_data in old_data[key]["member_list"]:
-                old_members_data[member_data["tag"]] = member_data["name"]
+                old_members_data[member_data["tag"]] = member_data
             for member_data in data["member_list"]:
-                new_members_data[member_data["tag"]] = member_data["name"]
+                new_members_data[member_data["tag"]] = member_data
 
+            # Process promotions and demotions
+            common_members = set(old_members_data.keys()).intersection(new_members_data.keys())
+            description = ""
+            for member in common_members:
+                old_role = old_members_data.get("role", "")
+                old_role_index = get_role_hierarchy(old_role)
+                new_role = new_members_data.get("role", "")
+                new_role_index = get_role_hierarchy(new_role)
+                if old_role_index == new_role_index:
+                    continue
+                if old_role_index > new_role_index:
+                    description += f"Demotion: {old_role} ⇒ {new_role}\n"
+                if old_role_index < new_role_index:
+                    description += f"Promotion: {old_role} ⇒ {new_role}\n"
+                description += f"{member['name']} ({member['tag']})\n"
+            embed = discord.Embed(
+                title="Member Edited",
+                description=description,
+                colour=discord.Colour.blue(),
+            )
+            await log_channel.send(embed=embed)
+            if clan_log_channel:
+                await clan_log_channel.send(embed=embed)
+
+            # Process members data
             total = set(list(new_members_data.keys())).union(
                 set(list(old_members_data.keys()))
             )
@@ -73,9 +101,9 @@ class ClanLog(commands.Cog):
 
             description = ""
             for player_tag in players_left_clan:
-                player_name = old_members_data.get(player_tag, None) or "Unnamed Player"
+                player_name = old_members_data.get(player_tag, {}).get("name", "Unnamed Player")
                 sad_emote = self.bot.get_emoji(592001717311242241) or ""
-                description += "{}({}) has left {} {}".format(
+                description += "{}({}) has left {} {}\n".format(
                     player_name, player_tag, data["name"], sad_emote
                 )
             if description:
@@ -89,9 +117,9 @@ class ClanLog(commands.Cog):
                     await clan_log_channel.send(embed=embed)
             description = ""
             for player_tag in players_joined_clan:
-                player_name = new_members_data.get(player_tag) or "Unnamed Player"
+                player_name = new_members_data.get(player_tag, {}).get("name", "Unnamed Player")
                 happy_emote = self.bot.get_emoji(375143193630605332) or ""
-                description += "{}({}) has joined {} {}".format(
+                description += "{}({}) has joined {} {}\n".format(
                     player_name, player_tag, key, happy_emote
                 )
             if description:
