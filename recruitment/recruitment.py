@@ -479,7 +479,7 @@ class Recruitment(commands.Cog):
             if not await self.check_member_eligibility(clankey, player_data):
                 await simple_embed(ctx, "Approval failed, player does not meet requirements for the clan.")
                 return
-            if clan_info.type == "closed":
+            if clan_info["type"] == "closed":
                 await simple_embed(
                     ctx, "Approval failed, the clan is currently closed.", False
                 )
