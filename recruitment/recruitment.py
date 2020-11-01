@@ -627,7 +627,7 @@ class Recruitment(commands.Cog):
                 else:
                     player_clan_tag = player_data.clan.tag.strip("#")
                     player_clan_name = player_data.clan.name
-                for name, data in self.crclans_cog.get_all_static_clan_data():
+                for name, data in self.crclans_cog.get_all_static_clan_data().items():
                     if data["tag"] == player_clan_tag:
                         is_clan_member = True
                         clans_joined.append(name)
