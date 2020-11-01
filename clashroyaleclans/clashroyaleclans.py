@@ -59,7 +59,6 @@ class ClashRoyaleClans(commands.Cog):
         self.config = Config.get_conf(self, identifier=2286464642345664456)
         default_global = {"clans": list()}
         self.config.register_global(**default_global)
-        self.discord_helper = Helper(bot)
 
         try:
             self.claninfo_path = str(cog_data_path(self) / "clans.json")
@@ -126,31 +125,3 @@ class ClashRoyaleClans(commands.Cog):
         except Exception as e:
             log.error("Encountered exception {} when refreshing clan data.".format(e))
         self.last_updated = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-
-class Helper:
-    def __init__(self, bot):
-        self.bot = bot
-        self.constants = self.bot.get_cog("ClashRoyaleTools").constants
-
-    @staticmethod
-    async def _add_roles(member: discord.Member, role_names: List[str], reason=""):
-        """Add roles"""
-        roles = [
-            discord.utils.get(member.guild.roles, name=role_name)
-            for role_name in role_names
-        ]
-        if any([x is None for x in roles]):
-            raise InvalidRole
-        try:
-            await member.add_roles(*roles, reason="From clashroyaleclans: " + reason)
-        except discord.Forbidden:
-            raise
-        except discord.HTTPException:
-            raise
-
-    def emoji(self, name: str):
-        """Emoji by name."""
-        for emoji in self.bot.emojis:
-            if emoji.name == name.replace(" ", "").replace("-", "").replace(".", ""):
-                return "<:{}:{}>".format(emoji.name, emoji.id)
-        return ""
