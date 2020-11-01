@@ -1,25 +1,20 @@
 import asyncio
 from collections import namedtuple
-import itertools
 import json
 import logging
-import os
 import random
 import string
-from datetime import datetime
 from typing import List, Optional, Literal, Union
 
 import clashroyale
 import discord
-from discord.ext import tasks
 from discord.ext.commands.errors import BadArgument
 from redbot.core import checks, commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
 from redbot.core.data_manager import bundled_data_path, cog_data_path
-from redbot.core.utils import AsyncIter
 from redbot.core.utils.chat_formatting import humanize_list, pagify
-from redbot.core.utils.menus import DEFAULT_CONTROLS, menu, start_adding_reactions
+from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
 from redbot.core.utils.predicates import MessagePredicate
 
 from crtoolsdb.crtoolsdb import Constants
@@ -474,7 +469,7 @@ class Recruitment(commands.Cog):
                 ctx, "Error: cannot reach Clash Royale Servers. Please try again later."
             )
             return
-        membership = player_clantag in self.crclans_cog.tags()
+        membership = player_clantag in self.crclans_cog.clan_tags()
         if not membership:
             if clan_info.get("members") == 50:
                 await simple_embed(

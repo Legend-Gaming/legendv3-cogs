@@ -242,7 +242,7 @@ class ClashRoyaleClans2(commands.Cog):
 
     def clan_tags(self):
         """Get tags of all the clans"""
-        return [clan["tag"] for clan in self.static_clandata.values()]
+        return [clan["tag"].strip("#") for clan in self.static_clandata.values()]
 
     def clan_roles(self):
         """Get roles of all the clans"""
