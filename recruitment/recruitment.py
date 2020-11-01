@@ -1111,15 +1111,15 @@ class Recruitment(commands.Cog):
             )
         await ctx.tick()
 
-    @commands.group(name="crclansset")
+    @commands.group(name="recruitmentset")
     @commands.guild_only()
     @checks.admin()
-    async def crclansset(self, ctx: commands.Context):
+    async def recruitmentset(self, ctx: commands.Context):
         """ Set variables used by ClashRoylaleClans cog """
         pass
 
-    @crclansset.command(name="showsettings")
-    async def crclansset_settings(self, ctx: commands.Context):
+    @recruitmentset.command(name="showsettings")
+    async def recruitmentset_settings(self, ctx: commands.Context):
         msg = ""
         msg += "Mentions:\n"
         mentions = await self.config.guild(ctx.guild).mentions()
@@ -1142,37 +1142,37 @@ class Recruitment(commands.Cog):
         msg += f"Show hyperlink in crclans: {str(data)}\n"
         await simple_embed(ctx, msg, True)
 
-    @crclansset.group(name="clanmention")
-    async def crclansset_clanmention(self, ctx):
+    @recruitmentset.group(name="clanmention")
+    async def recruitmentset_clanmention(self, ctx):
         """ Set whether clan will be mentioned """
         pass
 
-    @crclansset_clanmention.command(name="nm")
-    async def crclanset_clanmention_nm(self, ctx: commands.Context, value: bool = None):
+    @recruitmentset_clanmention.command(name="nm")
+    async def recruitmentset_clanmention_nm(self, ctx: commands.Context, value: bool = None):
         """ Set whether clan will be mentioned on successful newmember """
         if value is None:
             value = not await self.config.guild(ctx.guild).mentions.on_nm()
         await self.config.guild(ctx.guild).mentions.on_nm.set(value)
         await ctx.tick()
 
-    @crclansset_clanmention.command(name="waiting")
-    async def crclanset_clanmention_waiting(self, ctx: commands.Context, value: bool = None):
+    @recruitmentset_clanmention.command(name="waiting")
+    async def recruitmentset_clanmention_waiting(self, ctx: commands.Context, value: bool = None):
         """ Set whether clan will be mentioned on successful addition to waiting list """
         if value is None:
             value = not await self.config.guild(ctx.guild).mentions.on_waitlist_add()
         await self.config.guild(ctx.guild).mentions.on_waitlist_add.set(value)
         await ctx.tick()
 
-    @crclansset_clanmention.command(name="newrecruit")
-    async def crclanset_clanmention_newrecruit(self, ctx: commands.Context, value: bool = None):
+    @recruitmentset_clanmention.command(name="newrecruit")
+    async def recruitmentset_clanmention_newrecruit(self, ctx: commands.Context, value: bool = None):
         """ Set whether clan will be mentioned when recruit is approved """
         if value is None:
             value = not await self.config.guild(ctx.guild).mentions.on_newrecruit()
         await self.config.guild(ctx.guild).mentions.on_newrecruit.set(value)
         await ctx.tick()
 
-    @crclansset.command(name="global")
-    async def crclansset_global(self, ctx: commands.Context, channel: discord.TextChannel = None):
+    @recruitmentset.command(name="global")
+    async def recruitmentset_global(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """ Set channel used to welcome newly recruited members """
         if channel:
             channel = channel.id
@@ -1180,8 +1180,8 @@ class Recruitment(commands.Cog):
         await ctx.send(f"Set new global channel to: {channel.mention if channel else 'None'}")
         await ctx.tick()
 
-    @crclansset.command(name="newrecruits")
-    async def crclansset_newrecruits(self, ctx: commands.Context, channel: discord.TextChannel = None):
+    @recruitmentset.command(name="newrecruits")
+    async def recruitmentset_newrecruits(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """ Set channel used to inform staff about new recruits """
         if channel:
             channel = channel.id
@@ -1189,8 +1189,8 @@ class Recruitment(commands.Cog):
         await ctx.send(f"Set new recruits channel to: {channel.mention if channel else 'None'}")
         await ctx.tick()
 
-    @crclansset.command(name="playerinfo")
-    async def crclansset_playerinfo(self, ctx: commands.Context, value: bool = None):
+    @recruitmentset.command(name="playerinfo")
+    async def recruitmentset_playerinfo(self, ctx: commands.Context, value: bool = None):
         """ Set if player info is shown in output of crclans """
         if value is None:
             value = not await self.config.guild(ctx.guild).player_info_crclans()
@@ -1198,8 +1198,8 @@ class Recruitment(commands.Cog):
         await ctx.send(f"Set show player info to: {value}")
         await ctx.tick()
 
-    @crclansset.command(name="hyperlink")
-    async def crclansset_hyperlink(self, ctx: commands.Context, value: bool = None):
+    @recruitmentset.command(name="hyperlink")
+    async def recruitmentset_hyperlink(self, ctx: commands.Context, value: bool = None):
         """ Set if hyperlink is used where possible """
         if value is None:
             value = not await self.config.guild(ctx.guild).hyperlink_crclans()
