@@ -79,6 +79,14 @@ class ClashRoyaleClans2(commands.Cog):
             token=token["token"], is_async=True, url="https://proxy.royaleapi.dev/v1"
         )
 
+    def cog_unload(self):
+        if self.refresh_task:
+            self.refresh_task.cancel()
+        if self.token_task:
+            self.token_task.cancel()
+        if self.clash:
+            self.bot.loop.create_task(self.clash.close())
+
     async def refresh_data(self):
         try:
             with open(self.claninfo_path) as file:
