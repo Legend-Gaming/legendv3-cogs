@@ -86,8 +86,8 @@ class ClashRoyaleClans2(commands.Cog):
             for name, data in self.static_clandata.items():
                 try:
                     clan_tag = data["tag"]
-                    clan_data = await self.clash.get_clan(clan_tag)
-                    all_clan_data[name] = dict(clan_data)
+                    clan_data = (await self.clash.get_clan(clan_tag)).to_dict()
+                    all_clan_data[name] = clan_data
                 # REMINDER: Order is important. RequestError is base exception class.
                 except clashroyale.NotFoundError:
                     log.critical("Invalid clan tag.")
