@@ -2,8 +2,8 @@ import logging
 from typing import Optional
 
 import discord
+from redbot.core.bot import Red
 from redbot.core import Config, checks, commands
-
 
 log = logging.getLogger("red.cogs.clanlog")
 
@@ -13,7 +13,7 @@ class NoClansCog(Exception):
 
 
 class ClanLog(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
 
         self.config = Config.get_conf(self, identifier=6942053)
@@ -21,14 +21,19 @@ class ClanLog(commands.Cog):
             "global_log_channel": None,
         }
         self.config.register_global(**default_global)
-        self.crclans = self.bot.get_cog("ClashRoyaleClans2")
-        if self.crclans is None:
-            log.error("Load clashroyaleclans cog for this cog to work.")
-            raise NoClansCog
+
+        try:
+            # for auto-completion :)
+            from clashroyaleclansv2 import ClashRoyaleClans2
+            self.crclans: ClashRoyaleClans2 = self.bot.get_cog("ClashRoyaleClans2")
+            if self.crclans is None:
+                log.error("Load clashroyaleclans cog for this cog to work.")
+                raise NoClansCog
+        except:
+            pass
 
     @commands.Cog.listener(name="on_clandata_update")
     async def on_clandata_update(self, old_data, new_data):
-        log.error("Listener on")
         log_channel_id = await self.config.global_log_channel()
         log_channel = self.bot.get_channel(log_channel_id)
         if log_channel is None:
@@ -44,6 +49,11 @@ class ClanLog(commands.Cog):
                 log.error("New data is " + new_data)
                 return
         for key, data in new_data.items():
+            clan_log_channel = self.crclans.get_static_clandata(key).get("log_channel", None)
+            if clan_log_channel:
+                clan_log_channel = self.bot.get_channel(clan_log_channel)
+
+            # Process members data
             old_members_data = {}
             new_members_data = {}
             # When a clan is added
@@ -75,6 +85,8 @@ class ClanLog(commands.Cog):
                     colour=discord.Colour.blue(),
                 )
                 await log_channel.send(embed=embed)
+                if clan_log_channel:
+                    await clan_log_channel.send(embed=embed)
             description = ""
             for player_tag in players_joined_clan:
                 player_name = new_members_data.get(player_tag) or "Unnamed Player"
@@ -89,6 +101,8 @@ class ClanLog(commands.Cog):
                     colour=discord.Colour.blue(),
                 )
                 await log_channel.send(embed=embed)
+                if clan_log_channel:
+                    await clan_log_channel.send(embed=embed)
 
     @commands.group(name="clanlogset")
     async def clanlogset(self, ctx):
