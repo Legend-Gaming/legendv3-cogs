@@ -10,12 +10,12 @@ import clashroyale
 import discord
 from crtoolsdb.crtoolsdb import Constants
 from discord.ext import tasks
-from redbot.core import commands
+from redbot.core import commands, checks
 from redbot.core.bot import Red
 from redbot.core.config import Config
 from redbot.core.data_manager import cog_data_path
 from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import pagify
+from redbot.core.utils.chat_formatting import pagify, humanize_list
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
@@ -87,6 +87,13 @@ class ClashRoyaleClans2(commands.Cog):
         if self.clash:
             self.bot.loop.create_task(self.clash.close())
 
+
+    async def red_delete_data_for_user(
+        self, *, requester: RequestType, user_id: int
+    ) -> None:
+        # TODO: Replace this with the proper end user data removal handling.
+        super().red_delete_data_for_user(requester=requester, user_id=user_id)
+
     async def refresh_data(self):
         try:
             with open(self.claninfo_path) as file:
@@ -109,12 +116,6 @@ class ClashRoyaleClans2(commands.Cog):
         except Exception as e:
             log.error("Encountered exception {} when refreshing clan data.".format(e))
             raise
-
-    async def red_delete_data_for_user(
-        self, *, requester: RequestType, user_id: int
-    ) -> None:
-        # TODO: Replace this with the proper end user data removal handling.
-        super().red_delete_data_for_user(requester=requester, user_id=user_id)
 
     @tasks.loop(seconds=30)
     async def get_clandata(self):
@@ -154,7 +155,7 @@ class ClashRoyaleClans2(commands.Cog):
             log.error("Clans data is empty.")
             return
         if dispatch_clandata_update:
-            self.bot.dispatch("on_clandata_update", old_data, new_data)
+            self.bot.dispatch("clandata_update", old_data, new_data)
 
         await self.config.clans.set(new_data)
         self.last_error_time = None
@@ -332,6 +333,12 @@ class ClashRoyaleClans2(commands.Cog):
         await self.save_clan_data()
         return self.static_clandata[clankey]["requirements"]["approval"]
 
+    async def set_log_channel(self, clankey, channel_id):
+        """Toggle Private approval of new recruits"""
+        clankey = self.get_static_clankey(clankey)
+        self.static_clandata[clankey]["log_channel"] = channel_id
+        await self.save_clan_data()
+
     @commands.command(name="clanaudit")
     async def clanaudit(self, ctx, nickname: str):
         async with ctx.channel.typing():
@@ -438,4 +445,77 @@ class ClashRoyaleClans2(commands.Cog):
         for member in clan_data:
             members_names_by_tag[member["tag"].strip("#")] = member["name"]
         return members_names_by_tag
+
+    @commands.group(name="clans")
+    @checks.admin()
+    async def clans(self, ctx):
+        """ Set requirements for clan """
+        pass
+
+    @clans.command(name="logchannel")
+    async def clans_logchannel(self, ctx: commands.Context, clankey: str, channel: discord.TextChannel = None):
+        """Set clan channel used to log changes to clan"""
+        if channel:
+            channel = channel.id
+        await self.set_log_channel(clankey, channel)
+        await ctx.send(f"Set log channel for {clankey} to {channel.mention if channel else 'None'}")
+        await ctx.tick()
+
+    @clans.command(name="cwr")
+    async def clans_cwr(self, ctx, clankey, league, percent: int):
+        """ Set cwr as requirement for clan """
+        clan_name = self.get_static_clankey(clankey)
+        if not clan_name:
+            await ctx.send(f"{clankey} is not a valid clanname.")
+            return
+        try:
+            await self.set_cwr(clankey, league, percent)
+        except IndexError:
+            await ctx.send(f"Cannot find league {league}")
+            return
+        await self.save_clan_data()
+        await ctx.tick()
+
+    @clans.command(name="pb")
+    async def clans_pb(self, ctx, clankey, value: int):
+        """ Set personal best as requirements"""
+        clan_name = self.get_static_clankey(clankey)
+        if not clan_name:
+            await ctx.send(f"{clankey} is not a valid clanname.")
+            return
+        await self.set_clan_pb(clankey, value)
+        await self.save_clan_data()
+        await ctx.tick()
+
+    @clans.command(name="bonus")
+    async def clans_bonus(self, ctx, clankey, value: str):
+        """ Set bonus requirements for clan. Note that these values must be checked manually by hub officers. """
+        clan_name = self.get_static_clankey(clankey)
+        if not clan_name:
+            await ctx.send(f"{clankey} is not a valid clanname.")
+            return
+        await self.set_bonus(clankey, value)
+        await ctx.tick()
+
+    @clans.command(name="cwthreshold")
+    async def clans_cwthreshold(self, ctx, clankey, value: int):
+        """ Set fame threshold for clan """
+        clan_name = self.get_static_clankey(clankey)
+        if not clan_name:
+            await ctx.send(f"{clankey} is not a valid clanname.")
+            return
+        self.static_clandata[clan_name]["cwthreshold"] = value
+        await self.save_clan_data()
+        await ctx.tick()
+
+    @clans.command(name="wdwins")
+    async def clans_wdwins(self, ctx, clankey, value: int):
+        """ Set warday wins requirements for clan """
+        clan_name = self.get_static_clankey(clankey)
+        if not clan_name:
+            await ctx.send(f"{clankey} is not a valid clanname.")
+            return
+        self.static_clandata[clan_name]["requirements"]["wdwins"] = value
+        await self.save_clan_data()
+        await ctx.tick()
 
