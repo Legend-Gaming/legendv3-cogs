@@ -5,3 +5,5 @@ make.bat
 *.iml
 *.pyc
 *.pyc
+/battlelog.bak/battlelog.py
+/securitycheck.py
