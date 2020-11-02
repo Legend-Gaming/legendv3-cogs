@@ -453,9 +453,9 @@ class ClashRoyaleClans2(commands.Cog):
         pass
 
     @clans.command(name="logchannel")
-    async def clans_logchannel(self, ctx: commands.Context, clankey: str, channel: discord.TextChannel = None):
+    async def clans_logchannel(self, ctx: commands.Context, clankey: str, channel: Optional[discord.TextChannel] = None):
         """Set clan channel used to log changes to clan"""
-        await self.set_log_channel(clankey, channel.id)
+        await self.set_log_channel(clankey, channel.id if channel else channel)
         await ctx.send(f"Set log channel for {clankey} to {channel.mention if channel else 'None'}")
         await ctx.tick()
 
