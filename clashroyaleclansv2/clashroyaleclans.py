@@ -4,7 +4,7 @@ import logging
 from copy import deepcopy
 from datetime import datetime
 from time import sleep, time
-from typing import Literal, Dict
+from typing import Literal, Dict, Optional
 
 import clashroyale
 import discord
