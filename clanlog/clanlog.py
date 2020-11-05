@@ -75,10 +75,10 @@ class ClanLog(commands.Cog):
             common_members = set(old_members_data.keys()).intersection(new_members_data.keys())
             description = ""
             for member in common_members:
-                old_role = old_members_data.get("role", "")
-                old_role_index = get_role_hierarchy[member](old_role)
-                new_role = new_members_data.get("role", "")
-                new_role_index = get_role_hierarchy[member](new_role)
+                old_role = old_members_data[member].get("role", "")
+                old_role_index = get_role_hierarchy(old_role)
+                new_role = new_members_data[member].get("role", "")
+                new_role_index = get_role_hierarchy(new_role)
                 if old_role_index == new_role_index:
                     continue
                 if old_role_index > new_role_index:
