@@ -36,6 +36,9 @@ class ClanLog(commands.Cog):
     async def on_clandata_update(self, old_data, new_data):
         def get_role_hierarchy(role):
             hierarchy = {"member": 1, "elder": 2, "coLeader": 3, "leader": 4}
+            if role not in hierarchy:
+                log.error("Cannot find hierarchy for role " + role)
+                return 0
             return hierarchy[role.lower()]
 
         log_channel_id = await self.config.global_log_channel()
