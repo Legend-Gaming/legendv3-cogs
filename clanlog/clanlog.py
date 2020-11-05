@@ -37,7 +37,7 @@ class ClanLog(commands.Cog):
         def get_role_hierarchy(role):
             hierarchy = {"member": 1, "elder": 2, "coLeader": 3, "leader": 4}
             if role not in hierarchy:
-                log.error("Cannot find hierarchy for role " + (role if role else "None"))
+                log.error(f"Cannot find hierarchy for role {role or 'None'}")
                 return 0
             return hierarchy[role.lower()]
 
@@ -76,9 +76,9 @@ class ClanLog(commands.Cog):
             description = ""
             for member in common_members:
                 old_role = old_members_data.get("role", "")
-                old_role_index = get_role_hierarchy(old_role)
+                old_role_index = get_role_hierarchy[member](old_role)
                 new_role = new_members_data.get("role", "")
-                new_role_index = get_role_hierarchy(new_role)
+                new_role_index = get_role_hierarchy[member](new_role)
                 if old_role_index == new_role_index:
                     continue
                 if old_role_index > new_role_index:
