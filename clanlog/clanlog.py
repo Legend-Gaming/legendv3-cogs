@@ -37,7 +37,7 @@ class ClanLog(commands.Cog):
         def get_role_hierarchy(role):
             hierarchy = {"member": 1, "elder": 2, "coLeader": 3, "leader": 4}
             if role not in hierarchy:
-                log.error("Cannot find hierarchy for role " + (role if role else "None")
+                log.error("Cannot find hierarchy for role " + (role if role else "None"))
                 return 0
             return hierarchy[role.lower()]
 
