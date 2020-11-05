@@ -85,7 +85,7 @@ class ClanLog(commands.Cog):
                     description += f"Demotion: {old_role} ⇒ {new_role}\n"
                 if old_role_index < new_role_index:
                     description += f"Promotion: {old_role} ⇒ {new_role}\n"
-                description += f"{member['name']} ({member['tag']})\n"
+                description += f"{old_members_data[member]['name']} ({old_members_data[member]['tag']})\n"
             if description:
                 embed = discord.Embed(
                     title="Member Edited {data['name']} ({data['tag']})",
