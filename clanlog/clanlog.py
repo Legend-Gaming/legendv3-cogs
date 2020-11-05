@@ -35,7 +35,7 @@ class ClanLog(commands.Cog):
     @commands.Cog.listener(name="on_clandata_update")
     async def on_clandata_update(self, old_data, new_data):
         def get_role_hierarchy(role):
-            hierarchy = {"member": 1, "elder": 2, "coLeader": 3, "leader": 4}
+            hierarchy = {"member": 1, "elder": 2, "coleader": 3, "leader": 4}
             if role not in hierarchy:
                 log.error(f"Cannot find hierarchy for role {role or 'None'}")
                 return 0
