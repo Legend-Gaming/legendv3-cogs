@@ -86,14 +86,15 @@ class ClanLog(commands.Cog):
                 if old_role_index < new_role_index:
                     description += f"Promotion: {old_role} ⇒ {new_role}\n"
                 description += f"{member['name']} ({member['tag']})\n"
-            embed = discord.Embed(
-                title="Member Edited",
-                description=description,
-                colour=discord.Colour.blue(),
-            )
-            await log_channel.send(embed=embed)
-            if clan_log_channel:
-                await clan_log_channel.send(embed=embed)
+            if description:
+                embed = discord.Embed(
+                    title="Member Edited {data['name']} ({data['tag']})",
+                    description=description,
+                    colour=discord.Colour.blue(),
+                )
+                await log_channel.send(embed=embed)
+                if clan_log_channel:
+                    await clan_log_channel.send(embed=embed)
 
             # Process members data
             total = set(list(new_members_data.keys())).union(
