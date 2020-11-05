@@ -36,8 +36,8 @@ class ClanLog(commands.Cog):
     async def on_clandata_update(self, old_data, new_data):
         def get_role_hierarchy(role):
             hierarchy = {"member": 1, "elder": 2, "coleader": 3, "leader": 4}
-            if role.lower() not in hierarchy:
-                log.error(f"Cannot find hierarchy for role {role or 'None'}")
+            if role.lower() not in hierarchy.keys():
+                log.error(f"Cannot find hierarchy for role {role.lower() or 'None'}")
                 return 0
             return hierarchy[role.lower()]
 
