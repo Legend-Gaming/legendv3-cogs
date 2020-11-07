@@ -4,19 +4,19 @@ import logging
 from copy import deepcopy
 from datetime import datetime
 from time import sleep, time
-from typing import Literal, Dict, Optional
+from typing import Dict, Literal, Optional
 
 import clashroyale
 import discord
 from crtoolsdb.crtoolsdb import Constants
 from discord.ext import tasks
-from redbot.core import commands, checks
+from redbot.core import checks, commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
 from redbot.core.data_manager import cog_data_path
 from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import pagify, humanize_list
-from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+from redbot.core.utils.chat_formatting import humanize_list, pagify
+from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
 
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
@@ -45,7 +45,9 @@ class ClashRoyaleClans2(commands.Cog):
             "dispatch_event": True,
         }
         self.config = Config.get_conf(
-            self, identifier=2286464642345664457, force_registration=True,
+            self,
+            identifier=2286464642345664457,
+            force_registration=True,
         )
         self.config.register_global(**default_global)
 
@@ -86,7 +88,6 @@ class ClashRoyaleClans2(commands.Cog):
             self.token_task.cancel()
         if self.clash:
             self.bot.loop.create_task(self.clash.close())
-
 
     async def red_delete_data_for_user(
         self, *, requester: RequestType, user_id: int
@@ -365,8 +366,10 @@ class ClashRoyaleClans2(commands.Cog):
             absent_names = []  # Tags (URLS?) of people who aren't in Discord
             processed_tags = []
 
-            tags_by_member_id = self.tags.getTagsForUsers([member.id for member in role.members])
-            
+            tags_by_member_id = self.tags.getTagsForUsers(
+                [member.id for member in role.members]
+            )
+
             # Send people with roles to either unknown_members or orphan_members if required
             async for member in AsyncIter(role.members):
                 member_tags = tags_by_member_id.get(member.id, [])
@@ -455,10 +458,17 @@ class ClashRoyaleClans2(commands.Cog):
         pass
 
     @clans.command(name="logchannel")
-    async def clans_logchannel(self, ctx: commands.Context, clankey: str, channel: Optional[discord.TextChannel] = None):
+    async def clans_logchannel(
+        self,
+        ctx: commands.Context,
+        clankey: str,
+        channel: Optional[discord.TextChannel] = None,
+    ):
         """Set clan channel used to log changes to clan"""
         await self.set_log_channel(clankey, channel.id if channel else channel)
-        await ctx.send(f"Set log channel for {clankey} to {channel.mention if channel else 'None'}")
+        await ctx.send(
+            f"Set log channel for {clankey} to {channel.mention if channel else 'None'}"
+        )
         await ctx.tick()
 
     @clans.command(name="cwr")
@@ -518,4 +528,3 @@ class ClashRoyaleClans2(commands.Cog):
         self.static_clandata[clan_name]["requirements"]["wdwins"] = value
         await self.save_clan_data()
         await ctx.tick()
-
