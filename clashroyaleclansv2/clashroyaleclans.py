@@ -365,9 +365,11 @@ class ClashRoyaleClans2(commands.Cog):
             absent_names = []  # Tags (URLS?) of people who aren't in Discord
             processed_tags = []
 
+            tags_by_member_id = self.tags.getTagsForUsers([member.id for member in role.members])
+            
             # Send people with roles to either unknown_members or orphan_members if required
             async for member in AsyncIter(role.members):
-                member_tags = self.tags.quickGetAllTags(member.id)
+                member_tags = tags_by_member_id.get(member.id, [])
                 if len(member_tags) == 0:
                     unknown_members.append(f"{member.name}")
                 found = False
