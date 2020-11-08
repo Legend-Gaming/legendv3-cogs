@@ -226,8 +226,8 @@ class Recruitment(commands.Cog):
                     player['trophies'],
                     player['best_trophies'],
                     await self.discord_helper.get_best_league(player['cards']),
-                    player['warDayWins'],
-                    player['clan']['name'],
+                    player.get('warDayWins', 0),
+                    player.get("clan", {}).get("name", "None"),
                 )
             )
         )
