@@ -659,6 +659,7 @@ class Recruitment(commands.Cog):
             else:
                 output_msg += "Nickname changed to **{}**\n".format(newname)
             clan_roles.append("Member")
+            clan_roles.append("Clash Royale")
             try:
                 await self.discord_helper._add_roles(
                     member, clan_roles, reason="used newmember"
