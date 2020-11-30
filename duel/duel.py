@@ -76,7 +76,12 @@ class Duel(commands.Cog):
         self.clash = clashroyale.official_api.Client(
             token=token["token"], is_async=True, url="https://proxy.royaleapi.dev/v1"
         )
-    
+
+    def cog_unload(self):
+        if self.token_task:
+            self.token_task.cancel()
+        if self.clash:
+            self.bot.loop.create_task(self.clash.close())    
     
     async def elo_rating(self, A, B, score, k=32):
         """Calculate the new Elo rating for a player"""
