@@ -27,7 +27,7 @@ import clashroyale
 # 2. Roles for Rank
     
 credits="Bot by Legend Gaming"
-credits_url = ":LegendGif:"
+credits_url =  "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
 
 guild_defaults = {
     "mincreds" : 0,
