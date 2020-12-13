@@ -1,7 +1,10 @@
 import discord
 import os
-
 import time
+import calendar
+import asyncio
+import clashroyale
+from math import ceil
 
 from redbot.core import Config
 from redbot.core import checks, commands
@@ -12,13 +15,8 @@ from discord import client
 from datetime import datetime
 from datetime import timezone 
 from redbot.core.utils.chat_formatting import box, humanize_number
-import calendar
-import asyncio
 from redbot.core.utils.menus import close_menu, menu, DEFAULT_CONTROLS
-from math import ceil
 
-
-import clashroyale
 """This is a port of GR8's duel cog with some modifications.
    Original cog: https://github.com/Gr8z/Legend-Cogs/tree/master/duels """
 
@@ -27,7 +25,7 @@ import clashroyale
 # 2. Roles for Rank
     
 credits="Bot by Legend Gaming"
-credits_url =  "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
+credits_url = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
 
 guild_defaults = {
     "mincreds" : 0,
@@ -39,8 +37,9 @@ guild_defaults = {
     "accept_timeout" : 180,
     "battle_timeout" : 600,
     "role_id" : 0,
+    "private" : 0,
+    "private_member_id" : 0
 }
-
 
 member_defaults = {
     "tag" : "",
@@ -76,12 +75,13 @@ class Duel(commands.Cog):
         self.clash = clashroyale.official_api.Client(
             token=token["token"], is_async=True, url="https://proxy.royaleapi.dev/v1"
         )
-
+    
     def cog_unload(self):
         if self.token_task:
             self.token_task.cancel()
         if self.clash:
-            self.bot.loop.create_task(self.clash.close())    
+            self.bot.loop.create_task(self.clash.close())
+    
     
     async def elo_rating(self, A, B, score, k=32):
         """Calculate the new Elo rating for a player"""
@@ -197,6 +197,8 @@ class Duel(commands.Cog):
         await self.database.guild(ctx.guild).player2.set(0)
         await self.database.guild(ctx.guild).bet.set(0)
         await self.database.guild(ctx.guild).time.set(0)
+        await self.database.guild(ctx.guild).private.set(0)
+        await self.database.guild(ctx.guild).private_member_id.set(0)
         await ctx.send("Duel has been cleared.")
 
     @duel.command(name="ongoing")
@@ -230,12 +232,18 @@ class Duel(commands.Cog):
                 return 0
             player2 = member2.name
             user_tag2 = await self.database.member(member2).tag()            
-                        
+
+        is_private = await self.database.guild(ctx.guild).private()
+        if is_private:
+            private_text = "yes"
+        else:
+            private_text = "no"
+                                        
         bet_amt = await self.database.guild(ctx.guild).bet()
         
         await ctx.send("```Active = {}\nPlayer1 = {}\nPlayer2 = {}\
-        \nTag1 = {}\nTag2 = {}\nBet = {}```".format(str(is_active), str(player1), 
-        str(player2), str(user_tag1), str(user_tag2), str(bet_amt)))
+        \nTag1 = {}\nTag2 = {}\nBet = {}\nPrivate = {}```".format(str(is_active), str(player1), 
+        str(player2), str(user_tag1), str(user_tag2), str(bet_amt), str(private_text)))
                 
     @duel.command(name="start")
     async def duel_start(self, ctx, bet: int, member: discord.Member=None):
@@ -246,9 +254,7 @@ class Duel(commands.Cog):
         min_creds = await self.database.guild(ctx.guild).mincreds()
         is_active = await self.database.guild(ctx.guild).active()
         user_tag = await self.database.member(user).tag()
-        duel_role = await self.database.guild(ctx.guild).role_id()
-        
-            
+        duel_role = await self.database.guild(ctx.guild).role_id()            
         accept_time = await self.database.guild(ctx.guild).accept_timeout()
         
         if is_active == 1:
@@ -268,16 +274,32 @@ class Duel(commands.Cog):
         if user_tag == "":
             await ctx.send("Save your tag first using ```{}duel register <tag>```".format(str(ctx.prefix)))
             return 0
-        
+              
         if duel_role == 0:
             duel_role_name = ""
         else:
             duel_role_name  = get(ctx.guild.roles, id=(int)(duel_role))
             duel_role_name = duel_role_name.mention
+        
+        if member == user:
+            await ctx.send("Real funny trying to challenge yourself")
+            return 0
             
-        await ctx.send("{} {} is looking to duel for {}.\nTo accept challenge, use {}duel accept"
-        "\nThis duel request will timeout in {} seconds".format( str(duel_role_name), 
-        str(ctx.author.display_name), str(bet), str(ctx.prefix), str(accept_time)))
+        #if its a private duel, then there is no need to mention the role
+        if member == None:
+            await ctx.send("{} {} is looking to duel for {}.\nTo accept challenge, use {}duel accept"
+            "\nThis duel request will timeout in {} seconds".format( str(duel_role_name), 
+            str(ctx.author.display_name), str(bet), str(ctx.prefix), str(accept_time)), allowed_mentions=discord.AllowedMentions(roles=True))
+            
+        else:
+            await self.database.guild(ctx.guild).private.set(1)
+            #set player 2 id so that only that player may accept the duel
+            await self.database.guild(ctx.guild).private_member_id.set(member.id)
+
+            await ctx.send("{} is looking to duel {} for {}.\nTo accept challenge, use {}duel accept"
+            "\nThis duel request will timeout in {} seconds".format( str(ctx.author.display_name), 
+            str(member.display_name), str(bet), str(ctx.prefix), str(accept_time)))
+            
         
         await self.database.guild(ctx.guild).active.set(1)
         await self.database.guild(ctx.guild).player1.set(ctx.author.id)
@@ -307,6 +329,7 @@ class Duel(commands.Cog):
         
         is_active = await self.database.guild(ctx.guild).active()
         user_tag = await self.database.member(ctx.author).tag()
+        is_private = await self.database.guild(ctx.guild).private()
         
         if is_active == 0:
             await ctx.send("There is no ongoing duel. To start duel use {}duel start".format(str(ctx.prefix)))
@@ -327,7 +350,16 @@ class Duel(commands.Cog):
         if bet > balance:
             await ctx.send("You dont have that much credits to duel.")
             return 0
+        
+        if is_private:
+            private_id = await self.database.guild(ctx.guild).private_member_id()
             
+            if ctx.author.id == private_id   :
+                pass
+            else:
+                await ctx.send("The duel is a private one, intended for someone else")
+                return 0
+                
         await self.database.guild(ctx.guild).player2.set(ctx.author.id)
 
         start_time = (int)(time.time())
@@ -389,8 +421,8 @@ class Duel(commands.Cog):
                 return 0
         else:
             battle_timeout = await self.database.guild(ctx.guild).battle_timeout()
-            await ctx.send("Duel has been accepted. Duel will timeout in {} seconds."
-            "or ask an admin to clear using {}duel clear".format(
+            await ctx.send("Duel has been accepted. Duel will timeout in {} seconds.\n"
+            "Or ask an admin to clear using {}duel clear".format(
             str(battle_timeout), str(ctx.prefix)))
             
             
@@ -714,5 +746,4 @@ class Duel(commands.Cog):
                 highscores,
                 DEFAULT_CONTROLS if len(highscores) > 1 else {"\N{CROSS MARK}": close_menu},
             )
-            
-    
+
