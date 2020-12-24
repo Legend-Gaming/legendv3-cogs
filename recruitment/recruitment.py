@@ -305,7 +305,8 @@ class Recruitment(commands.Cog):
         self,
         ctx: commands.Context,
         member: Union[discord.Member, PlayerTag, None] = None,
-        account: int = 1,
+        account: Optional[int] = 1,
+        orderByMemberCount: bool = False,
     ):
         """
         Show all family clans.
@@ -363,7 +364,15 @@ class Recruitment(commands.Cog):
         found_clan = False
         total_members = 0
         total_waiting = 0
-        all_clans = await self.crclans_cog.all_clans_data()
+        if orderByMemberCount:
+            sortKey = lambda x: (
+                        x[1]["clan_war_trophies"],
+                        x[1]["required_trophies"],
+                        x[1]["clan_score"],
+                    )
+            all_clans = await self.crclans_cog.all_clans_data(sortKey, False)
+        else:
+            all_clans = await self.crclans_cog.all_clans_data()
         use_hyperlink = await self.config.guild(ctx.guild).hyperlink_crclans()
         description_clan = ""
         for clankey, clan in all_clans.items():

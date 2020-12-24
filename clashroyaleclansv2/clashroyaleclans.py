@@ -22,6 +22,11 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 log = logging.getLogger("red.cogs.clashroyaleclansv2")
 
+default_sort = lambda x: (
+                    x[1]["clan_war_trophies"],
+                    x[1]["required_trophies"],
+                    x[1]["clan_score"],
+                )
 
 class NoToken(Exception):
     pass
@@ -119,7 +124,7 @@ class ClashRoyaleClans2(commands.Cog):
             raise
 
     @tasks.loop(seconds=30)
-    async def get_clandata(self):
+    async def get_clandata(self, sortBy=default_sort, reverse=True):
         """Check current data against data stored in config."""
         if self is not self.bot.get_cog("ClashRoyaleClans2"):
             return
@@ -143,12 +148,8 @@ class ClashRoyaleClans2(commands.Cog):
             k: v
             for k, v in sorted(
                 new_data.items(),
-                key=lambda x: (
-                    x[1]["clan_war_trophies"],
-                    x[1]["required_trophies"],
-                    x[1]["clan_score"],
-                ),
-                reverse=True,
+                key=sortBy,
+                reverse=reverse,
             )
         }
 
@@ -188,9 +189,19 @@ class ClashRoyaleClans2(commands.Cog):
             with open(self.claninfo_path, "w") as file:
                 json.dump(self.static_clandata, file, indent=4)
 
-    async def all_clans_data(self):
+    async def all_clans_data(self, sortBy=None, reverse=True):
         """Return clan data"""
-        return await self.config.clans()
+        clans_data = await self.config.clans()
+        if sortBy is not None
+        clans_data = {
+            k: v
+            for k, v in sorted(
+                clans_data.items(),
+                key=sortBy,
+                reverse=reverse,
+            )
+        }
+        return clans_data
 
     def get_all_static_clan_data(self):
         return self.static_clandata
