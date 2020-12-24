@@ -437,6 +437,15 @@ class Recruitment(commands.Cog):
                 embed=await self.crclans_footer(player)
             )
 
+    @commands.command(name="mcrclans")
+    async def command_mcrclans(
+        self,
+        ctx: commands.Context,
+        member: Union[discord.Member, PlayerTag, None] = None,
+        account: Optional[int] = 1,
+    ):
+        await ctx.invoke(self.bot.get_command('crclans'), member=member, account=account, orderByMemberCount=True);
+    
     @commands.command(name="approve")
     @checks.mod_or_permissions()
     async def command_approve(
