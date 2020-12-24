@@ -366,6 +366,7 @@ class Recruitment(commands.Cog):
         total_waiting = 0
         if orderByMemberCount:
             sortKey = lambda x: (
+                        x[1]["members"],
                         x[1]["clan_war_trophies"],
                         x[1]["required_trophies"],
                         x[1]["clan_score"],
