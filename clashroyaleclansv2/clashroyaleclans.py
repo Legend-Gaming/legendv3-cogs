@@ -192,15 +192,15 @@ class ClashRoyaleClans2(commands.Cog):
     async def all_clans_data(self, sortBy=None, reverse=True):
         """Return clan data"""
         clans_data = await self.config.clans()
-        if sortBy is not None
-        clans_data = {
-            k: v
-            for k, v in sorted(
-                clans_data.items(),
-                key=sortBy,
-                reverse=reverse,
-            )
-        }
+        if sortBy is not None:
+            clans_data = {
+                k: v
+                for k, v in sorted(
+                    clans_data.items(),
+                    key=sortBy,
+                    reverse=reverse,
+                )
+            }
         return clans_data
 
     def get_all_static_clan_data(self):
