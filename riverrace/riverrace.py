@@ -60,7 +60,7 @@ async def simple_embed(
         embed=embed, allowed_mentions=discord.AllowedMentions(**mentions)
     )
 
-key = "" #ENTER YOUR TOKEN HERE
+key = "ENTER YOUR CLASH ROYALE DEVELOPER TOKEN HERE"
 headers = {
           'Accept': 'application/json',
           'Authorization': f'Bearer {key}'
