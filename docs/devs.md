@@ -14,12 +14,12 @@ We would like to thank the (handful/dozens/hundreds/thousands?!) of people who h
 - GR8 <Discord: GR8#8888>
 
 ### Head Developers
-- FyN8 <Discord: FyN8#8888>
 - Generaleoley <Discord: Generaleoley#8888>
+- Kingslayer <Discord: Kingslayer#4079>
+- Nevus <Discord: Nevus#6137>
 
 ### Devs
-- TheChosenOne07 <Discord: TheChosenOne07#6397>
-- Nevus <Discord: Nevus#6137>
+- FyN8 <Discord: FyN8#3137> <Email: [fyn8gmr@gmail.com](fyn8gmr@gmail.com)>
 - Striker <Discord: striker#6066>
 - Vanhorn <Discord: Vanhorn#0488> <Email: [fernando.fcavalcanti@gmail.com](fernando.fcavalcanti@gmail.com)>
 
