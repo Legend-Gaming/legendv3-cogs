@@ -5,7 +5,8 @@ from redbot.core import commands
 
 tl_clans = ['RY9QJU2', '8UQ2', 'LR9CY9VQ', '9CJ9YGPL', 'P09GPU', 'Y9G2LQ2Y', 'PGPQQ8UV', 'PPCG80G0', 'YJ8GRVGY', '9Q20L', 'YU20PCQU']
 sleep_time = 600
-channelid = 844120574921539625
+fameid = 844662799379595305
+donationsid = 844663013058543676
 fame_emoji = "<:cwfame:844641612608176178>"
 donations_emoji = "<:donations:844657488389472338>"
 
@@ -19,7 +20,8 @@ class FameLeaderboard(commands.Cog):
 
     async def update_embed(self):
         try:
-            channel = await self.bot.fetch_channel(844120574921539625)
+            famechannel = await self.bot.fetch_channel(fameid)
+            donationchannel = await self.bot.fetch_channel(donationsid)
             await asyncio.sleep(10)  # Start-up Time
             prev = None
             prev2 = None
@@ -27,11 +29,11 @@ class FameLeaderboard(commands.Cog):
                 embed = await self.get_data_fame()
                 if prev is not None:
                     await prev.delete()
-                prev = await channel.send(embed=embed)
+                prev = await famechannel.send(embed=embed)
                 embed2 = await self.get_data_donations()
                 if prev2 is not None:
                     await prev2.delete()
-                prev2 = await channel.send(embed=embed2)
+                prev2 = await donationchannel.send(embed=embed2)
 
 
                 # Run Every X seconds
