@@ -55,9 +55,10 @@ class FameLeaderboard(commands.Cog):
             url = 'https://api.clashroyale.com/v1/clans/%23{}/currentriverrace'.format(clantag)
             async with aiohttp.ClientSession() as client:
                 async with client.get(url, headers=self.headers) as resp:
-                    if(resp.status != 200):
-                        return discord.Embed(title='Clash Royale API Error', description = 'Clash Royale API is offline... data cannot be retreived :(')
                     data = await resp.json()
+                    if(resp.status != 200):
+                        return discord.Embed(title='Clash Royale API Error', description = 'Clash Royale API is offline... data cannot be retreived :( \n DEBUG DATA:  Status Code: {} JSON Response: {}'.format(resp.status, data)
+                    
                     members.extend(data['clan']['participants'])
         ldb = sorted(members, key=lambda member: -member['fame']) # sorts in descending order
 
