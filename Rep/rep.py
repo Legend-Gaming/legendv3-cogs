@@ -11,7 +11,7 @@ class Reputation(commands.Cog):
             'rep': 0
         }
         self.config.register_member(**self.default_member)
-    @commands.command()
+    @commands.command(cooldown_after_parsing=True)
     @commands.guild_only()
     @commands.cooldown(rate=1, per=1800, type=commands.BucketType.member)
     async def rep(self, ctx, member:discord.Member=None):
