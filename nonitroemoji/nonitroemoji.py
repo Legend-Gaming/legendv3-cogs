@@ -1,6 +1,7 @@
 import discord
 from discord.errors import InvalidArgument
 from redbot.core import commands, Config, checks
+from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
 
 class NonNitroEmoji(commands.Cog):
     def __init__(self, bot):
@@ -64,3 +65,36 @@ class NonNitroEmoji(commands.Cog):
             else:
                 data['guild_id'] = new_guild_id
                 await ctx.send("Guild ID changed")
+
+    @commands.command(name="listemojis")
+    async def list_emojis(self, ctx):
+        """
+        List the emoji's available to use
+        """
+        embed_list = []
+        to_append = ""
+        for count, emoji in enumerate(self.bot.emojis, start=1):
+            to_append += f"{emoji} \u200b \u200b \u200b \u200b {emoji.name}\n"
+            if count % 10 == 0:
+                embed = discord.Embed(
+                    color=0xFAA61A, description=to_append)
+                embed.set_author(name="List of emojis available",
+                                 icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
+                embed.set_footer(text="By Kingslayer | Legend Gaming",
+                             icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
+                embed_list.append(embed)
+                to_append = ""
+        if len(to_append) == 0:
+            pass
+        else:
+            embed = discord.Embed(color=0xFAA61A, description=to_append)
+            embed.set_author(name="List of emojis available")
+            embed.set_footer(text="By Kingslayer | Legend Gaming",
+                             icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
+            embed_list.append(embed)
+
+        await menu(ctx, embed_list, controls=DEFAULT_CONTROLS)
+
+    @commands.command(name="emojihow")
+    async def how_to_use(self, ctx):
+            await ctx.send("Send animated emotes/emotes from other servers the bot is on by putting your name between two colons.\nSample usage`:name_of_emoji:`\nGet list of emojis available by using `!listemojis`")
