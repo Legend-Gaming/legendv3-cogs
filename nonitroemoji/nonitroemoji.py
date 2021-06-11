@@ -69,12 +69,15 @@ class NonNitroEmoji(commands.Cog):
     @commands.command(name="listemojis")
     async def list_emojis(self, ctx):
         """
-        List the emoji's available to use
+        List the emojis available to use
         """
         embed_list = []
         to_append = ""
         for count, emoji in enumerate(self.bot.emojis, start=1):
-            to_append += f"{emoji} \u200b \u200b \u200b \u200b {emoji.name}\n"
+            if emoji.available:
+                to_append += f"{emoji} \u200b \u200b \u200b \u200b {emoji.name}\n"
+            else:
+                continue
             if count % 10 == 0:
                 embed = discord.Embed(
                     color=0xFAA61A, description=to_append)
