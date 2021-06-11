@@ -44,7 +44,7 @@ class Roast(commands.Cog):
             response = user.mention + "  " + (rand.choice(roasts)).strip()
             await self.green_emb("Roasted", response, ctx)
 
-    @checks.mod_or_permissions()
+    @checks.is_owner()
     @commands.command()  # broken
     async def setvip(self, ctx, new_vip: discord.Member):
         """Adding a VIP Member"""
@@ -56,7 +56,7 @@ class Roast(commands.Cog):
             await self.config.guild(ctx.guild).VIP.set(current)
             await ctx.send("Done {} is now an elite".format(new_vip.mention))
 
-    @checks.mod_or_permissions()
+    @checks.is_owner()
     @commands.command()
     async def removevip(self, ctx, new_vip: discord.Member):
         """Remove a VIP Member"""
