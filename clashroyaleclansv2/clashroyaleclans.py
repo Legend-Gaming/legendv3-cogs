@@ -23,11 +23,11 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 log = logging.getLogger("red.cogs.clashroyaleclansv2")
 
 
-def default_sort(x): return (
-    x[1]["clan_war_trophies"],
-    x[1]["required_trophies"],
-    x[1]["clan_score"],
-)
+default_sort = lambda x: (
+                    x[1]["clan_war_trophies"],
+                    x[1]["required_trophies"],
+                    x[1]["clan_score"],
+                )
 
 
 class NoToken(Exception):
