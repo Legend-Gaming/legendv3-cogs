@@ -13,7 +13,7 @@ from discord.ext import tasks
 from redbot.core import checks, commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
-from redbot.core.data_manager import cog_data_path
+from redbot.core.data_manager import cog_data_path, bundled_data_path
 from redbot.core.utils import AsyncIter
 from redbot.core.utils.chat_formatting import humanize_list, pagify
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
@@ -22,11 +22,13 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 log = logging.getLogger("red.cogs.clashroyaleclansv2")
 
-default_sort = lambda x: (
-                    x[1]["clan_war_trophies"],
-                    x[1]["required_trophies"],
-                    x[1]["clan_score"],
-                )
+
+def default_sort(x): return (
+    x[1]["clan_war_trophies"],
+    x[1]["required_trophies"],
+    x[1]["clan_score"],
+)
+
 
 class NoToken(Exception):
     pass
@@ -57,7 +59,7 @@ class ClashRoyaleClans2(commands.Cog):
         self.config.register_global(**default_global)
 
         try:
-            self.claninfo_path = str(cog_data_path(self) / "clans.json")
+            self.claninfo_path = str(bundled_data_path(self) / "clans.json")
             with open(self.claninfo_path) as file:
                 self.static_clandata = dict(json.load(file))
         except:
@@ -120,7 +122,8 @@ class ClashRoyaleClans2(commands.Cog):
             await self.config.clans.set(all_clan_data)
             # log.info("Updated data for all clans.")
         except Exception as e:
-            log.error("Encountered exception {} when refreshing clan data.".format(e))
+            log.error(
+                "Encountered exception {} when refreshing clan data.".format(e))
             raise
 
     @tasks.loop(seconds=30)
@@ -254,7 +257,8 @@ class ClashRoyaleClans2(commands.Cog):
     def clan_roles(self):
         """Get roles of all the clans"""
         roles = ["Member"]
-        roles.extend([clan["clanrole"] for clan in self.static_clandata.values()])
+        roles.extend([clan["clanrole"]
+                      for clan in self.static_clandata.values()])
         return roles
 
     def verify_clan_membership(self, clantag):
@@ -326,14 +330,25 @@ class ClashRoyaleClans2(commands.Cog):
 
     async def set_cwr(self, clankey, league, cwr):
         """Set a clan's CWR"""
+        if league.lower() == 'l':
+            league = 'legendary'
+        if league.lower() == 'g':
+            league = 'gold'
+        if league.lower() == 's':
+            league = 'silver'
+        if league.lower() == 'b':
+            league = 'bronze'
         clankey = self.get_static_clankey(clankey)
-        self.static_clandata[clankey]["requirements"]["cwr"][league] = cwr
-        await self.save_clan_data()
+        if self.static_clandata[clankey]["requirements"]["cwr"].get(league):
+            self.static_clandata[clankey]["requirements"]["cwr"][league] = cwr
+            await self.save_clan_data()
+        else:
+            raise IndexError()
 
     async def set_bonus(self, clankey, bonus):
         """Set a clan's Bonus Statement"""
         clankey = self.get_static_clankey(clankey)
-        self.static_clandata[clankey]["requirements"]["bonustitle"] = bonus
+        self.static_clandata[clankey]["requirements"]["bonus"] = bonus
         await self.save_clan_data()
 
     async def toggle_private(self, clankey):
@@ -445,7 +460,8 @@ class ClashRoyaleClans2(commands.Cog):
             for index, page in enumerate(pagify(absent_names_str, page_length=1024)):
                 if index == 0:
                     absent_members_value = page
-                em = discord.Embed(title=absent_members_title, description=page)
+                em = discord.Embed(
+                    title=absent_members_title, description=page)
                 pages.append(em)
             embed.add_field(
                 name=absent_members_title,
