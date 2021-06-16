@@ -39,6 +39,7 @@ class CRLeaderBoard(commands.Cog):
     
     @commands.command()
     async def legendleaderboard(self, ctx):
+        await ctx.channel.trigger_typing()
         desc = ""
         clan_tags = ["8QRQQ8RG", "L8J2VC20", "YLULCRQJ", "99R2PQVR", "PRCRJYCR", "J0CQ9R9", "P9GG9QQY",
                      "Y8G9C09", "2CJ88808", "80CC8", "RY9QJU2", "9P2PQULQ", "9PJYVVL2", "VJQ0GJ0", "29YPJYY", "Q0JJ2GG2"]
