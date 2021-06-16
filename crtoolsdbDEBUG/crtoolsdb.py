@@ -3,6 +3,7 @@ import discord
 import clashroyale
 from json import load
 from redbot.core import commands, checks, Config
+import traceback
 from redbot.core.data_manager import bundled_data_path
 import aiohttp
 
@@ -364,6 +365,8 @@ class ClashRoyaleTools(commands.Cog):
         self.token_task = self.bot.loop.create_task(self.crtoken())
 
     async def crtoken(self):
+        channel = await self.bot.fetch_channel(746247122000805978)
+        await channel.send("Running...")
         # SQL Server
         database = await self.bot.get_shared_api_tokens("database")
         try:
@@ -377,12 +380,14 @@ class ClashRoyaleTools(commands.Cog):
             print(e)
             raise RuntimeError
         # Clash Royale API
+        await channel.send("Done DB")
         token = await self.bot.get_shared_api_tokens("clashroyale")
         if token.get('token') is None:
             print("CR Token is not SET. Use !set api clashroyale token,YOUR_TOKEN to set it")
             raise RuntimeError
         self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True,
                                                  url="https://proxy.royaleapi.dev/v1")
+        print("Should be done CR...")
 
 
     def cog_unload(self):
