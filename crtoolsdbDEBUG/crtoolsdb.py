@@ -146,13 +146,14 @@ KEY `idx_user_id` (`user_id`),
 KEY `idx_tag` (`tag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"""
         cursor.execute(query)
-        print("Attempting to create the tags table if it does not exist.")
+        # print("Attempting to create the tags table if it does not exist.")
         return
 
     def getCursor(self):
         try:
             self.db.ping(reconnect=True, attempts=3, delay=1)
         except mysql.connector.Error as err:
+            # print(err)
             self.setupConnection()
         return self.db.cursor()
 
@@ -387,7 +388,7 @@ class ClashRoyaleTools(commands.Cog):
             raise RuntimeError
         self.cr = clashroyale.official_api.Client(token=token['token'], is_async=True,
                                                  url="https://proxy.royaleapi.dev/v1")
-        print("Should be done CR...")
+        await channel.send("Should be done CR...")
 
 
     def cog_unload(self):
@@ -439,7 +440,7 @@ class ClashRoyaleTools(commands.Cog):
                 await ctx.send("That tag has already been saved under this account")
                 return
             except TagAlreadyExists as e:
-                user = self.bot.get_user(e.user_id)
+                user = await self.bot.fetch_user(e.user_id)
                 embed=discord.Embed(title="Error", description=f"Tag is saved under another user: {user.mention}", color=0xff0000)
                 await ctx.send(
                     embed=embed,
