@@ -14,7 +14,7 @@ class CRLeaderBoard(commands.Cog):
         self.loop = asyncio.get_event_loop()
         self.session = ClientSession(loop=self.loop)
     
-    async def coctoken(self):
+    async def crtoken(self):
         token = await self.bot.get_shared_api_tokens("clashroyale")
         if token['token'] is None:
             print("CR token not set")
