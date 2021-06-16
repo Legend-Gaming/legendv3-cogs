@@ -6,11 +6,6 @@ import discord
 from redbot.core.utils import AsyncIter
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
-key = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQxMjM5OTVkLTI0MjctNGYzYi1hN2NlLTAyMjVlNjc5MTljMSIsImlhdCI6MTU5NjY0MzE3Miwic3ViIjoiZGV2ZWxvcGVyLzYwN2M4NWRiLTBkNzYtM2YxZC0yODBlLTZiMjNhNjFhNDVlOSIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxMjguMTI4LjEyOC4xMjgiXSwidHlwZSI6ImNsaWVudCJ9XX0.nT2mCANdy5eVTDzllr-UTvLq_DgqNJavGqnzvIbGpMfKzCDPDpPrCa-2RNxG8xNX6Ckmhmd0wP3tCVIpjXQwMA'
-headers = {
-    'Accept': 'application/json',
-    'Authorization': f'Bearer {key}'
-}
 
 player_trophy_list = {}
 
