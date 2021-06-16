@@ -6,7 +6,6 @@ import discord
 from redbot.core.utils import AsyncIter
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
-
 player_trophy_list = {}
 
 class CRLeaderBoard(commands.Cog):
@@ -14,6 +13,15 @@ class CRLeaderBoard(commands.Cog):
         self.bot = bot
         self.loop = asyncio.get_event_loop()
         self.session = ClientSession(loop=self.loop)
+    
+    async def coctoken(self):
+        token = await self.bot.get_shared_api_tokens("clashroyale")
+        if token['token'] is None:
+            print("CR token not set")
+
+        CRKEY = token['token']
+        global headers
+        headers = {"Authorization": f'Bearer {CRKEY}'}
 
 
     async def fetch(self, url):
@@ -34,12 +42,10 @@ class CRLeaderBoard(commands.Cog):
         desc = ""
         clan_tags = ["8QRQQ8RG", "L8J2VC20", "YLULCRQJ", "99R2PQVR", "PRCRJYCR", "J0CQ9R9", "P9GG9QQY",
                      "Y8G9C09", "2CJ88808", "80CC8", "RY9QJU2", "9P2PQULQ", "9PJYVVL2", "VJQ0GJ0", "29YPJYY", "Q0JJ2GG2"]
-        member_list = {"king slayer(#YPGU8UYP)": 10000}
         embed_list = []
 
         async for tag in AsyncIter(clan_tags):
             member_list = await(self.get_member_data(tag))
-            member_list['king slayer(#YPGU8UYP)'] = 10000
         final = {k: v for k, v in sorted(member_list.items(), key=lambda x: x[1], reverse=True)}
 
         async for k, v in AsyncIter(enumerate(final)):
