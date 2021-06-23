@@ -221,7 +221,7 @@ class FameLeaderboard(commands.Cog):
 
             # Get Clan
             clan = ''
-            uurl = 'https://api.clashroyale.com/v1/players/%23{}/'.format(
+            uurl = 'https://proxy.royaleapi.dev/v1/players/%23{}/'.format(
                 memb['tag'].strip('#'))
             async with aiohttp.ClientSession() as client:
                 async with client.get(uurl, headers=self.headers) as resp:
@@ -250,7 +250,7 @@ class FameLeaderboard(commands.Cog):
         clan_mem_dict = dict()
         legend_clans = await self.config.clan_servers()
         for clan_data in legend_clans:
-            url = 'https://api.clashroyale.com/v1/clans/%23{}/currentriverrace'.format(
+            url = 'https://proxy.royaleapi.dev/v1/clans/%23{}/currentriverrace'.format(
                 legend_clans[clan_data]['tag'])
             async with aiohttp.ClientSession() as client:
                 async with client.get(url, headers=self.headers) as resp:
@@ -301,7 +301,7 @@ class FameLeaderboard(commands.Cog):
         members = []  # Runs in O(n log n) where n is the amount of members
 
         for clantag in tl_clans:
-            url = 'https://api.clashroyale.com/v1/clans/%23{}/'.format(clantag)
+            url = 'https://proxy.royaleapi.dev/v1/clans/%23{}/'.format(clantag)
             async with aiohttp.ClientSession() as client:
                 async with client.get(url, headers=self.headers) as resp:
                     if(resp.status != 200):
@@ -332,7 +332,7 @@ class FameLeaderboard(commands.Cog):
 
             # Get Clan
             clan = ''
-            uurl = 'https://api.clashroyale.com/v1/players/%23{}/'.format(
+            uurl = 'https://proxy.royaleapi.dev/v1/players/%23{}/'.format(
                 memb['tag'].strip('#'))
             async with aiohttp.ClientSession() as client:
                 async with client.get(uurl, headers=self.headers) as resp:
