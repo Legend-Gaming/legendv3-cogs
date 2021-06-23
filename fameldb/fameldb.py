@@ -9,11 +9,8 @@ Make it work with individual servers
 Make the code work with config
 """
 
-tl_clans = ['RY9QJU2', '8UQ2', 'LR9CY9VQ', '9CJ9YGPL', 'P09GPU',
-            'Y9G2LQ2Y', 'PGPQQ8UV', 'PPCG80G0', 'YJ8GRVGY', '9Q20L', 'YU20PCQU']
-sleep_time = 600
-fameid = 844662799379595305
-donationsid = 844663013058543676
+
+sleep_time = 10
 fame_emoji = "<:fame:757940151845519411>"
 donations_emoji = "<:donations:844657488389472338>"
 
