@@ -2,6 +2,7 @@ import discord
 import asyncio
 import aiohttp
 from redbot.core import commands, Config
+import copy
 #TO-DO
 """
 Make it work with individual servers
@@ -272,7 +273,7 @@ class FameLeaderboard(commands.Cog):
         else:
             embed_dict = dict()
             for tag in clan_mem_dict:
-                em = await self.ldb_to_emb(ldb=clan_mem_dict[tag], base_embed=embed, clan_spec=True)
+                em = await self.ldb_to_emb(ldb=clan_mem_dict[tag], base_embed=copy.copy(embed), clan_spec=True)
                 embed_dict['tag'] = em
             return main_emb, embed_dict
 
