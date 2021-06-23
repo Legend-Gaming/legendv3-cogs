@@ -1,16 +1,11 @@
 import discord
 import asyncio
 import aiohttp
-from redbot.core import commands, Config
+from redbot.core import commands, Config, checks
 import copy
-#TO-DO
-"""
-Make it work with individual servers
-Make the code work with config
-"""
 
 
-sleep_time = 10
+sleep_time = 300
 fame_emoji = "<:fame:757940151845519411>"
 donations_emoji = "<:donations:844657488389472338>"
 
@@ -23,14 +18,14 @@ class FameLeaderboard(commands.Cog):
         self.tags = self.bot.get_cog('ClashRoyaleTools').tags
         self.update_embed_task = bot.loop.create_task(self.update_embed())
         self.config = Config.get_conf(self, identifier=2345341233)
-        default_settings = {"main": {"server_id": 857098966726344704,
-                            "use": True,
-                            "channel_id": 857098966726344707},
+        default_settings = {"main": {"server_id": None,
+                            "use": False,
+                            "channel_id": None},
                 "clan_servers": {
                 "Dragons Eight": {
-                    "server_id": 857098966726344704,
-                    "use": True,
-                    "channel_id": 857128031189860362,
+                    "server_id": None,
+                    "use": False,
+                    "channel_id": None,
                     "tag": "29YPJYY",
                     "nickname": "D8",
             },
@@ -123,17 +118,16 @@ class FameLeaderboard(commands.Cog):
 
     async def update_embed(self):
         try:
-            main = await self.config.main()
-            clans = await self.config.clan_servers()
-            main_embed, clan_embeds = await self.get_fame_data()
             await asyncio.sleep(10)  # Start-up Time
             while True:
+                main = await self.config.main()
+                clans = await self.config.clan_servers()
+                main_embed, clan_embeds = await self.get_data_fame()
                 if main['use'] == True:
                     main_guild_id = main['server_id']
                     main_channel_id = main["channel_id"]
                     main_guild = self.bot.get_guild(main_guild_id)
                     main_channel = main_guild.get_channel(main_channel_id)
-                    await main_channel.send("Hit it")
                     if main.get('last_message_id') == None:
                         message = await main_channel.send(embed=main_embed)
                         async with self.config.main() as data:
@@ -144,8 +138,10 @@ class FameLeaderboard(commands.Cog):
                             message = await main_channel.fetch_message(last_mes_id)
                             await message.delete()
                         except Exception as e:
+                            async with self.config.main() as data:
+                                data['last_message_id'] = None
                             print(e)
-                        message = await main_channel.send()
+                        message = await main_channel.send(embed=main_embed)
                         async with self.config.main() as data:
                             data['last_message_id'] = message.id
                 if clan_embeds != None:
@@ -158,7 +154,7 @@ class FameLeaderboard(commands.Cog):
                                 if clan_embeds.get(clans[clan]['tag']) == None: #some edge case scenario
                                     pass
                                 else:
-                                    clan_emb = clan_embeds[[clans][clan]['tag']]
+                                    clan_emb = clan_embeds[clans[clan]['tag']]
                                     message = await clan_channel.send(embed=clan_emb)
                                     async with self.config.clan_servers() as data:
                                         data[clan]['last_message_id'] = message.id
@@ -173,13 +169,13 @@ class FameLeaderboard(commands.Cog):
                                         await message.delete()
                                     except Exception as e:
                                         print(e)
-                                    clan_emb = clan_embeds[[clans][clan]['tag']]
+                                    clan_emb = clan_embeds[clans[clan]['tag']]
                                     message = await clan_channel.send(embed=clan_emb)
                                     async with self.config.clan_servers() as data:
                                         data[clan]['last_message_id'] = message.id
 
                 # Run Every X seconds
-                    await asyncio.sleep(sleep_time)
+                await asyncio.sleep(sleep_time)
         except asyncio.CancelledError:
             pass
 
@@ -197,7 +193,7 @@ class FameLeaderboard(commands.Cog):
     
     async def ldb_to_emb(self, ldb, base_embed, clan_spec:bool= False):
         # This all looks weird but it's embed formatting
-        pos = 9
+        pos = 25
         if clan_spec == True:
             pos = 4
         podium = ['🥇', '🥈', '🥉']
@@ -278,16 +274,56 @@ class FameLeaderboard(commands.Cog):
                 embed.set_footer(text="Bot by: Legend Dev Team",
                          icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
                 em = await self.ldb_to_emb(ldb=clan_mem_dict[tag], base_embed=copy.copy(embed), clan_spec=True)
-                embed_dict['tag'] = em
+                embed_dict[tag] = em
             return main_emb, embed_dict
 
     @commands.command()
     async def topfame(self, ctx):
-        """Get Top 10 Fame Contributors this war"""
+        """Get Top 25 Fame Contributors this war"""
         async with ctx.typing():
-                embed, clan_emb = await self.get_data_fame()
+                embed, _ = await self.get_data_fame()
                 await ctx.send(embed=embed)
+    
+    @commands.command()
+    @checks.is_owner()
+    async def setfamechannel(self, ctx, nick='main'):
+        """Set the current channel as fame channel"""
+        if nick=='main':
+            async with self.config.main() as data:
+                data['use'] = True
+                data['channel_id'] = ctx.channel.id
+                data['server_id'] = ctx.guild.id
+                await ctx.send('Set this channel as the main fame channel')
+        else:
+            async with self.config.clan_servers() as data:
+                for clan in data:
+                    clan_nick = data[clan]['nickname']
+                    if clan_nick.lower() == nick:
+                        data[clan]['use'] = True
+                        data[clan]['channel_id'] = ctx.channel.id
+                        data[clan]['server_id'] = ctx.guild.id
+                        return await ctx.send(f"Set this channel as {clan} fame channel")
+                return await ctx.send('Incorrect clan nickname')
 
+    @commands.command()
+    @checks.is_owner()
+    async def stopfameldb(self, ctx, nick="main"):
+        if nick == 'main':
+            async with self.config.main() as data:
+                data['use'] = False
+                data['channel_id'] = None
+                data['server_id'] = None
+                await ctx.send("Stopped main fame leaderboard")
+        else:
+            async with self.config.clan_servers() as data:
+                for clan in data:
+                    clan_nick = data[clan]['nickname']
+                    if clan_nick.lower() == nick:
+                        data[clan]['use'] = False
+                        data[clan]['channel_id'] = None
+                        data[clan]['server_id'] = None
+                        return await ctx.send(f"Stopped fame leaderboard for {clan}")
+                return await ctx.send('Incorrect clan nickname')
     """
     async def get_data_donations(self) -> discord.Embed:
         podium = ['🥇', '🥈', '🥉']
