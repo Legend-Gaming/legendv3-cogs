@@ -13,7 +13,7 @@ tl_clans = ['RY9QJU2', '8UQ2', 'LR9CY9VQ', '9CJ9YGPL', 'P09GPU',
 sleep_time = 600
 fameid = 844662799379595305
 donationsid = 844663013058543676
-fame_emoji = "<:cwfame:844641612608176178>"
+fame_emoji = "<:fame:757940151845519411>"
 donations_emoji = "<:donations:844657488389472338>"
 
 
