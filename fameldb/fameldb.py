@@ -133,6 +133,7 @@ class FameLeaderboard(commands.Cog):
                     main_channel_id = main["channel_id"]
                     main_guild = self.bot.get_guild(main_guild_id)
                     main_channel = main_guild.get_channel(main_channel_id)
+                    await main_channel.send("Hit it")
                     if main.get('last_message_id') == None:
                         message = await main_channel.send(embed=main_embed)
                         async with self.config.main() as data:
