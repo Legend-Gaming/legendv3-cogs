@@ -225,11 +225,11 @@ class FameLeaderboard(commands.Cog):
                         return discord.Embed(title='Clash Royale API Error', description='Clash Royale API is offline... data cannot be retreived :(')
                     data = await resp.json()
                     try:
-                        clan = data['clan']['name']
+                        clan = f"| {data['clan']['name']}"
                     except Exception:
                         clan=''
 
-            value += f"{memb['name']} ({memb['tag']}) | {clan} "
+            value += f"{memb['name']} ({memb['tag']}) {clan}"
             base_embed.add_field(name=title, value=value, inline=False)
 
         return base_embed
@@ -267,14 +267,16 @@ class FameLeaderboard(commands.Cog):
         else:
             embed_dict = dict()
             for tag in clan_mem_dict:
-                embed = discord.Embed(title="Legend Clash Royale Fame Leaderboard",
-                                      description='These are the top fame contributors from Legend Clans in the current river race!', color=0x80ff00)
-                embed.set_thumbnail(
-                         url="https://static.wikia.nocookie.net/clashroyale/images/9/9f/War_Shield.png/revision/latest?cb=20180425130200")
-                embed.set_footer(text="Bot by: Legend Dev Team",
-                         icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
-                em = await self.ldb_to_emb(ldb=clan_mem_dict[tag], base_embed=copy.copy(embed), clan_spec=True)
-                embed_dict[tag] = em
+                for clan in legend_clans:
+                    if legend_clans[clan]['tag'] == tag: 
+                        embed = discord.Embed(title=f"{clan.strip('!')} Fame Leaderboard",
+                                            description=f'These are the top fame contributors from {clan} in the current river race!', color=0x80ff00)
+                        embed.set_thumbnail(
+                                url="https://static.wikia.nocookie.net/clashroyale/images/9/9f/War_Shield.png/revision/latest?cb=20180425130200")
+                        embed.set_footer(text="Bot by: Legend Dev Team",
+                                icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
+                        em = await self.ldb_to_emb(ldb=clan_mem_dict[tag], base_embed=copy.copy(embed), clan_spec=True)
+                        embed_dict[tag] = em
             return main_emb, embed_dict
 
     @commands.command()
