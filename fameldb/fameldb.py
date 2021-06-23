@@ -229,7 +229,10 @@ class FameLeaderboard(commands.Cog):
                     if(resp.status != 200):
                         return discord.Embed(title='Clash Royale API Error', description='Clash Royale API is offline... data cannot be retreived :(')
                     data = await resp.json()
-                    clan = data['clan']['name']
+                    try:
+                        clan = data['clan']['name']
+                    except Exception:
+                        clan=''
 
             value += f"{memb['name']} ({memb['tag']}) | {clan} "
             base_embed.add_field(name=title, value=value, inline=False)
