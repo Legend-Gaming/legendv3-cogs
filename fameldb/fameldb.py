@@ -185,7 +185,7 @@ class FameLeaderboard(commands.Cog):
 
     async def crtoken(self):
         # Clash Royale API
-        token = await self.bot.get_shared_api_tokens("clashroyaleb")
+        token = await self.bot.get_shared_api_tokens("ksclashroyale")
         if token.get('token') is None:
             print(
                 "CR Token is not SET. Use !set api clashroyale token,YOUR_TOKEN to set it")
