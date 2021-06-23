@@ -149,34 +149,35 @@ class FameLeaderboard(commands.Cog):
                         message = await main_channel.send()
                         async with self.config.main() as data:
                             data['last_message_id'] = message.id
-                for clan in clans:
-                    x = clans[clan]
-                    if clans[clan]['use'] == True:
-                        clan_guild = self.bot.get_guild(clans[clan]['server_id'])
-                        clan_channel = clan_guild.get_channel(clans[clan]['channel_id'])
-                        if x.get('last_message_id') == None:
-                            if clan_embeds.get(clans[clan]['tag']) == None: #some edge case scenario
-                                pass
+                if clan_embeds != None:
+                    for clan in clans:
+                        x = clans[clan]
+                        if clans[clan]['use'] == True:
+                            clan_guild = self.bot.get_guild(clans[clan]['server_id'])
+                            clan_channel = clan_guild.get_channel(clans[clan]['channel_id'])
+                            if x.get('last_message_id') == None:
+                                if clan_embeds.get(clans[clan]['tag']) == None: #some edge case scenario
+                                    pass
+                                else:
+                                    clan_emb = clan_embeds[[clans][clan]['tag']]
+                                    message = await clan_channel.send(embed=clan_emb)
+                                    async with self.config.clan_servers() as data:
+                                        data[clan]['last_message_id'] = message.id
                             else:
-                                clan_emb = clan_embeds[[clans][clan]['tag']]
-                                message = await clan_channel.send(embed=clan_emb)
-                                async with self.config.clan_servers() as data:
-                                    data[clan]['last_message_id'] = message.id
-                        else:
-                            # some edge case scenario
-                            if clan_embeds.get(clans[clan]['tag']) == None:
-                                pass
-                            else:
-                                last_mes_id = clans[clan]['last_message_id']
-                                try:
-                                    message = await clan_channel.fetch_message(last_mes_id)
-                                    await message.delete()
-                                except Exception as e:
-                                    print(e)
-                                clan_emb = clan_embeds[[clans][clan]['tag']]
-                                message = await clan_channel.send(embed=clan_emb)
-                                async with self.config.clan_servers() as data:
-                                    data[clan]['last_message_id'] = message.id
+                                # some edge case scenario
+                                if clan_embeds.get(clans[clan]['tag']) == None:
+                                    pass
+                                else:
+                                    last_mes_id = clans[clan]['last_message_id']
+                                    try:
+                                        message = await clan_channel.fetch_message(last_mes_id)
+                                        await message.delete()
+                                    except Exception as e:
+                                        print(e)
+                                    clan_emb = clan_embeds[[clans][clan]['tag']]
+                                    message = await clan_channel.send(embed=clan_emb)
+                                    async with self.config.clan_servers() as data:
+                                        data[clan]['last_message_id'] = message.id
 
                 # Run Every X seconds
                     await asyncio.sleep(sleep_time)
@@ -272,7 +273,14 @@ class FameLeaderboard(commands.Cog):
                 embed_dict['tag'] = em
             return main_emb, embed_dict
 
+    @commands.command()
+    async def topfame(self, ctx):
+        """Get Top 10 Fame Contributors this war"""
+        async with ctx.typing():
+                embed, clan_emb = await self.get_data_fame()
+                await ctx.send(embed=embed)
 
+    """
     async def get_data_donations(self) -> discord.Embed:
         podium = ['🥇', '🥈', '🥉']
 
@@ -332,14 +340,9 @@ class FameLeaderboard(commands.Cog):
 
     @commands.command()
     async def topdonations(self, ctx):
-        """Get Top 10 Donators this week"""
+        Get Top 10 Donators this week
         async with ctx.typing():
             embed = await self.get_data_donations()
-            await ctx.send(embed=embed)
+            await ctx.send(embed=embed)"""
 
-    @commands.command()
-    async def topfame(self, ctx):
-        """Get Top 10 Fame Contributors this war"""
-        async with ctx.typing():
-            embed = await self.get_data_fame()
-            await ctx.send(embed=embed)
+
