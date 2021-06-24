@@ -344,7 +344,7 @@ class FameLeaderboard(commands.Cog):
                 participants = data['clan']['participants']
                 members_in_clan = await self.check_membership(participants)
                 embed = discord.Embed(title=f"Legend Empire Lowest Fame Contributors",
-                                            description=f'These are the least fame contributors from Legend Empire in the current river race, they are even worse then Sai Namrath LMAO, Lets cyberbully them for being bad at this video game.', color=discord.Color.red())
+                                            description=f'These are the least fame contributors from Legend Empire in the current river race, they are even worse then Sai Namrath LMAO.', color=discord.Color.red())
                 embed.set_thumbnail(
                         url="https://static.wikia.nocookie.net/clashroyale/images/9/9f/War_Shield.png/revision/latest?cb=20180425130200")
                 embed.set_footer(text="Bot by: Legend Dev Team",
