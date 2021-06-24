@@ -302,7 +302,7 @@ class FameLeaderboard(commands.Cog):
                 for clan in legend_clans:
                     if legend_clans[clan]['tag'] == tag:
                         embed = discord.Embed(title=f"{clan.strip('!')} Fame Leaderboard",
-                                              description=f'These are the top fame contributors from {clan} in the current river race, they are better than SK Morten', color=0x80ff00)
+                                              description=f'These are the top fame contributors from {clan} in the current river race, they are even better than SK Morten.', color=0x80ff00)
                         embed.set_thumbnail(
                             url="https://static.wikia.nocookie.net/clashroyale/images/9/9f/War_Shield.png/revision/latest?cb=20180425130200")
                         embed.set_footer(text="Bot by: Legend Dev Team",
