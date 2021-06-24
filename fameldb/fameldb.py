@@ -1,11 +1,13 @@
 import discord
 import asyncio
 import aiohttp
+from discord import embeds
+from discord.message import Message
 from redbot.core import commands, Config, checks
 import copy
 
 
-sleep_time = 300
+sleep_time = 120
 fame_emoji = "<:fame:757940151845519411>"
 donations_emoji = "<:donations:844657488389472338>"
 
@@ -173,7 +175,30 @@ class FameLeaderboard(commands.Cog):
                                     message = await clan_channel.send(embed=clan_emb)
                                     async with self.config.clan_servers() as data:
                                         data[clan]['last_message_id'] = message.id
-
+                empire_data = clans['LeGeND Empire!']
+                if empire_data.get('use') == True:
+                    try:
+                        to_send = await self.empire_losers()
+                    except Exception as e:
+                        print(e)
+                    emp = self.bot.get_guild(clans['LeGeND Empire!']['server_id'])
+                    channel_to_send = emp.get_channel(empire_data.get('channel_id'))
+                    if empire_data.get('last_reverse') == None:
+                        try:
+                            message = await channel_to_send.send(embed=to_send)
+                        except Exception as e:
+                            print(e)
+                        async with self.config.clan_servers() as clan:
+                            clan['LeGeND Empire!']['last_reverse'] = message.id
+                    else:
+                        try:
+                            message = await channel_to_send.fetch_message(empire_data.get('last_reverse'))
+                            await message.delete()
+                        except Exception as e:
+                            print(e)
+                        message = await channel_to_send.send(embed=to_send)
+                        async with self.config.clan_servers() as clan:
+                            clan['LeGeND Empire!']['last_reverse'] = message.id
                 # Run Every X seconds
                 await asyncio.sleep(sleep_time)
         except asyncio.CancelledError:
@@ -278,7 +303,55 @@ class FameLeaderboard(commands.Cog):
                         em = await self.ldb_to_emb(ldb=clan_mem_dict[tag], base_embed=copy.copy(embed), clan_spec=True)
                         embed_dict[tag] = em
             return main_emb, embed_dict
-
+    async def check_membership(self, riverrace_data):
+        url = 'https://proxy.royaleapi.dev/v1/clans/%239P2PQULQ/members'
+        async with aiohttp.ClientSession() as client:
+            async with client.get(url=url, headers=self.headers) as resp:
+                data=await resp.json()
+                member_list = data['items']
+            found_members = []
+            for member in riverrace_data:
+                tag = member['tag']
+                for clan_mem in member_list:
+                    if tag == clan_mem['tag']:
+                        found_members.append(member)
+                        break
+            final = sorted(found_members, key=lambda x: x['fame'])
+            return final
+    def embed_for_bottom(self, rectified_data, base_embed):
+        for i, memb in enumerate(rectified_data):
+            if(i > 4):
+                break
+            title = str(50-i)
+            title += ' - ' + str(memb['fame']) + fame_emoji
+            value = ''
+            try:
+                users = self.tags.getUser(memb['tag'].strip('#'))
+                for user in users:
+                    value += f'<@{user[0]}> - '
+            except Exception as e:
+                print(e)
+            value += f"{memb['name']} ({memb['tag']})"
+            base_embed.add_field(name=title, value=value, inline=False)
+        return base_embed
+    async def empire_losers(self):
+        url = 'https://proxy.royaleapi.dev/v1/clans/%239P2PQULQ/currentriverrace'
+        async with aiohttp.ClientSession() as client:
+            async with client.get(url=url, headers=self.headers) as resp:
+                if(resp.status != 200):
+                    return discord.Embed(title='Clash Royale API Error', description='Clash Royale API is offline... data cannot be retreived :(')
+                data = await resp.json()
+                participants = data['clan']['participants']
+                members_in_clan = await self.check_membership(participants)
+                print(members_in_clan)
+                embed = discord.Embed(title=f"Legend Empire Lowest Fame Contributors",
+                                            description=f'These are the least fame contributors from Legend Empire in the current river race, they are even worse then Sai Namrath LMAO, Lets cyberbully them for being bad at this video game.', color=discord.Color.red())
+                embed.set_thumbnail(
+                        url="https://static.wikia.nocookie.net/clashroyale/images/9/9f/War_Shield.png/revision/latest?cb=20180425130200")
+                embed.set_footer(text="Bot by: Legend Dev Team",
+                        icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
+                embed = self.embed_for_bottom(members_in_clan, base_embed=embed)
+                return embed
     @commands.command()
     async def topfame(self, ctx):
         """Get Top 25 Fame Contributors this war"""
