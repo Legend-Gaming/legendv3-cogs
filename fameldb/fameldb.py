@@ -7,7 +7,7 @@ from redbot.core import commands, Config, checks
 import copy
 
 
-sleep_time = 300
+sleep_time = 600
 fame_emoji = "<:fame:757940151845519411>"
 donations_emoji = "<:donations:844657488389472338>"
 
