@@ -21,101 +21,101 @@ class FameLeaderboard(commands.Cog):
         self.update_embed_task = bot.loop.create_task(self.update_embed())
         self.config = Config.get_conf(self, identifier=2345341233)
         default_settings = {"main": {"server_id": None,
-                            "use": False,
-                            "channel_id": None},
-                "clan_servers": {
-                "Dragons Eight": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "29YPJYY",
-                    "nickname": "D8",
+                                     "use": False,
+                                     "channel_id": None},
+                            "clan_servers": {
+            "Dragons Eight": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "29YPJYY",
+                "nickname": "D8",
             },
-                "LeGeND Legion!": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "VJQ0GJ0",
-                    "nickname": "Legion",
+            "LeGeND Legion!": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "VJQ0GJ0",
+                "nickname": "Legion",
             },
-                "LeGeND Titan!": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "9PJYVVL2",
-                    "nickname": "Titan"
+            "LeGeND Titan!": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "9PJYVVL2",
+                "nickname": "Titan"
             },
-                "Dragons Eight 2": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "Y8G9C09",
-                    "nickname": "D82"
+            "Dragons Eight 2": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "Y8G9C09",
+                "nickname": "D82"
             },
-                "LeGeND Squad!": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "80CC8",
-                    "nickname": "Squad"
+            "LeGeND Squad!": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "80CC8",
+                "nickname": "Squad"
             },
-                "LeGeND Prime!": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "Q0JJ2GG2",
-                    "nickname": "Prime"
+            "LeGeND Prime!": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "Q0JJ2GG2",
+                "nickname": "Prime"
             },
-                "LeGeND Empire!": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "9P2PQULQ",
-                    "nickname": "Empire"
+            "LeGeND Empire!": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "9P2PQULQ",
+                "nickname": "Empire"
             },
-                "LeGeND Dynasty!": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "99R2PQVR",
-                    "nickname": "Dynasty"
+            "LeGeND Dynasty!": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "99R2PQVR",
+                "nickname": "Dynasty"
             },
-                "LeGeND eSports!": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "P9GG9QQY",
-                    "nickname": "eSports"
+            "LeGeND eSports!": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "P9GG9QQY",
+                "nickname": "eSports"
             },
-                "White Plague": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "J0CQ9R9",
-                    "nickname": "Plague"
+            "White Plague": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "J0CQ9R9",
+                "nickname": "Plague"
             },
-                "Dragons Eight 3": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "PRCRJYCR",
-                    "nickname": "D83"
+            "Dragons Eight 3": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "PRCRJYCR",
+                "nickname": "D83"
             },
-                "LeGeND Phantom!": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "2CJ88808",
-                    "nickname": "Phantom"
+            "LeGeND Phantom!": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "2CJ88808",
+                "nickname": "Phantom"
             },
-                "LeGeND Pride!": {
-                    "server_id": None,
-                    "use": False,
-                    "channel_id": None,
-                    "tag": "YLULCRQJ",
-                    "nickname": "Pride"
+            "LeGeND Pride!": {
+                "server_id": None,
+                "use": False,
+                "channel_id": None,
+                "tag": "YLULCRQJ",
+                "nickname": "Pride"
             }
-            }}
+        }}
         self.config.register_global(**default_settings)
 
     async def update_embed(self):
@@ -150,10 +150,13 @@ class FameLeaderboard(commands.Cog):
                     for clan in clans:
                         x = clans[clan]
                         if clans[clan]['use'] == True:
-                            clan_guild = self.bot.get_guild(clans[clan]['server_id'])
-                            clan_channel = clan_guild.get_channel(clans[clan]['channel_id'])
+                            clan_guild = self.bot.get_guild(
+                                clans[clan]['server_id'])
+                            clan_channel = clan_guild.get_channel(
+                                clans[clan]['channel_id'])
                             if x.get('last_message_id') == None:
-                                if clan_embeds.get(clans[clan]['tag']) == None: #some edge case scenario
+                                # some edge case scenario
+                                if clan_embeds.get(clans[clan]['tag']) == None:
                                     pass
                                 else:
                                     clan_emb = clan_embeds[clans[clan]['tag']]
@@ -181,8 +184,10 @@ class FameLeaderboard(commands.Cog):
                         to_send = await self.empire_losers()
                     except Exception as e:
                         print(e)
-                    emp = self.bot.get_guild(clans['LeGeND Empire!']['server_id'])
-                    channel_to_send = emp.get_channel(empire_data.get('channel_id'))
+                    emp = self.bot.get_guild(
+                        clans['LeGeND Empire!']['server_id'])
+                    channel_to_send = emp.get_channel(
+                        empire_data.get('channel_id'))
                     if empire_data.get('last_reverse') == None:
                         try:
                             message = await channel_to_send.send(embed=to_send)
@@ -215,8 +220,8 @@ class FameLeaderboard(commands.Cog):
 
     def cog_unload(self):
         self.update_embed_task.cancel()
-    
-    async def ldb_to_emb(self, ldb, base_embed, clan_spec:bool= False):
+
+    async def ldb_to_emb(self, ldb, base_embed, clan_spec: bool = False):
         # This all looks weird but it's embed formatting
         pos = 25
         if clan_spec == True:
@@ -252,7 +257,7 @@ class FameLeaderboard(commands.Cog):
                     try:
                         clan = f"| {data['clan']['name']}"
                     except Exception:
-                        clan=''
+                        clan = ''
 
             value += f"{memb['name']} ({memb['tag']}) {clan}"
             base_embed.add_field(name=title, value=value, inline=False)
@@ -281,8 +286,10 @@ class FameLeaderboard(commands.Cog):
                     members.extend(data['clan']['participants'])
                     if legend_clans[clan_data]['use'] == True:
                         clan_mems = data['clan']['participants']
-                        sorted_clan_mems = sorted(clan_mems, key= lambda x: x['fame'], reverse=True)
-                        clan_mem_dict[legend_clans[clan_data]['tag']] = sorted_clan_mems 
+                        sorted_clan_mems = sorted(
+                            clan_mems, key=lambda x: x['fame'], reverse=True)
+                        clan_mem_dict[legend_clans[clan_data]
+                                      ['tag']] = sorted_clan_mems
 
         # sorts in descending order
         ldb = sorted(members, key=lambda member: -member['fame'])
@@ -293,21 +300,22 @@ class FameLeaderboard(commands.Cog):
             embed_dict = dict()
             for tag in clan_mem_dict:
                 for clan in legend_clans:
-                    if legend_clans[clan]['tag'] == tag: 
+                    if legend_clans[clan]['tag'] == tag:
                         embed = discord.Embed(title=f"{clan.strip('!')} Fame Leaderboard",
-                                            description=f'These are the top fame contributors from {clan} in the current river race!', color=0x80ff00)
+                                              description=f'These are the top fame contributors from {clan} in the current river race, they are better than SK Morten', color=0x80ff00)
                         embed.set_thumbnail(
-                                url="https://static.wikia.nocookie.net/clashroyale/images/9/9f/War_Shield.png/revision/latest?cb=20180425130200")
+                            url="https://static.wikia.nocookie.net/clashroyale/images/9/9f/War_Shield.png/revision/latest?cb=20180425130200")
                         embed.set_footer(text="Bot by: Legend Dev Team",
-                                icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
-                        em = await self.ldb_to_emb(ldb=clan_mem_dict[tag], base_embed=copy.copy(embed), clan_spec=True)
+                                         icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
+                        em = await self.ldb_to_emb(ldb=clan_mem_dict[tag], base_embed=embed, clan_spec=True)
                         embed_dict[tag] = em
             return main_emb, embed_dict
+
     async def check_membership(self, riverrace_data):
         url = 'https://proxy.royaleapi.dev/v1/clans/%239P2PQULQ/members'
         async with aiohttp.ClientSession() as client:
             async with client.get(url=url, headers=self.headers) as resp:
-                data=await resp.json()
+                data = await resp.json()
                 member_list = data['items']
             found_members = []
             for member in riverrace_data:
@@ -318,6 +326,7 @@ class FameLeaderboard(commands.Cog):
                         break
             final = sorted(found_members, key=lambda x: x['fame'])
             return final
+
     def embed_for_bottom(self, rectified_data, base_embed):
         for i, memb in enumerate(rectified_data):
             if(i > 4):
@@ -334,6 +343,7 @@ class FameLeaderboard(commands.Cog):
             value += f"{memb['name']} ({memb['tag']})"
             base_embed.add_field(name=title, value=value, inline=False)
         return base_embed
+
     async def empire_losers(self):
         url = 'https://proxy.royaleapi.dev/v1/clans/%239P2PQULQ/currentriverrace'
         async with aiohttp.ClientSession() as client:
@@ -346,23 +356,25 @@ class FameLeaderboard(commands.Cog):
                 embed = discord.Embed(title=f"Legend Empire Lowest Fame Contributors",
                                             description=f'These are the lowest fame contributers from LeGeND Empire! in the current ricer race, they are even worse than Sai Namrath LMAO.', color=discord.Color.red())
                 embed.set_thumbnail(
-                        url="https://static.wikia.nocookie.net/clashroyale/images/9/9f/War_Shield.png/revision/latest?cb=20180425130200")
+                    url="https://static.wikia.nocookie.net/clashroyale/images/9/9f/War_Shield.png/revision/latest?cb=20180425130200")
                 embed.set_footer(text="Bot by: Legend Dev Team",
-                        icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
-                embed = self.embed_for_bottom(members_in_clan, base_embed=embed)
+                                 icon_url="https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1")
+                embed = self.embed_for_bottom(
+                    members_in_clan, base_embed=embed)
                 return embed
+
     @commands.command()
     async def topfame(self, ctx):
         """Get Top 25 Fame Contributors this war"""
         async with ctx.typing():
-                embed, _ = await self.get_data_fame()
-                await ctx.send(embed=embed)
-    
+            embed, _ = await self.get_data_fame()
+            await ctx.send(embed=embed)
+
     @commands.command()
     @checks.is_owner()
     async def setfamechannel(self, ctx, nick='main'):
         """Set the current channel as fame channel"""
-        if nick=='main':
+        if nick == 'main':
             async with self.config.main() as data:
                 data['use'] = True
                 data['channel_id'] = ctx.channel.id
@@ -462,5 +474,3 @@ class FameLeaderboard(commands.Cog):
         async with ctx.typing():
             embed = await self.get_data_donations()
             await ctx.send(embed=embed)"""
-
-
