@@ -7,7 +7,7 @@ from redbot.core import commands, Config, checks
 import copy
 
 
-sleep_time = 120
+sleep_time = 300
 fame_emoji = "<:fame:757940151845519411>"
 donations_emoji = "<:donations:844657488389472338>"
 
@@ -343,7 +343,6 @@ class FameLeaderboard(commands.Cog):
                 data = await resp.json()
                 participants = data['clan']['participants']
                 members_in_clan = await self.check_membership(participants)
-                print(members_in_clan)
                 embed = discord.Embed(title=f"Legend Empire Lowest Fame Contributors",
                                             description=f'These are the least fame contributors from Legend Empire in the current river race, they are even worse then Sai Namrath LMAO, Lets cyberbully them for being bad at this video game.', color=discord.Color.red())
                 embed.set_thumbnail(
