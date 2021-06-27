@@ -281,7 +281,7 @@ class FameLeaderboard(commands.Cog):
             async with aiohttp.ClientSession() as client:
                 async with client.get(url, headers=self.headers) as resp:
                     if(resp.status != 200):
-                        return discord.Embed(title='Clash Royale API Error', description='Clash Royale API is offline... data cannot be retreived :(')
+                        return discord.Embed(title='Clash Royale API Error', description='Clash Royale API is offline... data cannot be retreived :('), None
                     data = await resp.json()
                     members.extend(data['clan']['participants'])
                     if legend_clans[clan_data]['use'] == True:
