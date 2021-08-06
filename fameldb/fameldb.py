@@ -270,6 +270,8 @@ class FameLeaderboard(commands.Cog):
         clan_mem_dict = dict()
         legend_clans = await self.config.clan_servers()
         for clan_data in legend_clans:
+            if legend_clans[clan_data]['tag'] == "9PJYVVL2":
+                continue 
             url = 'https://proxy.royaleapi.dev/v1/clans/%23{}/currentriverrace'.format(
                 legend_clans[clan_data]['tag'])
             async with aiohttp.ClientSession() as client:
