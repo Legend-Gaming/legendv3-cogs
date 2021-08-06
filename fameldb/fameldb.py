@@ -37,13 +37,7 @@ class FameLeaderboard(commands.Cog):
                 "channel_id": None,
                 "tag": "VJQ0GJ0",
                 "nickname": "Legion",
-            },
-            "LeGeND Titan!": {
-                "server_id": None,
-                "use": False,
-                "channel_id": None,
-                "tag": "9PJYVVL2",
-                "nickname": "Titan"
+   
             },
             "Dragons Eight 2": {
                 "server_id": None,
