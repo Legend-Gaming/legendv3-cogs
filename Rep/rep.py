@@ -57,7 +57,7 @@ class Reputation(commands.Cog):
                 position = len(ldb_users)
             await ctx.send(f"**You have {rep} reputation points!** \n\nYou are currently #{humanize_number(position+1)} on the Rep leaderboard!")
         else:
-            rep = rep = await self.config.member(member=member).rep()
+            rep = await self.config.member(member=member).rep()
             try:
                 position = list(ldb_users).index(member.id)
             except ValueError:
@@ -80,6 +80,9 @@ class Reputation(commands.Cog):
             #indivdual is user id
             rep = final_dict[individual]['rep']
             mem = ctx.guild.get_member(int(individual))
+            if mem==None:
+                position -= 1
+                continue 
             desc += f"**{position}. {mem.mention} ({mem.name}) \u200b \u200b \u200b \u200b Total Rep: {rep}**\n"
             if position%10 == 0:
                 embed = discord.Embed(
