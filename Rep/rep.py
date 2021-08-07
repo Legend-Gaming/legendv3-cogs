@@ -81,8 +81,7 @@ class Reputation(commands.Cog):
             rep = final_dict[individual]['rep']
             mem = ctx.guild.get_member(int(individual))
             if mem==None:
-                position -= 1
-                continue 
+                mem = await self.bot.fetch_user(individual)
             desc += f"**{position}. {mem.mention} ({mem.name}) \u200b \u200b \u200b \u200b Total Rep: {rep}**\n"
             if position%10 == 0:
                 embed = discord.Embed(
