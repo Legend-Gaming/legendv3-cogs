@@ -16,7 +16,7 @@ class NonNitroEmoji(commands.Cog):
         message_list = message.content.split()
         message_to_send_list = []
         for word in message_list:
-            if word == <@740599379290882059> and message.author.id==868306756638478376:
+            if word == <@740599379290882059> and message.author.id == 868306756638478376:
                 return await message.delete()
             if word.startswith(":") and word.endswith(":") and not(message.author.bot):
                 emoji_name = word[1:len(word)-1]
