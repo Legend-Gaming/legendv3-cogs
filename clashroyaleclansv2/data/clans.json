@@ -39,26 +39,6 @@
         },
         "waiting": []
     },
-    "LeGeND Titan!": {
-        "name": "LeGeND Titan!",
-        "tag": "9PJYVVL2",
-        "nickname": "Titan",
-        "clanrole": "Titan",
-        "emoji": "titan",
-        "requirements": {
-            "personalbest": 5800,
-            "wdwins": 100,
-            "cwr": {
-                "legendary": 15,
-                "gold": 40,
-                "silver": 0,
-                "bronze": 0
-            },
-            "bonus": "",
-            "private": false
-        },
-        "waiting": []
-    },
     "Dragons Eight 2": {
         "name": "Dragons Eight 2",
         "tag": "Y8G9C09",
@@ -168,26 +148,6 @@
             796034276877271050
         ],
         "invite": "https://discord.gg/Rv5PJx"
-    },
-    "LeGeND eSports!": {
-        "name": "LeGeND eSports!",
-        "tag": "P9GG9QQY",
-        "nickname": "eSports",
-        "clanrole": "eSports",
-        "emoji": "esports",
-        "requirements": {
-            "personalbest": 5600,
-            "wdwins": 0,
-            "cwr": {
-                "legendary": 0,
-                "gold": 0,
-                "silver": 0,
-                "bronze": 75
-            },
-            "bonus": "",
-            "private": false
-        },
-        "waiting": []
     },
     "White Plague": {
         "name": "White Plague",
