@@ -11,7 +11,7 @@ from redbot.core import commands, checks
 import brawlstats # pip install brawlstats
 
 
-credits = "Bot by ThePeaceKeeper | Horizon" # :( 
+credits = "Bot by Legend Gaming"
 
 
 class BrawlStars(commands.Cog):
@@ -25,7 +25,7 @@ class BrawlStars(commands.Cog):
         """"Initializes the api, don't call this."""
         token = await self.bot.get_shared_api_tokens("brawlstars") # todo check here if it's not saved, just make sure to save it using !set api brawlstars,token
         if token['token'] is None:
-            print("Brawl Stars token is not set, use [p]set api brawlstars token,YOURAPITOKEN")
+            print("Unable to connect to server, API token not set, [p]set api brawlstars YOURTOKENHERE")
             raise ValueError
         self.brawl = brawlstats.Client(token['token'], is_async=False) # Yes defining class attrs (self) outside __init__ is not a good practice but this is to get around the async issues
 
@@ -81,12 +81,12 @@ class BrawlStars(commands.Cog):
         clantag = self.bstools.formatTag(clantag)
 
         if not self.bstools.verifyTag(clantag):
-            return await ctx.send("The clantag you provided has invalid characters. Please try again.")
+            return await ctx.send("Umm, that clan tag is correct, check thats its right and try again.")
 
         try:
             clandata = self.brawl.get_club(clantag)
         except brawlstats.RequestError:
-            return await ctx.send("Error: cannot reach Brawl Stars Servers. Please try again later.")
+            return await ctx.send("Unfortunately I cant connect with the Brawl Stars API Servers. Try again later or contact devs.")
 
         embed = discord.Embed(description=clandata.description, color=0xFAA61A)
         embed.set_author(name=clandata.name + " (" + clandata.tag + ")")
@@ -159,11 +159,11 @@ class BrawlStars(commands.Cog):
     
 
     @commands.command(paliases=['bssave'])
-    async def bsave(self, ctx, profiletag: str, member: discord.User = None):
+    async def savebs(self, ctx, profiletag: str, member: discord.User = None):
         """ save your Brawl Stars Profile Tag
         Example:
-            [p]bssave #CRRYTPTT @ThePeaceKeeper
-            [p]bssave #CRRYRPCC
+            [p]savebs #CRRYTPTT @TPK
+            [p]savebs #CRRYTPTT
         """
 
         server = ctx.guild
@@ -172,14 +172,14 @@ class BrawlStars(commands.Cog):
         profiletag = self.bstools.formatTag(profiletag)
 
         if not self.bstools.verifyTag(profiletag):
-            return await ctx.send("The tag you provided has invalid characters. Please try again.")
+            return await ctx.send("Hmm... That tag doesnt seem to work, check it and try again.")
 
 
          # Trying to save tag for someone else (Generaleoley way, personally feel it's cleaner)
         if member is not None and member != ctx.author:
             if await self.bot.is_mod(ctx.author) is False:
                 await ctx.send(
-                    "Sorry you cannot save tags for others. You need a mod permission level"
+                    "Unfortunately I cannot let you save tag for others, you missing the correct perms"
                 )
                 return
 
@@ -198,11 +198,11 @@ class BrawlStars(commands.Cog):
 
             embed = discord.Embed(color=discord.Color.green())
             avatar = member.avatar_url if member.avatar else member.default_avatar_url
-            embed.set_author(name='{} (#{}) has been successfully saved.'.format(profiledata.name, profiletag),
+            embed.set_author(name='{} (#{}) has been successfully saved. Congrats!!'.format(profiledata.name, profiletag),
                              icon_url=avatar)
             await ctx.send(embed=embed)
         except brawlstats.NotFoundError:
-            return await ctx.send("The tag you provided is invalid, please double check!")
+            return await ctx.send("Hmm... That tag doesnt seem to work, check it and try again.")
         except brawlstats.RequestError:
-            return await ctx.send("Error: cannot reach Brawl Stars Servers. Please try again later.")
+            return await ctx.send("Unfortunately I cant connect with the Brawl Stars API Servers. Try again later or contact devs.")
 
